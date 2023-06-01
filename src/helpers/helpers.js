@@ -17,7 +17,7 @@ function shortName(variationLongName) {
 		return "n";
 	} else if (variationLongName.indexOf("variation") === 0 && variationLongName.length >= 10) {
 		const variationNumber = variationLongName.slice(9);
-		if (strToInt(variationNumber) > 0 || variationNumber === "0") {
+		if (strToInt(variationNumber) > 0) {
 			return "v" + variationNumber;
 		} else {
 			return "u";
@@ -103,6 +103,8 @@ function strToInt(num)
 
 			total_value += digit_value * Math.pow(10, num.length - char_index - 1);
 		}
+	} else {
+		return null;
 	}
 
 	return total_value;
@@ -115,6 +117,13 @@ function parseTestsVariations(testsVariations) {
 	const pairs = testsVariations.slice(1, -1).split(',');
 
 	const results = [];
+
+	const firstChar = testsVariations.slice(0, 1);
+	const lastChar = testsVariations.slice(-1);
+
+	if (firstChar !== "[" || lastChar !== "]") {
+		return results;
+	}
 
 	for (const pair of pairs) {
 		const keyValue = pair.split(':');
@@ -132,4 +141,17 @@ function parseTestsVariations(testsVariations) {
 	}
 
 	return results;
+}
+
+// serializeTestsVariations serializes an array of tests variations into a string.
+// [{id: 123, variation: variation}, {id: 456, variation: variation2}, {id: 789, variation: variation3}, {id: 345, variation: unset}, {id: 678, variation: none}] => [123:v1,456:v2,789:v3,345:u,678:n]
+function serializeTestsVariations(testsVariations) {
+	const pairs = [];
+
+	for (const testVariation of testsVariations) {
+		const pair = testVariation.id + ":" + shortName(testVariation.variation);
+		pairs.push(pair);
+	}
+
+	return "[" + pairs.join(',') + "]";
 }
