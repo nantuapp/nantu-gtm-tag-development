@@ -26,6 +26,7 @@ function shortName(variationLongName) {
 		return "u";
 	}
 }
+
 // longName converts a variation short name to a long name.
 function longName(variationShortName) {
 	if ( ! variationShortName ) {
@@ -154,4 +155,45 @@ function serializeTestsVariations(testsVariations) {
 	}
 
 	return "[" + pairs.join(',') + "]";
+}
+
+//Check if the user is in QA mode
+//QA Mode is set using a cookie or the query parameter nantu_mode=qa
+function isInQAMode() {
+	if (queryPermission('get_cookies', nantuModeCookieName)) {
+		const nantuModeCookie = getCookieValues(nantuModeCookieName);
+
+		if (nantuModeCookie === "qa" || hasQAQuery()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function hasQAQuery() {
+	if (queryPermission('get_url', 'query')) {
+		const nantuModeQuery = getUrl('query');
+
+		if (nantuModeQuery.indexOf(nantuModeQueryVariableName + "=qa") !== -1) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//set the QA mode cookie
+function setQAModeCookie() {
+	// Set Cookie Permissions
+	const options = {
+		'domain': 'auto',
+		'path': '/',
+		'max-age': 60*60,
+		'secure': true
+	};
+
+	if (queryPermission('set_cookies', nantuModeCookieName, options)) {
+		setCookie(nantuModeCookieName, 'qa', options);
+	}
 }
