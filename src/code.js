@@ -11,7 +11,7 @@ const setCookie = require('setCookie');
 // Constants
 const nantuModeCookieName = 'nantu_mode';
 const nantuModeQueryVariableName = 'nantu_mode';
-
+const nantuVersion = '1.0.0';
 
 if (isNantuOff()) {
 	log("Nantu is off");
@@ -20,10 +20,11 @@ if (isNantuOff()) {
 }
 
 if (hasQAQuery()) {
+	log("QA mode is on, setting QA cookie");
 	setQAModeCookie();
 }
 
-log("Is in QA mode: " + isInQAMode());
+testLog("Nantu Version: " + nantuVersion);
 
 /* Get Permissions*/
 // localStorage Permissions
@@ -254,6 +255,13 @@ function setQAModeCookie() {
 		setCookie(nantuModeCookieName, 'qa', options);
 	}
 }
+
+// display log messages in the console if nantu is in QA mode, also include the test index
+function testLog(message1, message2) {
+	if (isInQAMode()) {
+		log("Nantu Test " + data.test_index + ": " + message1, message2);
+	}
+}
 /*--includeend--*/
 
 /*-------------------*/
@@ -284,12 +292,7 @@ const tablet_device_type = "tablet";
 const mobile_device_type = "mobile";
 const excluded_device_type = "excluded";
 
-if(data.qa_mode && is_in_qa_mode() == false)
-{
-	test_log("This test is QA only");
-	return;
-}
-else if(typeof(inflow_device_type) == "string")
+if(typeof(inflow_device_type) == "string")
 {
 	if((inflow_device_type == desktop_device_type && data.desktop) || (inflow_device_type == tablet_device_type && data.tablet) || (inflow_device_type == mobile_device_type && data.mobile))
 	{
@@ -343,17 +346,6 @@ else if(typeof(inflow_device_type) == "string")
 		test_log("not allowed device type", inflow_device_type);	
 	}
 }
-function is_in_qa_mode()
-{
-	if(inflow_query_vars.indexOf("inflow=qa") > -1 || inflow_query_vars.indexOf("inflow-qa") > -1 || inflow_qa_cookie == "qa")
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 function is_in_test_window()
 {
@@ -387,15 +379,6 @@ function is_domain_allowed(inflow_host)
 	return false;
 }
 
-function test_log(value1, value2)
-{
-	if(is_in_qa_mode())
-	{
-		log("nantu_" + data.test_index + ": " + value1, value2);
-	}
-}
-
-test_log('data =', data);
 
 // Call data.gtmOnSuccess when the tag is finished.
 data.gtmOnSuccess();

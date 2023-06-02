@@ -211,3 +211,10 @@ function setQAModeCookie() {
 		setCookie(nantuModeCookieName, 'qa', options);
 	}
 }
+
+// display log messages in the console if nantu is in QA mode, also include the test index
+function testLog(message1, message2) {
+	if (isInQAMode()) {
+		log("Nantu Test " + data.test_index + ": " + message1, message2);
+	}
+}
