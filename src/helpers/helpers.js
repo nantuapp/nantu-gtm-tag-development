@@ -157,11 +157,25 @@ function serializeTestsVariations(testsVariations) {
 	return "[" + pairs.join(',') + "]";
 }
 
+// check if the user is in Nantu off mode
+// Nantu off mode is set using a cookie or the query parameter nantu_mode=off
+function isNantuOff() {
+	if (queryPermission('get_url', 'query')) {
+		const nantuModeQuery = getUrl('query');
+
+		if (nantuModeQuery.indexOf(nantuModeQueryVariableName + "=off") !== -1) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 //Check if the user is in QA mode
 //QA Mode is set using a cookie or the query parameter nantu_mode=qa
 function isInQAMode() {
 	if (queryPermission('get_cookies', nantuModeCookieName)) {
-		const nantuModeCookie = getCookieValues(nantuModeCookieName);
+		const nantuModeCookie = getCookieValues(nantuModeCookieName).join('');
 
 		if (nantuModeCookie === "qa" || hasQAQuery()) {
 			return true;
