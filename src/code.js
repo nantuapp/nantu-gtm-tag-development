@@ -7,6 +7,7 @@ const generateRandom = require('generateRandom');
 const getCookieValues = require('getCookieValues');
 const getUrl = require('getUrl');
 const setCookie = require('setCookie');
+const copyFromWindow = require('copyFromWindow');
 
 // Constants
 const nantuModeCookieName = 'nantu_mode';
@@ -32,14 +33,49 @@ const nantuTestsKey = 'nantu_tests';
 let savedNantuTests = "[]";
 if (queryPermission('access_local_storage', 'readwrite', nantuTestsKey)) {
 	savedNantuTests = localStorage.getItem(nantuTestsKey);
+} else {
+	log("Nantu can't access local storage");
+	data.gtmOnFailure();
+	return;
 }
+
+var domain = "unset";
 
 // URL Permissions
 if (queryPermission('get_url', 'host')) {
-	const domain = getUrl('host');
+	domain = getUrl('host');
+}
+
+if (domain === "unset") {
+	log("Nantu can't get the domain:" + domain);
+	data.gtmOnSuccess();
+	return;
+}
+
+if (! isAllowedDomain(domain, data)) {
+	log("Nantu test is not allowed on this domain: " + domain);
+	data.gtmOnSuccess();
+	return;
 }
 
 const nantuTests = parseTestsVariations(savedNantuTests);
+
+var selectedVariation = getSelectedVariation(nantuTests, data);
+
+testLog("Selected Variation: " + selectedVariation);
+
+if (selectedVariation == "unset") {
+	selectedVariation = selectRandomVariation(data);
+	testLog("Random Variation: " + selectedVariation);
+
+	nantuTests.push({ id: strToInt(data.test_index), variation: selectedVariation});
+
+	localStorage.setItem(nantuTestsKey, serializeTestsVariations(nantuTests));
+	testLog("Setting Variation: " + selectedVariation);
+}
+
+log(nantuTests);
+log(data);
 
 /*--include:helpers/helpers.js:--*/
 // Description: Helper functions for the A/B testing framework.
@@ -158,6 +194,11 @@ function strToInt(num)
 // parseTestsVariations parses a string of tests variations into an array of objects.
 // [123:v1,456:v2,789:v3,345:u,678:n] => [{id: 123, variation: variation}, {id: 456, variation: variation2}, {id: 789, variation: variation3}, {id: 345, variation: unset}, {id: 678, variation: none}]
 function parseTestsVariations(testsVariations) {
+
+	if ( ! testsVariations ) {
+		return [];
+	}
+
 	// Split the string into an array of key-value pairs.
 	const pairs = testsVariations.slice(1, -1).split(',');
 
@@ -262,123 +303,170 @@ function testLog(message1, message2) {
 		log("Nantu Test " + data.test_index + ": " + message1, message2);
 	}
 }
-/*--includeend--*/
 
-/*-------------------*/
+function getDeviceType(userAgent) {
+	if (isDesktopBrowser(userAgent)) {
+		return "desktop";
+	}
 
-const copyFromWindow = require('copyFromWindow');
-const getCookieValues = require('getCookieValues');
-const createQueue = require('createQueue');
-const dataLayerPush = createQueue('dataLayer');
-const generateRandom = require('generateRandom');
 
-const inflow_host = copyFromWindow('inflow_host');
-const inflow_query_vars = copyFromWindow('inflow_query_variables');
-const inflow_qa_cookie = getCookieValues('inflow_cookie');
-const inflow_get_cookie_value = copyFromWindow('inflow_get_cookie_value');
-const inflow_set_cookie_value = copyFromWindow('inflow_set_cookie_value');
-const inflow_device_type = copyFromWindow('inflow_device_type');
-const inflow_execute_test = copyFromWindow('inflow_execute_test');
-const inflow_get_geoip = copyFromWindow('inflow_get_geoip');
-const inflow_set_variation_cookie = copyFromWindow('inflow_set_variation_cookie');
-const inflow_is_in_test_window = copyFromWindow('inflow_is_in_test_window');
-const inflow_is_cross_domain_test = copyFromWindow('inflow_is_cross_domain_test');
-const inflow_environment = copyFromWindow('inflow_environment');
+	return "excluded";
+}
 
-var test_has_been_executed = false;
+function getNumberAfterString(text, string) {
+	const index = text.indexOf(string);
 
-const desktop_device_type = "desktop";
-const tablet_device_type = "tablet";
-const mobile_device_type = "mobile";
-const excluded_device_type = "excluded";
-
-if(typeof(inflow_device_type) == "string")
-{
-	if((inflow_device_type == desktop_device_type && data.desktop) || (inflow_device_type == tablet_device_type && data.tablet) || (inflow_device_type == mobile_device_type && data.mobile))
-	{
-		test_log("allowed device type", inflow_device_type);
-
-		if(is_domain_allowed(inflow_host))
-		{
-			test_log("allowed domain", inflow_host);
-
-			if(is_in_test_window())
-			{
-				test_log("pass test window check");
-
-				if(data.qa_mode)
-				{
-					if(is_in_qa_mode())
-					{
-						execute_test();
-					}
-					else
-					{
-						test_log("test is QA only");
-					}
-				}
-				else
-				{
-					execute_test();
-				}
-			}
-			else
-			{
-				if(data.qa_mode && is_in_qa_mode())
-				{
-					test_log("doesn't pass test window check but is in QA mode");
-
-					execute_test();
-				}
-				else
-				{
-					test_log("doesn't pass test window check");
-				}
+	if (index !== -1) {
+		let startOfNumberIndex = index + string.length;
+		let endOfNumberIndex = startOfNumberIndex;
+		while (endOfNumberIndex < text.length) {
+			if (strToInt(text[endOfNumberIndex]) !== null) {
+				endOfNumberIndex++;
+			} else {
+				break;
 			}
 		}
-		else
-		{
-			test_log("not allowed domain", inflow_host);
-		}
+
+		const number = text.slice(startOfNumberIndex, endOfNumberIndex);
+
+		return strToInt(number);
 	}
-	else
-	{
-		test_log("not allowed device type", inflow_device_type);	
-	}
+
+	return null;
 }
 
-function is_in_test_window()
-{
-	if(data.test_window_enabled)
-	{
-		return inflow_is_in_test_window(data);
-	}
-	else
-	{
-		test_log("test window is not enabled");
-
-		return true;
-	}
-}
-
-function execute_test()
-{
-	test_log("execute test", data.test_index);
-	inflow_execute_test(data);
-}
-
-function is_domain_allowed(inflow_host)
-{
-	data.allowed_domains.forEach(function(allowed_domain){
-		if(allowed_domain.domain == inflow_host)
-		{
+function isAllowedDomain(domain, testData) {
+	for (const allowed_domain of testData.allowed_domains) {
+		if (allowed_domain.domain === domain) {
 			return true;
 		}
-	});
+	}
 
 	return false;
 }
 
+function getSelectedVariation(savedVariations, testData) {
+	for (const savedVariation of savedVariations) {
+		if (savedVariation.id === strToInt(testData.test_index)) {
+			return savedVariation.variation;
+		}
+	}
+
+	return "unset";
+}
+
+function selectRandomVariation(testData) {
+	const variations = testData.variations;
+
+	let maxWeight = 0;
+
+	for (const variation of variations) {
+		maxWeight += strToInt(variation.weight);
+	}
+
+	const randomWeight = generateRandom(0, maxWeight - 1);
+
+	let currentWeight = 0;
+
+	for (const variation of variations) {
+		currentWeight += strToInt(variation.weight);
+		if (randomWeight < currentWeight) {
+			return variation.id;
+		}
+	}
+
+	return "unset";
+}
+
+function isSafari(userAgent) {
+	const supportedPlatforms = ['Macintosh', 'iPhone', 'iPad'];
+
+	let platformIndex = -1;
+
+	for (const platform of supportedPlatforms) {
+		if (userAgent.indexOf(platform) > -1) {
+			platformIndex = userAgent.indexOf(platform);
+			break;
+		}
+	}
+
+	if (platformIndex > -1) {
+		const safariVersion = getNumberAfterString(userAgent.slice(platformIndex), "Version/");
+
+		if (safariVersion > 0) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function isDesktopBrowser(userAgent) {
+	const supportedPlatforms = ['Linux x86_64', 'Mac OS', 'Windows NT'];
+	const supportedBrowsers = [
+		{
+			name: 'Firefox',
+			versionPrefix: 'Firefox/',
+			minVersion: 70
+		},
+		{
+			name: 'Chrome',
+			versionPrefix: 'Chrome/',
+			minVersion: 80,
+		}
+	];
+
+	const supportedSafari = {
+		versionPrefix: 'Version/',
+		minVersion: 14
+	};
+
+	let platformIndex = -1;
+
+	for (const platform of supportedPlatforms) {
+		if (userAgent.indexOf(platform) > -1) {
+			platformIndex = userAgent.indexOf(platform);
+			break;
+		}
+	}
+
+	const macintoshString = 'Macintosh;';
+
+	const macintoshIndex = userAgent.indexOf('Macintosh;');
+
+	if (platformIndex === -1 && macintoshString === -1) {
+		return false;
+	}
+
+	if (platformIndex > -1) {
+		const platform = userAgent.slice(platformIndex);
+
+		for (const browser of supportedBrowsers) {
+			const browserIndex = platform.indexOf(browser.name);
+
+			if (browserIndex > -1) {
+				const browserVersion = getNumberAfterString(platform.slice(browserIndex), browser.versionPrefix);
+
+				if (browserVersion >= browser.minVersion) {
+					return true;
+				}
+			}
+		}
+	}
+
+	if (macintoshString > -1) {
+		const platform = userAgent.slice(macintoshIndex);
+
+		const browserVersion = getNumberAfterString(platform, supportedSafari.versionPrefix);
+
+		if (browserVersion >= supportedSafari.minVersion) {
+			return true;
+		}
+	}
+
+	return false;
+}
+/*--includeend--*/
 
 // Call data.gtmOnSuccess when the tag is finished.
 data.gtmOnSuccess();

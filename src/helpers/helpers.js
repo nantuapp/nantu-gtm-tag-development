@@ -114,6 +114,11 @@ function strToInt(num)
 // parseTestsVariations parses a string of tests variations into an array of objects.
 // [123:v1,456:v2,789:v3,345:u,678:n] => [{id: 123, variation: variation}, {id: 456, variation: variation2}, {id: 789, variation: variation3}, {id: 345, variation: unset}, {id: 678, variation: none}]
 function parseTestsVariations(testsVariations) {
+
+	if ( ! testsVariations ) {
+		return [];
+	}
+
 	// Split the string into an array of key-value pairs.
 	const pairs = testsVariations.slice(1, -1).split(',');
 
@@ -217,4 +222,167 @@ function testLog(message1, message2) {
 	if (isInQAMode()) {
 		log("Nantu Test " + data.test_index + ": " + message1, message2);
 	}
+}
+
+function getDeviceType(userAgent) {
+	if (isDesktopBrowser(userAgent)) {
+		return "desktop";
+	}
+
+
+	return "excluded";
+}
+
+function getNumberAfterString(text, string) {
+	const index = text.indexOf(string);
+
+	if (index !== -1) {
+		let startOfNumberIndex = index + string.length;
+		let endOfNumberIndex = startOfNumberIndex;
+		while (endOfNumberIndex < text.length) {
+			if (strToInt(text[endOfNumberIndex]) !== null) {
+				endOfNumberIndex++;
+			} else {
+				break;
+			}
+		}
+
+		const number = text.slice(startOfNumberIndex, endOfNumberIndex);
+
+		return strToInt(number);
+	}
+
+	return null;
+}
+
+function isAllowedDomain(domain, testData) {
+	for (const allowed_domain of testData.allowed_domains) {
+		if (allowed_domain.domain === domain) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function getSelectedVariation(savedVariations, testData) {
+	for (const savedVariation of savedVariations) {
+		if (savedVariation.id === strToInt(testData.test_index)) {
+			return savedVariation.variation;
+		}
+	}
+
+	return "unset";
+}
+
+function selectRandomVariation(testData) {
+	const variations = testData.variations;
+
+	let maxWeight = 0;
+
+	for (const variation of variations) {
+		maxWeight += strToInt(variation.weight);
+	}
+
+	const randomWeight = generateRandom(0, maxWeight - 1);
+
+	let currentWeight = 0;
+
+	for (const variation of variations) {
+		currentWeight += strToInt(variation.weight);
+		if (randomWeight < currentWeight) {
+			return variation.id;
+		}
+	}
+
+	return "unset";
+}
+
+function isSafari(userAgent) {
+	const supportedPlatforms = ['Macintosh', 'iPhone', 'iPad'];
+
+	let platformIndex = -1;
+
+	for (const platform of supportedPlatforms) {
+		if (userAgent.indexOf(platform) > -1) {
+			platformIndex = userAgent.indexOf(platform);
+			break;
+		}
+	}
+
+	if (platformIndex > -1) {
+		const safariVersion = getNumberAfterString(userAgent.slice(platformIndex), "Version/");
+
+		if (safariVersion > 0) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function isDesktopBrowser(userAgent) {
+	const supportedPlatforms = ['Linux x86_64', 'Mac OS', 'Windows NT'];
+	const supportedBrowsers = [
+		{
+			name: 'Firefox',
+			versionPrefix: 'Firefox/',
+			minVersion: 70
+		},
+		{
+			name: 'Chrome',
+			versionPrefix: 'Chrome/',
+			minVersion: 80,
+		}
+	];
+
+	const supportedSafari = {
+		versionPrefix: 'Version/',
+		minVersion: 14
+	};
+
+	let platformIndex = -1;
+
+	for (const platform of supportedPlatforms) {
+		if (userAgent.indexOf(platform) > -1) {
+			platformIndex = userAgent.indexOf(platform);
+			break;
+		}
+	}
+
+	const macintoshString = 'Macintosh;';
+
+	const macintoshIndex = userAgent.indexOf('Macintosh;');
+
+	if (platformIndex === -1 && macintoshString === -1) {
+		return false;
+	}
+
+	if (platformIndex > -1) {
+		const platform = userAgent.slice(platformIndex);
+
+		for (const browser of supportedBrowsers) {
+			const browserIndex = platform.indexOf(browser.name);
+
+			if (browserIndex > -1) {
+				const browserVersion = getNumberAfterString(platform.slice(browserIndex), browser.versionPrefix);
+
+				if (browserVersion >= browser.minVersion) {
+					return true;
+				}
+			}
+		}
+	}
+
+	if (macintoshString > -1) {
+		const platform = userAgent.slice(macintoshIndex);
+
+		const browserVersion = getNumberAfterString(platform, supportedSafari.versionPrefix);
+
+		if (browserVersion >= supportedSafari.minVersion) {
+			return true;
+		}
+	}
+
+	return false;
 }
