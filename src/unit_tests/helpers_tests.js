@@ -330,7 +330,7 @@ for (let i = 0; i < 1000; i++) {
 		variationResults.variation1++;
 	}
 	else {
-		throw new Error("Unexpected variation:" + result);
+		throw new Error("Unexpected variation:" result);
 	}
 }
 

@@ -162,6 +162,32 @@ function serializeTestsVariations(testsVariations) {
 	return "[" + pairs.join(',') + "]";
 }
 
+function setTestVariation(testsVariations, testId, variation) {
+	const testVariation = {
+		id: testId,
+		variation: variation
+	};
+
+	const newTestsVariations = [];
+
+	let found = false;
+
+	for (const currentTestVariation of testsVariations) {
+		if (currentTestVariation.id === testId) {
+			newTestsVariations.push(testVariation);
+			found = true;
+		} else {
+			newTestsVariations.push(currentTestVariation);
+		}
+	}
+
+	if ( ! found ) {
+		newTestsVariations.push(testVariation);
+	}
+
+	return newTestsVariations;
+}
+
 // check if the user is in Nantu off mode
 // Nantu off mode is set using a cookie or the query parameter nantu_mode=off
 function isNantuOff() {
@@ -274,6 +300,17 @@ function getSelectedVariation(savedVariations, testData) {
 
 	return "unset";
 }
+
+function getVariationName(variation, testData) {
+	for (const variationData of testData.variations) {
+		if (variationData.id === variation) {
+			return variationData.name;
+		}
+	}
+
+	return "unknown";
+}
+
 
 function selectRandomVariation(testData) {
 	const variations = testData.variations;

@@ -8,6 +8,7 @@ const getCookieValues = require('getCookieValues');
 const getUrl = require('getUrl');
 const setCookie = require('setCookie');
 const copyFromWindow = require('copyFromWindow');
+const createQueue = require('createQueue');
 
 // Constants
 const nantuModeCookieName = 'nantu_mode';
@@ -58,21 +59,23 @@ if (! isAllowedDomain(domain, data)) {
 	return;
 }
 
-const nantuTests = parseTestsVariations(savedNantuTests);
+var nantuTests = parseTestsVariations(savedNantuTests);
 
 var selectedVariation = getSelectedVariation(nantuTests, data);
 
-testLog("Selected Variation: " + selectedVariation);
 
 if (selectedVariation == "unset") {
 	selectedVariation = selectRandomVariation(data);
-	testLog("Random Variation: " + selectedVariation);
 
-	nantuTests.push({ id: strToInt(data.test_index), variation: selectedVariation});
+	nantuTests = setTestVariation(nantuTests, data.test_index, selectedVariation);
 
 	localStorage.setItem(nantuTestsKey, serializeTestsVariations(nantuTests));
 	testLog("Setting Variation: " + selectedVariation);
 }
+
+const dataLayerPush = createQueue('dataLayer');
+
+dataLayerPush({'event': 'nantu_execute_' + data.test_index, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experiment_name, 'nantu_variation_name' : getVariationName(selectedVariation, data)});
 
 log(nantuTests);
 log(data);
@@ -242,6 +245,32 @@ function serializeTestsVariations(testsVariations) {
 	return "[" + pairs.join(',') + "]";
 }
 
+function setTestVariation(testsVariations, testId, variation) {
+	const testVariation = {
+		id: testId,
+		variation: variation
+	};
+
+	const newTestsVariations = [];
+
+	let found = false;
+
+	for (const currentTestVariation of testsVariations) {
+		if (currentTestVariation.id === testId) {
+			newTestsVariations.push(testVariation);
+			found = true;
+		} else {
+			newTestsVariations.push(currentTestVariation);
+		}
+	}
+
+	if ( ! found ) {
+		newTestsVariations.push(testVariation);
+	}
+
+	return newTestsVariations;
+}
+
 // check if the user is in Nantu off mode
 // Nantu off mode is set using a cookie or the query parameter nantu_mode=off
 function isNantuOff() {
@@ -354,6 +383,17 @@ function getSelectedVariation(savedVariations, testData) {
 
 	return "unset";
 }
+
+function getVariationName(variation, testData) {
+	for (const variationData of testData.variations) {
+		if (variationData.id === variation) {
+			return variationData.name;
+		}
+	}
+
+	return "unknown";
+}
+
 
 function selectRandomVariation(testData) {
 	const variations = testData.variations;
