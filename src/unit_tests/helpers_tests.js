@@ -64,7 +64,8 @@ const strToIntCases = [
 	{ input: 'abc', expected: null },
 	{ input: '12a3', expected: null },
 	{ input: '9x', expected: null },
-	{ input: 'xyz', expected: null }
+	{ input: 'xyz', expected: null },
+	{ input: 'GA1.1.1567679025.1665237476', expected: null }
 ];
 
 for (const testCase of strToIntCases) {
@@ -330,7 +331,7 @@ for (let i = 0; i < 1000; i++) {
 		variationResults.variation1++;
 	}
 	else {
-		throw new Error("Unexpected variation:" result);
+		throw new Error("Unexpected variation:" + result);
 	}
 }
 
@@ -345,3 +346,44 @@ if(variationResults.variation1 < 450 || variationResults.variation1 > 550) {
 
 console.log('All selectRandomVariation tests passed successfully!');
 
+
+const leapYearTestCases = [
+	{ year: 2020, expected: true },
+	{ year: 2021, expected: false },
+	{ year: 2022, expected: false },
+	{ year: 2000, expected: true },
+	{ year: 1900, expected: false },
+	{ year: 1600, expected: true },
+	{ year: 2400, expected: true },
+	{ year: 2401, expected: false },
+	{ year: 2200, expected: false },
+];
+
+for (const testCase of leapYearTestCases) {
+	const { year, expected } = testCase;
+	const result = isLeapYear(year);
+	assert.strictEqual(result, expected, `Input: ${year}, Expected: ${expected}, Result: ${result}`);
+}
+
+console.log('All isLeapYear tests passed successfully!');
+
+
+const timestampTestCases = [
+	{ date: "1/1/1970", expected: 0 },
+	{ date: "1/15/1970", expected: Math.round(1209600 / (24 * 3600)) },
+	{ date: "1/15/1980", expected: Math.round(316738800 / (24 * 3600)) },
+	{ date: "1/1/2000", expected: Math.round(946681200 / (24 * 3600)) },
+	{ date: "1/1/2021", expected: Math.round(1609455600 / (24 * 3600)) },
+	{ date: "1/1/2022", expected: Math.round(1640991600 / (24 * 3600)) },
+	{ date: "1/1/2023", expected: Math.round(1672527600 / (24 * 3600)) },
+	{ date: "2/29/2020", expected: Math.round(1582930800 / (24 * 3600)) },
+	{ date: "5/1/2020", expected: Math.round(1588297200 / (24 * 3600)) },
+	{ date: "10/1/2024", expected: Math.round(1727733600 / (24 * 3600)) },
+	{ date: "12/22/2054", expected: Math.round(2681506800 / (24 * 3600)) },
+];
+
+for (const testCase of timestampTestCases) {
+	const { date, expected } = testCase;
+	const result = getDaysFrom1970(date);
+	assert.strictEqual(result, expected, `Input: ${date}, Expected: ${expected}, Result: ${result}`);
+}

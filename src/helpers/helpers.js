@@ -52,53 +52,46 @@ function longName(variationShortName) {
 // strToInt converts a string to an integer. If the string is not a number, it returns null.
 function strToInt(num)
 {
+	if(getType(num) == "number")
+	{
+		return num;
+	}
+
 	let total_value = 0;
 
-	if(num)
-	{
-		for(let char_index = 0; char_index < num.length; char_index++)
-		{
+	if(num) {
+		for(let char_index = 0; char_index < num.length; char_index++) {
 			let digit_value = 0;
 			let current_letter = num.charAt(char_index);
 
-			if(current_letter === "1")
-			{
+			if(current_letter === "1") {
 				digit_value = 1;
 			}
-			else if (current_letter === "2")
-			{
+			else if (current_letter === "2") {
 				digit_value = 2;
 			}
-			else if (current_letter === "3")
-			{
+			else if (current_letter === "3") {
 				digit_value = 3;
 			}
-			else if (current_letter === "4")
-			{
+			else if (current_letter === "4") {
 				digit_value = 4;
 			}
-			else if (current_letter === "5")
-			{
+			else if (current_letter === "5") {
 				digit_value = 5;
 			}
-			else if (current_letter === "6")
-			{
+			else if (current_letter === "6") {
 				digit_value = 6;
 			}
-			else if (current_letter === "7")
-			{
+			else if (current_letter === "7") {
 				digit_value = 7;
 			}
-			else if (current_letter === "8")
-			{
+			else if (current_letter === "8") {
 				digit_value = 8;
 			}
-			else if (current_letter === "9")
-			{
+			else if (current_letter === "9") {
 				digit_value = 9;
 			}
-			else if (current_letter !== "0")
-			{
+			else if (current_letter !== "0") {
 				return null;
 			}
 
@@ -200,6 +193,30 @@ function isNantuOff() {
 	}
 
 	return false;
+}
+
+
+function getGACookieTimestamp() {
+
+	const GACookieName = "_ga";
+
+	if (queryPermission('get_cookies', GACookieName)) {
+		const gaCookieValue = getCookieValues(GACookieName).join('');
+
+		const cookieParts = gaCookieValue.split(".");
+
+		const gaTimestamp = strToInt(cookieParts[cookieParts.length - 1]);
+
+		if(gaTimestamp > 0)
+		{
+			return gaTimestamp;
+		}
+
+	} else {
+		return 0;
+	}
+	
+	return Math.floor(getTimestampMillis()/1000);
 }
 
 //Check if the user is in QA mode
@@ -333,6 +350,46 @@ function selectRandomVariation(testData) {
 	}
 
 	return "unset";
+}
+
+function getDaysFrom1970(dateString) {
+	const dateParts = dateString.split('/');
+
+	if (dateParts.length !== 3) {
+		return 0;
+	}
+
+	const month = strToInt(dateParts[0]);
+	const day = strToInt(dateParts[1]);
+	const year = strToInt(dateParts[2]);
+
+	// Days per month (assuming non-leap year for February)
+	const daysPerMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+	// Calculate the total number of days from the Unix Epoch to the given date
+	let totalDays = 0;
+
+	for (let y = 1970; y < year; y++) {
+		totalDays += isLeapYear(y) ? 366 : 365;
+	}
+
+	for (let m = 1; m < month; m++) {
+
+		totalDays += daysPerMonth[m];
+
+
+		if (m === 2 && isLeapYear(year)) {
+			totalDays += 1; // February has 29 days in a leap year
+		}
+
+	}
+	totalDays += day - 1; // Subtract 1 as the Unix Epoch starts from January 1, 1970
+
+	return totalDays;
+}
+
+function isLeapYear(year) {
+	return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
 
 function isSafari(userAgent) {

@@ -17,4 +17,6 @@ function generateRandom(min, max) {
   // Calculate the random integer within the range [min, max].
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
+function getType(obj) {
+	return typeof obj;
+}
