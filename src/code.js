@@ -7,7 +7,6 @@ const generateRandom = require('generateRandom');
 const getCookieValues = require('getCookieValues');
 const getUrl = require('getUrl');
 const setCookie = require('setCookie');
-const copyFromWindow = require('copyFromWindow');
 const createQueue = require('createQueue');
 const getType = require('getType');
 const getTimestampMillis = require('getTimestampMillis');
