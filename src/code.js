@@ -91,10 +91,7 @@ if (selectedVariation == "unset") {
 
 const dataLayerPush = createQueue('dataLayer');
 
-dataLayerPush({'event': 'nantu_execute_' + data.test_index, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experiment_name, 'nantu_variation_name' : getVariationName(selectedVariation, data)});
-
-log(nantuTests);
-log(data);
+dataLayerPush({'event': 'nantu_execute_' + data.test_index + '_' + selectedVariation, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experiment_name, 'nantu_variation_name' : getVariationName(selectedVariation, data)});
 
 /*--include:helpers/helpers.js:--*/
 // Description: Helper functions for the A/B testing framework.
@@ -366,15 +363,6 @@ function testLog(message1, message2) {
 	}
 }
 
-function getDeviceType(userAgent) {
-	if (isDesktopBrowser(userAgent)) {
-		return "desktop";
-	}
-
-
-	return "excluded";
-}
-
 function getNumberAfterString(text, string) {
 	const index = text.indexOf(string);
 
@@ -491,94 +479,6 @@ function isLeapYear(year) {
 	return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
 
-function isSafari(userAgent) {
-	const supportedPlatforms = ['Macintosh', 'iPhone', 'iPad'];
-
-	let platformIndex = -1;
-
-	for (const platform of supportedPlatforms) {
-		if (userAgent.indexOf(platform) > -1) {
-			platformIndex = userAgent.indexOf(platform);
-			break;
-		}
-	}
-
-	if (platformIndex > -1) {
-		const safariVersion = getNumberAfterString(userAgent.slice(platformIndex), "Version/");
-
-		if (safariVersion > 0) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-function isDesktopBrowser(userAgent) {
-	const supportedPlatforms = ['Linux x86_64', 'Mac OS', 'Windows NT'];
-	const supportedBrowsers = [
-		{
-			name: 'Firefox',
-			versionPrefix: 'Firefox/',
-			minVersion: 70
-		},
-		{
-			name: 'Chrome',
-			versionPrefix: 'Chrome/',
-			minVersion: 80,
-		}
-	];
-
-	const supportedSafari = {
-		versionPrefix: 'Version/',
-		minVersion: 14
-	};
-
-	let platformIndex = -1;
-
-	for (const platform of supportedPlatforms) {
-		if (userAgent.indexOf(platform) > -1) {
-			platformIndex = userAgent.indexOf(platform);
-			break;
-		}
-	}
-
-	const macintoshString = 'Macintosh;';
-
-	const macintoshIndex = userAgent.indexOf('Macintosh;');
-
-	if (platformIndex === -1 && macintoshString === -1) {
-		return false;
-	}
-
-	if (platformIndex > -1) {
-		const platform = userAgent.slice(platformIndex);
-
-		for (const browser of supportedBrowsers) {
-			const browserIndex = platform.indexOf(browser.name);
-
-			if (browserIndex > -1) {
-				const browserVersion = getNumberAfterString(platform.slice(browserIndex), browser.versionPrefix);
-
-				if (browserVersion >= browser.minVersion) {
-					return true;
-				}
-			}
-		}
-	}
-
-	if (macintoshString > -1) {
-		const platform = userAgent.slice(macintoshIndex);
-
-		const browserVersion = getNumberAfterString(platform, supportedSafari.versionPrefix);
-
-		if (browserVersion >= supportedSafari.minVersion) {
-			return true;
-		}
-	}
-
-	return false;
-}
 /*--includeend--*/
 
 // Call data.gtmOnSuccess when the tag is finished.

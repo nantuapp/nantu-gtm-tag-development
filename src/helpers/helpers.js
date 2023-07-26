@@ -267,15 +267,6 @@ function testLog(message1, message2) {
 	}
 }
 
-function getDeviceType(userAgent) {
-	if (isDesktopBrowser(userAgent)) {
-		return "desktop";
-	}
-
-
-	return "excluded";
-}
-
 function getNumberAfterString(text, string) {
 	const index = text.indexOf(string);
 
