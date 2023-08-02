@@ -166,7 +166,7 @@ function setTestVariation(testsVariations, testId, variation) {
 	let found = false;
 
 	for (const currentTestVariation of testsVariations) {
-		if (currentTestVariation.id === testId) {
+		if (currentTestVariation.id == testId) {
 			newTestsVariations.push(testVariation);
 			found = true;
 		} else {

@@ -1,3 +1,9 @@
+// Description: Nantu A/B Testing Template
+// Author: Juan Castro
+// Last modified: 2023-08-02
+// License: Apache 2.0
+// Version: 1.0.0
+
 // API imports
 const Math = require('Math');
 const log = require('logToConsole');
@@ -15,6 +21,7 @@ const getTimestampMillis = require('getTimestampMillis');
 const nantuModeCookieName = 'nantu_mode';
 const nantuModeQueryVariableName = 'nantu_mode';
 const nantuVersion = '1.0.0';
+const nantuVariationsQueryName = 'nantu_variations';
 
 if (isNantuOff()) {
 	log("Nantu is off");
@@ -77,8 +84,18 @@ if (data.test_window_enabled === true) {
 
 var nantuTests = parseTestsVariations(savedNantuTests);
 
+const variationFromURL = getVariationFromURL();
+
 var selectedVariation = getSelectedVariation(nantuTests, data);
 
+if (variationFromURL !== null) {
+	selectedVariation = variationFromURL;
+
+	nantuTests = setTestVariation(nantuTests, data.test_index, selectedVariation);
+
+	localStorage.setItem(nantuTestsKey, serializeTestsVariations(nantuTests));
+	testLog("Forcing Variation: " + selectedVariation);
+}
 
 if (selectedVariation == "unset") {
 	selectedVariation = selectRandomVariation(data);
@@ -92,6 +109,40 @@ if (selectedVariation == "unset") {
 const dataLayerPush = createQueue('dataLayer');
 
 dataLayerPush({'event': 'nantu_' + data.test_index + '_execute_' + selectedVariation, 'nantu_test_id' : data.test_index, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experiment_name, 'nantu_variation_name' : getVariationName(selectedVariation, data)});
+
+function getVariationFromURL() {
+	if (queryPermission('get_url', 'query')) {
+		const nantuVariationsQuery = getUrl('query');
+
+		const nantuVariationsIndex = nantuVariationsQuery.indexOf(nantuVariationsQueryName);
+
+		if (nantuVariationsIndex > -1) {
+			const nantuVariationsQueryValue = nantuVariationsQuery.slice(nantuVariationsIndex + nantuVariationsQueryName.length + 1);
+
+			const nantuVariationsQueryValueEnd = nantuVariationsQueryValue.indexOf('&');
+
+			var variationsValues = "";
+
+			if (nantuVariationsQueryValueEnd > -1) {
+				variationsValues = nantuVariationsQueryValue.slice(0, nantuVariationsQueryValueEnd);
+			} else {
+				variationsValues = nantuVariationsQueryValue;
+			}
+
+			const queryVariations = parseTestsVariations("[" + variationsValues + "]");
+
+			for (let variationIndex = 0; variationIndex < queryVariations.length; variationIndex++) {
+				const variation = queryVariations[variationIndex];
+
+				if (variation.id == data.test_index) {
+					return variation.variation;
+				}
+			}
+		}
+	}
+
+	return null;
+}
 
 /*--include:helpers/helpers.js:--*/
 // Description: Helper functions for the A/B testing framework.
@@ -262,7 +313,7 @@ function setTestVariation(testsVariations, testId, variation) {
 	let found = false;
 
 	for (const currentTestVariation of testsVariations) {
-		if (currentTestVariation.id === testId) {
+		if (currentTestVariation.id == testId) {
 			newTestsVariations.push(testVariation);
 			found = true;
 		} else {
