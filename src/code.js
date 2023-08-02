@@ -91,7 +91,7 @@ if (selectedVariation == "unset") {
 
 const dataLayerPush = createQueue('dataLayer');
 
-dataLayerPush({'event': 'nantu_execute_' + data.test_index + '_' + selectedVariation, 'nantu_test_id' : data.test_index, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experiment_name, 'nantu_variation_name' : getVariationName(selectedVariation, data)});
+dataLayerPush({'event': 'nantu_' + data.test_index + '_execute_' + selectedVariation, 'nantu_test_id' : data.test_index, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experiment_name, 'nantu_variation_name' : getVariationName(selectedVariation, data)});
 
 /*--include:helpers/helpers.js:--*/
 // Description: Helper functions for the A/B testing framework.
