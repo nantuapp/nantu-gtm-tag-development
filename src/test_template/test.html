@@ -63,10 +63,11 @@ function nantu_x_push_to_data_layer() {
 }
 
 if(nantu_x_trigger_event.indexOf("nantu_x_execute") > -1) {
+	if (typeof(nantu_qa_show_test) == "function") {
+		nantu_qa_show_test(nantu_x_test_id, nantu_x_selected_variation, nantu_x_test_version, nantu_x_variations, false);
+	}
+
 	// don't run if test is off
-		if (typeof(nantu_qa_show_test) == "function") {
-			nantu_qa_show_test(nantu_x_test_id, nantu_x_selected_variation, nantu_x_test_version, nantu_x_variations, false);
-		}
 	if (/^(unknown|none)$/.test(nantu_x_selected_variation) === false) {
 
 		//The code of the A/B test variations goes here
