@@ -12,9 +12,8 @@ var nantu_x_selected_variation = "{{nantu_variation}}";
 var nantu_x_variation_name = "{{nantu_variation_name}}";
 var nantu_x_test_id = "{{nantu_test_id}}";
 var nantu_x_experiment = "{{nantu_experiment}}";
+var nantu_x_variations = "{{nantu_test_variations}}"
 var nantu_x_trigger_event = "{{Event}}";
-
-var nantu_x_variation_name = "";
 
 if("qa" === "{{nantu_mode_cookie}}" || "qa" === "{{nantu_mode_query_var}}" || localStorage.getItem("nantu_log_enable") == "yes") {
 	nantu_x_debug = true;
@@ -28,29 +27,18 @@ function nantu_x_log(nantu_x_message) {
 }
 // Send data to data layer
 function nantu_x_push_to_data_layer() {
-	if(document.querySelectorAll("#nantu_x_tab_line > .inflow_qa_dimension").length > 0) {
-		document.querySelector("#nantu_x_tab_line > .inflow_qa_dimension").innerText = " | " + nantu_x_test_data.ga_dimension;
-	}
-
-	var nantu_x_data_string = JSON.stringify(nantu_x_data);
-
-	if (nantu_x_data_string != window.nantu_x_data_sent) {
-		//only push data if it is the first time or data has been changed
-		window.nantu_x_data_sent = nantu_x_data_string;
-
-		if(localStorage.getItem("nantu_x_test_set") != nantu_x_variation_name) {
-			dataLayer.push(nantu_x_data);
-		}
+	if (typeof(nantu_qa_show_test) == "function") {
+		nantu_qa_show_test(nantu_x_test_id, nantu_x_selected_variation, nantu_x_test_version, nantu_x_variations, true);
 	}
 
 	var nantu_ga4_data = {
-		"nantu_version" : "1.6",
-		"nantu_ab_test_experiment_name" : nantu_x_test_data.experiment_name,
-		"nantu_ab_test_variation" : window.nantu_x_variation_name,
-		"nantu_ab_test_index" : nantu_x_test_data.test_index
+		"nantu_version" : "1.0",
+		"nantu_ab_test_experiment_name" : nantu_x_experiment,
+		"nantu_ab_test_variation" : nantu_x_variation_name,
+		"nantu_ab_test_index" : nantu_x_test_id
 	};
 
-	nantu_x_log("setting GA4 user property: nantu_ab_test" + nantu_x_test_data.test_index);
+	nantu_x_log("setting GA4 user property: nantu_ab_test" + nantu_x_test_id + " to " + nantu_x_variation_name);
 
 	var nantu_ga4_data_string = JSON.stringify(nantu_ga4_data);
 
@@ -58,10 +46,10 @@ function nantu_x_push_to_data_layer() {
 		//only push data if it is the first time or data has been changed
 		window.nantu_ga4_data_sent = nantu_ga4_data_string;
 
-		nantu_ga4_event_id = "nantu_ab_test" + nantu_x_test_data.test_index;
+		nantu_ga4_event_id = "nantu_ab_test" + nantu_x_test_id;
 
 		if(localStorage.getItem(nantu_ga4_event_id) != nantu_x_variation_name) {
-			nantu_ga4_data["event"] = "nantu_ab_test" + nantu_x_test_data.test_index;
+			nantu_ga4_data["event"] = "nantu_ab_test" + nantu_x_test_id;
 
 			nantu_ga4_data["eventTimeout"] = 2000;
 
@@ -75,15 +63,17 @@ function nantu_x_push_to_data_layer() {
 }
 
 if(nantu_x_trigger_event.indexOf("nantu_x_execute") > -1) {
-	if(document.querySelectorAll("#nantu_x_tab_line > .inflow_qa_id").length > 0)
-	{
-		document.querySelector("#nantu_x_tab_line > .inflow_qa_id").innerText = nantu_x_test_data.test_index + ":" + nantu_x_test_version + " ";
+	// don't run if test is off
+		if (typeof(nantu_qa_show_test) == "function") {
+			nantu_qa_show_test(nantu_x_test_id, nantu_x_selected_variation, nantu_x_test_version, nantu_x_variations, false);
+		}
+	if (/^(unknown|none)$/.test(nantu_x_selected_variation) === false) {
+
+		//The code of the A/B test variations goes here
+		nantu_x_push_to_data_layer();
+
+		// End of A/B test variations code
 	}
-
-	//The code of the A/B test variations goes here
-	nantu_x_push_to_data_layer();
-
-	// End of A/B test variations code
 } else {
 	nantu_x_log("setup error, this tag should be triggered by an event that starts with nantu_x_execute");
 }

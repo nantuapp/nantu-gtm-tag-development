@@ -1,0 +1,84 @@
+<script>
+// Description: QA Tab for Nantu AB Testing.
+// Author: Juan Castro
+// Last modified: 2023-08-02
+// License: Apache 2.0
+// Version: 1.0.0
+
+
+var nantu_qa_tab_html = '<div id="nantu_qa_tab" style="position: fixed;min-height: 30px;min-width: 50px;top: 50%;padding: 8px;right: 0;background: white;box-shadow: 2px 2px 5px #333;border-radius: 8px 0 0 8px;"><span style="display:block;font-size:11px;text-align:center; font-family:sans-serif;">Nantu Tests</span></div>';
+
+
+if(document.querySelectorAll("#nantu_qa_tab").length == 0)
+{
+	document.body.insertAdjacentHTML("beforeEnd", nantu_qa_tab_html);
+}
+
+function nantu_qa_show_test(test_id, variation, version, variations, dimension) {
+	var nantu_qa_abbrev_regex = /(ontrol|ariation)/;
+
+	if(document.querySelectorAll("#nantu_qa_tab").length == 0) {
+		document.body.insertAdjacentHTML("beforeEnd", nantu_qa_tab_html);
+	}
+
+	document.querySelector("#nantu_qa_tab > span:first-child").innerHTML = '<a href="javascript:window.nantu_qa_edit()" style="padding: 6px; background: #666; color: white; text-decoration: none; border-radius: 4px; display: block; margin-bottom: 4px; font-size: 10px;">Edit Variations</a>';
+
+	if(document.querySelectorAll("#nantu_" + test_id + "_tab_line").length == 0) {
+		document.getElementById("nantu_qa_tab").insertAdjacentHTML("beforeEnd", '<span style="display: flex;font-size:11px;column-gap: 2px; align-items: center;" id="nantu_' + test_id + '_tab_line"><span class="nantu_qa_id" style="font-weight:bold;"></span><span class="nantu_qa_variation"></span><span class="nantu_qa_dimension"></span><span class="nantu_qa_dimension_links" style="display:none; column-gap: 3px;"></span></span>');
+	}
+
+	var nantu_qa_button_style = 'style="display: flex; text-decoration: none; min-width: 40px;height: 30px;justify-content: center;align-items: center;font-size: 20px;background: #666;color: white;border-radius: 3px; padding: 0 4px;"'; 
+
+	var variations_list = variations.split(",");
+
+	if(document.querySelectorAll("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension_links > a").length == 0) {
+		// add buttons to change variations to QA tab
+		for(var i = 0; i < variations_list.length; i++) {
+			var variation = variations_list[i];
+
+			var short_variation = variation.replace(nantu_qa_abbrev_regex, "");
+
+			document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension_links").insertAdjacentHTML("beforeEnd", '<a href="javascript:void(0);" onclick="window.nantu_qa_force_variation(' + test_id + ', \'' + short_variation + '\')" ' + nantu_qa_button_style + '  >' + short_variation.toUpperCase() + '</a>');
+		}
+
+		// add button to turn off test
+		document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension_links").insertAdjacentHTML("beforeEnd", '<a href="javascript:void(0);" onclick="window.nantu_qa_force_variation(' + test_id + ', \'n\')" ' + nantu_qa_button_style + '  >OFF</a>');
+	}
+
+	document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_id").innerText = test_id + "-" + version + ": ";
+
+	var nantu_qa_variation = variation.replace(nantu_qa_abbrev_regex, "").toUpperCase();
+
+	document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_variation").innerText = nantu_qa_variation;
+
+	var dimension_sent = "";
+
+	if (dimension) {
+		dimension_sent = "✓";
+	}
+
+	document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension").innerText = dimension_sent;
+}
+
+window.nantu_qa_edit = function()
+{
+	document.querySelector("#nantu_qa_tab > span:first-child").style.display = "none";
+
+	var nantu_qa_lines = document.querySelectorAll("span.nantu_qa_dimension_links[style*='none']");
+
+	for(var nantu_qa_var_index = 0; nantu_qa_var_index < nantu_qa_lines.length; nantu_qa_var_index++)
+	{
+		nantu_qa_lines[nantu_qa_var_index].style.display = "flex";
+
+	}
+}
+
+window.nantu_qa_force_variation = function(test_id, variation)
+{
+	var url = new URL(location.href);
+
+	url.searchParams.set("nantu_variations", "variation_data");
+
+	window.location = url.href.replace("variation_data", test_id + ":" + variation);
+}
+</script>
