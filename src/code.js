@@ -117,7 +117,9 @@ for (let variationIndex = 0; variationIndex < data.variations.length; variationI
 
 const dataLayerPush = createQueue('dataLayer');
 
-dataLayerPush({'event': 'nantu_' + data.test_index + '_execute_' + selectedVariation, 'nantu_test_id' : data.test_index, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experiment_name, 'nantu_variation_name' : getVariationName(selectedVariation, data), 'nantu_test_variations' : testVariations.join(",")});
+if (data.qaOnly === false || data.qaOnly === true && isInQAMode()) {
+	dataLayerPush({'event': 'nantu_' + data.test_index + '_execute_' + selectedVariation, 'nantu_test_id' : data.test_index, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experiment_name, 'nantu_variation_name' : getVariationName(selectedVariation, data), 'nantu_test_variations' : testVariations.join(",")});
+}
 
 function getVariationFromURL() {
 	if (queryPermission('get_url', 'query')) {
