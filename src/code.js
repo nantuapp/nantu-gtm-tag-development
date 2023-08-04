@@ -16,6 +16,7 @@ const setCookie = require('setCookie');
 const createQueue = require('createQueue');
 const getType = require('getType');
 const getTimestampMillis = require('getTimestampMillis');
+const decode = require('decodeUriComponent');
 
 // Constants
 const nantuModeCookieName = 'nantu_mode';
@@ -120,7 +121,7 @@ dataLayerPush({'event': 'nantu_' + data.test_index + '_execute_' + selectedVaria
 
 function getVariationFromURL() {
 	if (queryPermission('get_url', 'query')) {
-		const nantuVariationsQuery = getUrl('query');
+		const nantuVariationsQuery = decode(getUrl('query'));
 
 		const nantuVariationsIndex = nantuVariationsQuery.indexOf(nantuVariationsQueryName);
 
