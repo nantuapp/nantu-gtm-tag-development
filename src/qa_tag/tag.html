@@ -34,9 +34,9 @@ function nantu_qa_show_test(test_id, variation, version, variations, dimension) 
 	if(document.querySelectorAll("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension_links > a").length == 0) {
 		// add buttons to change variations to QA tab
 		for(var i = 0; i < variations_list.length; i++) {
-			var variation = variations_list[i];
+			var this_variation = variations_list[i];
 
-			var short_variation = variation.replace(nantu_qa_abbrev_regex, "");
+			var short_variation = this_variation.replace(nantu_qa_abbrev_regex, "");
 
 			document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension_links").insertAdjacentHTML("beforeEnd", '<a href="javascript:void(0);" onclick="window.nantu_qa_force_variation(' + test_id + ', \'' + short_variation + '\')" ' + nantu_qa_button_style + '  >' + short_variation.toUpperCase() + '</a>');
 		}
