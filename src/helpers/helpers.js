@@ -263,7 +263,7 @@ function setQAModeCookie() {
 // display log messages in the console if nantu is in QA mode, also include the test index
 function testLog(message1, message2) {
 	if (isInQAMode()) {
-		log("Nantu Test " + data.test_index + ": " + message1, message2);
+		log("Nantu Test " + data.testIndex + ": " + message1, message2);
 	}
 }
 
@@ -290,10 +290,8 @@ function getNumberAfterString(text, string) {
 }
 
 function isAllowedDomain(domain, testData) {
-	for (const allowed_domain of testData.allowed_domains) {
-		if (allowed_domain.domain === domain) {
-			return true;
-		}
+	if (testData.allowedDomain === domain) {
+		return true;
 	}
 
 	return false;
@@ -301,7 +299,7 @@ function isAllowedDomain(domain, testData) {
 
 function getSelectedVariation(savedVariations, testData) {
 	for (const savedVariation of savedVariations) {
-		if (savedVariation.id === strToInt(testData.test_index)) {
+		if (savedVariation.id === strToInt(testData.testIndex)) {
 			return savedVariation.variation;
 		}
 	}

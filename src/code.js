@@ -68,13 +68,13 @@ if (! isAllowedDomain(domain, data)) {
 	return;
 }
 
-if (data.test_window_enabled === true) {
+if (data.testWindowEnabled === true) {
 	const gaTimestamp = getGACookieTimestamp();
 
 	const getGADays = Math.floor(gaTimestamp / 86400);
 
-	const getStartDays = getDaysFrom1970(data.test_window_start);
-	const getEndDays = getDaysFrom1970(data.test_window_end);
+	const getStartDays = getDaysFrom1970(data.testWindowStart);
+	const getEndDays = getDaysFrom1970(data.testWindowEnd);
 
 	if ( ! (getGADays >= getStartDays && getGADays <= getEndDays)) {
 		testLog("Nantu test is not running. First visit timestamp:" + gaTimestamp);
@@ -92,7 +92,7 @@ var selectedVariation = getSelectedVariation(nantuTests, data);
 if (variationFromURL !== null) {
 	selectedVariation = variationFromURL;
 
-	nantuTests = setTestVariation(nantuTests, data.test_index, selectedVariation);
+	nantuTests = setTestVariation(nantuTests, data.testIndex, selectedVariation);
 
 	localStorage.setItem(nantuTestsKey, serializeTestsVariations(nantuTests));
 	testLog("Forcing Variation: " + selectedVariation);
@@ -101,7 +101,7 @@ if (variationFromURL !== null) {
 if (selectedVariation == "unset") {
 	selectedVariation = selectRandomVariation(data);
 
-	nantuTests = setTestVariation(nantuTests, data.test_index, selectedVariation);
+	nantuTests = setTestVariation(nantuTests, data.testIndex, selectedVariation);
 
 	localStorage.setItem(nantuTestsKey, serializeTestsVariations(nantuTests));
 	testLog("Setting Variation: " + selectedVariation);
@@ -118,7 +118,7 @@ for (let variationIndex = 0; variationIndex < data.variations.length; variationI
 const dataLayerPush = createQueue('dataLayer');
 
 if (data.qaOnly === false || data.qaOnly === true && isInQAMode()) {
-	dataLayerPush({'event': 'nantu_' + data.test_index + '_execute_' + selectedVariation, 'nantu_test_id' : data.test_index, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experiment_name, 'nantu_variation_name' : getVariationName(selectedVariation, data), 'nantu_test_variations' : testVariations.join(",")});
+	dataLayerPush({'event': 'nantu_' + data.testIndex + '_execute_' + selectedVariation, 'nantu_test_id' : data.testIndex, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experimentName, 'nantu_variation_name' : getVariationName(selectedVariation, data), 'nantu_test_variations' : testVariations.join(",")});
 }
 
 function getVariationFromURL() {
@@ -145,7 +145,7 @@ function getVariationFromURL() {
 			for (let variationIndex = 0; variationIndex < queryVariations.length; variationIndex++) {
 				const variation = queryVariations[variationIndex];
 
-				if (variation.id == data.test_index) {
+				if (variation.id == data.testIndex) {
 					return variation.variation;
 				}
 			}
@@ -421,7 +421,7 @@ function setQAModeCookie() {
 // display log messages in the console if nantu is in QA mode, also include the test index
 function testLog(message1, message2) {
 	if (isInQAMode()) {
-		log("Nantu Test " + data.test_index + ": " + message1, message2);
+		log("Nantu Test " + data.testIndex + ": " + message1, message2);
 	}
 }
 
@@ -448,10 +448,8 @@ function getNumberAfterString(text, string) {
 }
 
 function isAllowedDomain(domain, testData) {
-	for (const allowed_domain of testData.allowed_domains) {
-		if (allowed_domain.domain === domain) {
-			return true;
-		}
+	if (testData.allowedDomain === domain) {
+		return true;
 	}
 
 	return false;
@@ -459,7 +457,7 @@ function isAllowedDomain(domain, testData) {
 
 function getSelectedVariation(savedVariations, testData) {
 	for (const savedVariation of savedVariations) {
-		if (savedVariation.id === strToInt(testData.test_index)) {
+		if (savedVariation.id === strToInt(testData.testIndex)) {
 			return savedVariation.variation;
 		}
 	}
