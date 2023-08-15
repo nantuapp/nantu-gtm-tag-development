@@ -17,12 +17,16 @@ const createQueue = require('createQueue');
 const getType = require('getType');
 const getTimestampMillis = require('getTimestampMillis');
 const decode = require('decodeUriComponent');
+const isConsentGranted = require('isConsentGranted');
+const addConsentListener = require('addConsentListener');
 
 // Constants
 const nantuModeCookieName = 'nantu_mode';
 const nantuModeQueryVariableName = 'nantu_mode';
 const nantuVersion = '1.0.0';
 const nantuVariationsQueryName = 'nantu_variations';
+
+
 
 if (isNantuOff()) {
 	log("Nantu is off");
@@ -117,8 +121,56 @@ for (let variationIndex = 0; variationIndex < data.variations.length; variationI
 
 const dataLayerPush = createQueue('dataLayer');
 
-if (data.qaOnly === false || data.qaOnly === true && isInQAMode()) {
-	dataLayerPush({'event': 'nantu_' + data.testIndex + '_execute_' + selectedVariation, 'nantu_test_id' : data.testIndex, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experimentName, 'nantu_variation_name' : getVariationName(selectedVariation, data), 'nantu_test_variations' : testVariations.join(",")});
+if (isConsentGranted('ad_storage') && isConsentGranted('analytics_storage')) {
+	executeTest(data, selectedVariation, testVariations);
+} else {
+	let adWasCalled = false;
+	let analyticswasCalled = false;
+
+	let adWasGranted = false;
+	let analyticsWasGranted = false;
+
+	addConsentListener('ad_storage', (consentType, granted) => {
+		if (adWasCalled) {
+			adWasCalled = true;
+		}
+
+		if (granted) {
+			adWasGranted = true;
+		}
+
+		if (adWasCalled && analyticswasCalled) {
+			executeTest(data, selectedVariation, testVariations);
+		}
+	});
+
+	addConsentListener('analytics_storage', (consentType, granted) => {
+		if (adWasCalled) {
+			adWasCalled = true;
+		}
+
+		if (granted) {
+			adWasGranted = true;
+		}
+
+		if (adWasCalled && analyticswasCalled) {
+			executeTest(data, selectedVariation, testVariations);
+		}
+	});
+}
+
+let testExecuted = false;
+
+function executeTest(data, selectedVariation, testVariations) {
+	if (testExecuted) {
+		return;
+	}
+
+	testExecuted = true;
+
+	if (data.qaOnly === false || data.qaOnly === true && isInQAMode()) {
+		dataLayerPush({'event': 'nantu_' + data.testIndex + '_execute_' + selectedVariation, 'nantu_test_id' : data.testIndex, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experimentName, 'nantu_variation_name' : getVariationName(selectedVariation, data), 'nantu_test_variations' : testVariations.join(",")});
+	}
 }
 
 function getVariationFromURL() {
