@@ -17,8 +17,6 @@ const createQueue = require('createQueue');
 const getType = require('getType');
 const getTimestampMillis = require('getTimestampMillis');
 const decode = require('decodeUriComponent');
-const isConsentGranted = require('isConsentGranted');
-
 
 // Constants
 const nantuModeCookieName = 'nantu_mode';
