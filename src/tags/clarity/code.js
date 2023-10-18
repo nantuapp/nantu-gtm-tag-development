@@ -3,56 +3,62 @@ const queryPermission = require('queryPermission');
 const createArgumentsQueue = require('createArgumentsQueue');
 const encodeUri = require('encodeUri');
 const log = require('logToConsole');
-const callLater = require('callLater');
-const getTimestampMillis = require('getTimestampMillis');
+const copyFromWindow = require('copyFromWindow');
+const copyFromDataLayer = require('copyFromDataLayer');
 
-var lastCall = 0; 
+const nantuEventPrefix = 'nantu_';
+const nantuEventPrefixLength = nantuEventPrefix.length;
 
-var clarityExternal;
+const nantuEventExecute = '_execute_';
+const nantuEventExecuteLength = nantuEventExecute.length;
 
+const eventName = copyFromDataLayer('event');
 
-
-function sendClarityEvent() {
-	/*if (queryPermission('access_globals', 'clarity', 'read')) {
-		clarity = copyFromWindow('clarity');
-	} else {
-		log('Cannot access clarity');
-		data.gtmOnFailure();
-		return;
-	}*/
-
-	var now = getTimestampMillis();
-
-	if (now - lastCall < 1000) {
-		callLater(sendClarityEvent);
-		return;
-	}
-
-	lastCall = now;
-
-	if (typeof clarityExternal != 'undefined') {
-		log('Sending Clarity event');
-		data.gtmOnSuccess();
-	} else {
-		callLater(sendClarityEvent);
-	}
+if (eventName.indexOf(nantuEventPrefix) === -1) {
+	log('Nantu Add on should be used only with Nantu events');
+	data.gtmOnFailure();
+	return;
 }
 
-/*if (queryPermission('access_globals', 'clarity', 'read')) {
+const executeIndex = eventName.indexOf(nantuEventExecute);
+
+if (executeIndex === -1) {
+	log('Error with event name' + eventName);
+	data.gtmOnFailure();
+	return;
+}
+
+if (data.all_tests === false) {
+	const testIndex = eventName.indexOf(nantuEventPrefixLength, executeIndex - nantuEventPrefixLength);
+
+	log('Test index: ' + testIndex);
+}
+
+const testName = eventName.substring(0, executeIndex);
+const testVariation = eventName.substring(executeIndex + nantuEventExecuteLength);
+
+var clarity;
+
+const clarityCheck = copyFromWindow('clarity');
+
+if (typeof clarityCheck != 'undefined') {
+	log('Clarity is already loaded');
 	clarity = copyFromWindow('clarity');
-}*/
+} else {
+	log('Clarity is not loaded');
+	clarity = createArgumentsQueue('clarity', 'clarity.q');
+}
+
+clarity("set", testName, testVariation);
+
 
 if (data.has_clarity === false) {
-	const clarity = createArgumentsQueue('clarity', 'clarity.q');
-
-	clarity("set", "test", "variation");
-
 	// Reconstruct customer clarity script URL
 	const url = "https://www.clarity.ms/tag/"+encodeUri(data.clarity_project_id)+"?ref=gtm";
 
 	// Handle Success
 	const onCustomerSuccess = () => {
-		sendClarityEvent();
+		data.gtmOnSuccess();
 	};
 
 	// Handle Failure
@@ -68,6 +74,5 @@ if (data.has_clarity === false) {
 		data.gtmOnFailure();
 	}
 } else {
-	// Clarity is already loaded
-	sendClarityEvent();
+	data.gtmOnSuccess();
 }

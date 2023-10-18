@@ -1,0 +1,276 @@
+<script>
+// Description: Environment Variables detection for A/B testing framework.
+// Author: Juan Castro
+// Last modified: 2023-07-25
+// License: Apache 2.0
+// Version: 1.0.0
+
+
+window.nantu_device = "unknown";
+window.nantu_browser_type = "unknown";
+window.nantu_browser = "unknown";
+window.nantu_browser_version = 0;
+
+
+// Detect device, browser, browser type and browser version
+var nantuBrowserData = nantuDetectBrowser(navigator.userAgent);
+
+if (nantuBrowserData) {
+	window.nantu_device = nantuBrowserData.device;
+	window.nantu_browser_type = nantuBrowserData.browserType;
+	window.nantu_browser = nantuBrowserData.browser;
+	window.nantu_browser_version = nantuBrowserData.version;
+}
+
+
+// Check if source, medium and campaign are already set in localStorage
+if (localStorage.getItem('nantu_source')) {
+	window.nantu_source = localStorage.getItem('nantu_source');
+	window.nantu_medium = localStorage.getItem('nantu_medium');
+	window.nantu_campaign = localStorage.getItem('nantu_campaign');
+}
+
+var nantuURL = new URL(window.location.href);
+
+// if source, medium and campaign are set in the URL, set them in localStorage
+if ( ! localStorage.getItem('nantu_source') || nantuURL.searchParams.get("utm_source") || nantuURL.searchParams.get("utm_medium") || nantuURL.searchParams.get("gclid") || nantuURL.searchParams.get("fbclid") || nantuURL.searchParams.get('msclkid')) {
+	var nantuSourceData = nantuGetSourceMedium();
+
+	if (nantuSourceData) {
+		localStorage.setItem('nantu_source', nantuSourceData.source);
+		localStorage.setItem('nantu_medium', nantuSourceData.medium);
+		localStorage.setItem('nantu_campaign', nantuSourceData.campaign);
+
+		window.nantu_source = nantuSourceData.source;
+		window.nantu_medium = nantuSourceData.medium;
+		window.nantu_campaign = nantuSourceData.campaign;
+	}
+}
+
+window.dataLayer.push({event: 'nantu_page_view'});
+
+/*--include:detectors.js:--*/
+// Description: Device detection for A/B testing framework.
+// Author: Juan Castro
+// Last modified: 2023-07-25
+// License: Apache 2.0
+// Version: 1.0.0
+
+function nantuDetectBrowser(userAgent) {
+	var safariData = nantuIsSafariBrowser(userAgent);
+
+	if (safariData) {
+		return safariData;
+	}
+
+	var desktopBrowserData = nantuGetBrowser(userAgent);
+
+	if (desktopBrowserData) {
+		return desktopBrowserData;
+	}
+
+	return {device: "unknown", browser: "unknown", browserType: "unknown", version: 0};
+}
+
+function nantuIsSafariBrowser(userAgent) {
+	var isSafari = false;
+
+	var isDesktop = false;
+	var isMobile = false;
+	var isTabvar = false;
+
+	var supportedApplePlatforms = ['Macintosh', 'iPhone', 'iPad'];
+
+	var platformIndex = -1;
+
+	for (var i = 0; i < supportedApplePlatforms.length; i++) {
+		var platform = supportedApplePlatforms[i];
+
+		if (userAgent.indexOf(platform) > -1) {
+			if (platform === 'iPad') {
+				isTabvar = true;
+			}
+			if (platform === 'Macintosh') {
+				isDesktop = true;
+			}
+			if (platform === 'iPhone') {
+				isMobile = true;
+			}
+
+			platformIndex = userAgent.indexOf(platform);
+			break;
+		}
+	}
+
+	var safariVersionRegex = /Version\/[0-9]+/;
+
+	if (platformIndex > -1) {
+		if (safariVersionRegex.test(userAgent.slice(platformIndex))) {
+			var safariVersion = parseInt(userAgent.slice(platformIndex).match(safariVersionRegex)[0].split('/')[1]);
+
+			if (safariVersion > 0) {
+				return {device: isDesktop ? 'desktop' : isMobile ? 'mobile' : isTabvar ? 'tablet' : null, browserType: 'safari', browser: 'safari', version: safariVersion};
+			}
+		}
+	}
+
+	var chromeIosVersionRegex = /CriOS\/[0-9]+/;
+
+	if (chromeIosVersionRegex.test(userAgent)) {
+		var chromeIosVersion = parseInt(userAgent.match(chromeIosVersionRegex)[0].split('/')[1]);
+
+		if (chromeIosVersion > 0) {
+			return {device: isDesktop ? 'desktop' : isMobile ? 'mobile' : isTabvar ? 'tablet' : null, browserType: 'safari', browser: 'chrome', version: chromeIosVersion};
+		}
+	}
+
+	return null;
+}
+
+function nantuGetBrowser(userAgent) {
+	var supportedPlatforms = ['Linux x86_64', 'Mac OS', 'Windows NT', 'CrOS', 'Android'];
+	var supportedBrowsers = [
+		{
+			name: 'Chrome',
+			versionRegex: 'OPR/'
+		},
+		{
+			name: 'Firefox',
+			versionRegex: 'Firefox/'
+		},
+		{
+			name: 'Chrome',
+			versionRegex: 'Chrome/'
+		},
+	];
+
+	var platformIndex = -1;
+
+	var deviceType = "desktop";
+
+	for (var i = 0; i < supportedPlatforms.length; i++) {
+		var platform = supportedPlatforms[i];
+
+		if (userAgent.indexOf(platform) > -1) {
+			if (platform === 'Android') { 
+				if (userAgent.indexOf('Mobile') > -1) {
+					deviceType = "mobile";
+				} else {
+					deviceType = "tablet";
+				}
+			}
+
+			for (var j = 0; j < supportedBrowsers.length; j++) {
+				var browser = supportedBrowsers[j];
+
+				if (userAgent.indexOf(browser.name) > -1) {
+
+					var versionRegex = new RegExp(browser.versionRegex.replace('/', '\\/') + '[0-9]+');
+
+					if (versionRegex.test(userAgent)) {
+						var browserVersion = parseInt(userAgent.slice(userAgent.indexOf(browser.name)).match(versionRegex)[0].split('/')[1]);
+
+						if (browserVersion > 0) {
+							var browserType = browser.name.toLowerCase();
+
+							var browserName = browserType;
+
+							if (userAgent.indexOf('Edg/') > -1) {
+								browserName = 'edge';
+							}
+
+							if (userAgent.indexOf('OPR/') > -1) {
+								browserName = 'opera';
+							}
+
+							return {device: deviceType, browserType: browserType, browser: browserName, version: browserVersion};
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return null;
+}
+
+/*--includeend--*/
+/*--include:helpers.js:--*/
+// Description: Helpers for A/B testing framework.
+// Author: Juan Castro
+// Last modified: 2023-07-25
+// License: Apache 2.0
+// Version: 1.0.0
+
+function nantuCleanString(text) {
+	return text.replace(/[^a-z0-9._-]/gi, "").substr(0, 50);
+}
+
+function nantuGetHost(referrer) {
+	try {
+		return new URL(referrer).hostname.replace('www.', '').split('.')[0];
+	}
+	catch(err)
+	{
+		console.error(err);
+	}
+
+	return "unknown";
+}
+
+function nantuGetSourceMedium() {
+
+	var source = "direct";
+	var medium = "none";
+	var campaign = "none";
+
+	var searchEngineRegex = /(.*google\..*)|(duckduckgo\.com)|(.*bing\.com)|(baidu\..*)|(yandex\..*)|(yahoo\.com)/;
+	var searchEngineNameRegex = /(google|duckduckgo|bing|baidu|yandex|yahoo)/;
+
+
+	var url = new URL(window.location.href);
+
+	if(url.searchParams.get("utm_source") || url.searchParams.get("utm_medium")) {
+		if(url.searchParams.get("utm_source")) {
+			source = url.searchParams.get("utm_source");
+		}
+
+		if(url.searchParams.get("utm_medium")) {
+			medium = url.searchParams.get("utm_medium");
+		}
+	} else if(url.searchParams.get("gclid")) {
+		source = "google";
+		medium = "cpc";
+	} else if(url.searchParams.get("fbclid")) {
+		source = "facebook";
+		medium = "cpc";
+	} else if(url.searchParams.get("msclkid")) {
+		source = "bing";
+		medium = "cpc";
+	} else if(searchEngineRegex.test(document.referrer)) {
+		source = document.referrer.match(searchEngineNameRegex)[0];
+
+		medium = "organic";
+	} else if(document.referrer !== '') {
+
+		var referrer = new URL(document.referrer);
+
+		if (referrer.hostname !== window.location.hostname) {
+			medium = "referral";
+		}
+	}
+
+	if(url.searchParams.get("utm_campaign"))
+	{
+		campaign = url.searchParams.get("utm_campaign");
+	}
+
+	return {source: source, medium: medium, campaign: campaign};
+}
+
+function nantuGetTotalElements(selector) {
+	return document.querySelectorAll(selector).length;
+}
+/*--includeend--*/
+</script>
+
