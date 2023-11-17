@@ -2,7 +2,10 @@
 // Author: Juan Castro
 // Last modified: 2023-08-02
 // License: Apache 2.0
-// Version: 1.0.0
+// Version: 1.0.1
+
+// What's new:
+// Experiment Name and Variation Name character limit
 
 // API imports
 const Math = require('Math');
@@ -17,6 +20,7 @@ const createQueue = require('createQueue');
 const getType = require('getType');
 const getTimestampMillis = require('getTimestampMillis');
 const decode = require('decodeUriComponent');
+
 
 // Constants
 const nantuModeCookieName = 'nantu_mode';
