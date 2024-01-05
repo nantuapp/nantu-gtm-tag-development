@@ -1,0 +1,506 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2023-11-17 18:20:01",
+    "containerVersion": {
+        "path": "accounts/6098026418/containers/115676190/versions/0",
+        "accountId": "6098026418",
+        "containerId": "115676190",
+        "containerVersionId": "0",
+        "container": {
+            "path": "accounts/6098026418/containers/115676190",
+            "accountId": "6098026418",
+            "containerId": "115676190",
+            "name": "nantu.app",
+            "publicId": "GTM-KQR8W86",
+            "usageContext": [
+                "WEB"
+            ],
+            "fingerprint": "1691766812264",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6098026418/containers/115676190/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": false,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": false
+            },
+            "tagIds": [
+                "GTM-KQR8W86"
+            ]
+        },
+        "tag": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "11",
+                "name": "Nantu Environment Variables",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>\n// Description: Environment Variables detection for A/B testing framework.\n// Author: Juan Castro\n// Last modified: 2023-07-25\n// License: Apache 2.0\n// Version: 1.0.0\n\n\nwindow.nantu_device = \"unknown\";\nwindow.nantu_browser_type = \"unknown\";\nwindow.nantu_browser = \"unknown\";\nwindow.nantu_browser_version = 0;\n\n\n// Detect device, browser, browser type and browser version\nvar nantuBrowserData = nantuDetectBrowser(navigator.userAgent);\n\nif (nantuBrowserData) {\n\twindow.nantu_device = nantuBrowserData.device;\n\twindow.nantu_browser_type = nantuBrowserData.browserType;\n\twindow.nantu_browser = nantuBrowserData.browser;\n\twindow.nantu_browser_version = nantuBrowserData.version;\n}\n\n\n// Check if source, medium and campaign are already set in localStorage\nif (localStorage.getItem('nantu_source')) {\n\twindow.nantu_source = localStorage.getItem('nantu_source');\n\twindow.nantu_medium = localStorage.getItem('nantu_medium');\n\twindow.nantu_campaign = localStorage.getItem('nantu_campaign');\n}\n\nvar nantuURL = new URL(window.location.href);\n\n// if source, medium and campaign are set in the URL, set them in localStorage\nif ( ! localStorage.getItem('nantu_source') || nantuURL.searchParams.get(\"utm_source\") || nantuURL.searchParams.get(\"utm_medium\") || nantuURL.searchParams.get(\"gclid\") || nantuURL.searchParams.get(\"fbclid\") || nantuURL.searchParams.get('msclkid')) {\n\tvar nantuSourceData = nantuGetSourceMedium();\n\n\tif (nantuSourceData) {\n\t\tlocalStorage.setItem('nantu_source', nantuSourceData.source);\n\t\tlocalStorage.setItem('nantu_medium', nantuSourceData.medium);\n\t\tlocalStorage.setItem('nantu_campaign', nantuSourceData.campaign);\n\n\t\twindow.nantu_source = nantuSourceData.source;\n\t\twindow.nantu_medium = nantuSourceData.medium;\n\t\twindow.nantu_campaign = nantuSourceData.campaign;\n\t}\n}\n\nwindow.dataLayer.push({event: 'nantu_page_view'});\n\n/*--include:detectors.js:--*/\n// Description: Device detection for A/B testing framework.\n// Author: Juan Castro\n// Last modified: 2023-07-25\n// License: Apache 2.0\n// Version: 1.0.0\n\nfunction nantuDetectBrowser(userAgent) {\n\tvar safariData = nantuIsSafariBrowser(userAgent);\n\n\tif (safariData) {\n\t\treturn safariData;\n\t}\n\n\tvar desktopBrowserData = nantuGetBrowser(userAgent);\n\n\tif (desktopBrowserData) {\n\t\treturn desktopBrowserData;\n\t}\n\n\treturn {device: \"unknown\", browser: \"unknown\", browserType: \"unknown\", version: 0};\n}\n\nfunction nantuIsSafariBrowser(userAgent) {\n\tvar isSafari = false;\n\n\tvar isDesktop = false;\n\tvar isMobile = false;\n\tvar isTabvar = false;\n\n\tvar supportedApplePlatforms = ['Macintosh', 'iPhone', 'iPad'];\n\n\tvar platformIndex = -1;\n\n\tfor (var i = 0; i < supportedApplePlatforms.length; i++) {\n\t\tvar platform = supportedApplePlatforms[i];\n\n\t\tif (userAgent.indexOf(platform) > -1) {\n\t\t\tif (platform === 'iPad') {\n\t\t\t\tisTabvar = true;\n\t\t\t}\n\t\t\tif (platform === 'Macintosh') {\n\t\t\t\tisDesktop = true;\n\t\t\t}\n\t\t\tif (platform === 'iPhone') {\n\t\t\t\tisMobile = true;\n\t\t\t}\n\n\t\t\tplatformIndex = userAgent.indexOf(platform);\n\t\t\tbreak;\n\t\t}\n\t}\n\n\tvar safariVersionRegex = /Version\\/[0-9]+/;\n\n\tif (platformIndex > -1) {\n\t\tif (safariVersionRegex.test(userAgent.slice(platformIndex))) {\n\t\t\tvar safariVersion = parseInt(userAgent.slice(platformIndex).match(safariVersionRegex)[0].split('/')[1]);\n\n\t\t\tif (safariVersion > 0) {\n\t\t\t\treturn {device: isDesktop ? 'desktop' : isMobile ? 'mobile' : isTabvar ? 'tablet' : null, browserType: 'safari', browser: 'safari', version: safariVersion};\n\t\t\t}\n\t\t}\n\t}\n\n\tvar chromeIosVersionRegex = /CriOS\\/[0-9]+/;\n\n\tif (chromeIosVersionRegex.test(userAgent)) {\n\t\tvar chromeIosVersion = parseInt(userAgent.match(chromeIosVersionRegex)[0].split('/')[1]);\n\n\t\tif (chromeIosVersion > 0) {\n\t\t\treturn {device: isDesktop ? 'desktop' : isMobile ? 'mobile' : isTabvar ? 'tablet' : null, browserType: 'safari', browser: 'chrome', version: chromeIosVersion};\n\t\t}\n\t}\n\n\treturn null;\n}\n\nfunction nantuGetBrowser(userAgent) {\n\tvar supportedPlatforms = ['Linux x86_64', 'Mac OS', 'Windows NT', 'CrOS', 'Android'];\n\tvar supportedBrowsers = [\n\t\t{\n\t\t\tname: 'Chrome',\n\t\t\tversionRegex: 'OPR/'\n\t\t},\n\t\t{\n\t\t\tname: 'Firefox',\n\t\t\tversionRegex: 'Firefox/'\n\t\t},\n\t\t{\n\t\t\tname: 'Chrome',\n\t\t\tversionRegex: 'Chrome/'\n\t\t},\n\t];\n\n\tvar platformIndex = -1;\n\n\tvar deviceType = \"desktop\";\n\n\tfor (var i = 0; i < supportedPlatforms.length; i++) {\n\t\tvar platform = supportedPlatforms[i];\n\n\t\tif (userAgent.indexOf(platform) > -1) {\n\t\t\tif (platform === 'Android') { \n\t\t\t\tif (userAgent.indexOf('Mobile') > -1) {\n\t\t\t\t\tdeviceType = \"mobile\";\n\t\t\t\t} else {\n\t\t\t\t\tdeviceType = \"tablet\";\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfor (var j = 0; j < supportedBrowsers.length; j++) {\n\t\t\t\tvar browser = supportedBrowsers[j];\n\n\t\t\t\tif (userAgent.indexOf(browser.name) > -1) {\n\n\t\t\t\t\tvar versionRegex = new RegExp(browser.versionRegex.replace('/', '\\\\/') + '[0-9]+');\n\n\t\t\t\t\tif (versionRegex.test(userAgent)) {\n\t\t\t\t\t\tvar browserVersion = parseInt(userAgent.slice(userAgent.indexOf(browser.name)).match(versionRegex)[0].split('/')[1]);\n\n\t\t\t\t\t\tif (browserVersion > 0) {\n\t\t\t\t\t\t\tvar browserType = browser.name.toLowerCase();\n\n\t\t\t\t\t\t\tvar browserName = browserType;\n\n\t\t\t\t\t\t\tif (userAgent.indexOf('Edg/') > -1) {\n\t\t\t\t\t\t\t\tbrowserName = 'edge';\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif (userAgent.indexOf('OPR/') > -1) {\n\t\t\t\t\t\t\t\tbrowserName = 'opera';\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\treturn {device: deviceType, browserType: browserType, browser: browserName, version: browserVersion};\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\n\treturn null;\n}\n\n/*--includeend--*/\n/*--include:helpers.js:--*/\n// Description: Helpers for A/B testing framework.\n// Author: Juan Castro\n// Last modified: 2023-07-25\n// License: Apache 2.0\n// Version: 1.0.0\n\nfunction nantuCleanString(text) {\n\treturn text.replace(/[^a-z0-9._-]/gi, \"\").substr(0, 50);\n}\n\nfunction nantuGetHost(referrer) {\n\ttry {\n\t\treturn new URL(referrer).hostname.replace('www.', '').split('.')[0];\n\t}\n\tcatch(err)\n\t{\n\t\tconsole.error(err);\n\t}\n\n\treturn \"unknown\";\n}\n\nfunction nantuGetSourceMedium() {\n\n\tvar source = \"direct\";\n\tvar medium = \"none\";\n\tvar campaign = \"none\";\n\n\tvar searchEngineRegex = /(.*google\\..*)|(duckduckgo\\.com)|(.*bing\\.com)|(baidu\\..*)|(yandex\\..*)|(yahoo\\.com)/;\n\tvar searchEngineNameRegex = /(google|duckduckgo|bing|baidu|yandex|yahoo)/;\n\n\n\tvar url = new URL(window.location.href);\n\n\tif(url.searchParams.get(\"utm_source\") || url.searchParams.get(\"utm_medium\")) {\n\t\tif(url.searchParams.get(\"utm_source\")) {\n\t\t\tsource = url.searchParams.get(\"utm_source\");\n\t\t}\n\n\t\tif(url.searchParams.get(\"utm_medium\")) {\n\t\t\tmedium = url.searchParams.get(\"utm_medium\");\n\t\t}\n\t} else if(url.searchParams.get(\"gclid\")) {\n\t\tsource = \"google\";\n\t\tmedium = \"cpc\";\n\t} else if(url.searchParams.get(\"fbclid\")) {\n\t\tsource = \"facebook\";\n\t\tmedium = \"cpc\";\n\t} else if(url.searchParams.get(\"msclkid\")) {\n\t\tsource = \"bing\";\n\t\tmedium = \"cpc\";\n\t} else if(searchEngineRegex.test(document.referrer)) {\n\t\tsource = document.referrer.match(searchEngineNameRegex)[0];\n\n\t\tmedium = \"organic\";\n\t} else if(document.referrer !== '') {\n\n\t\tvar referrer = new URL(document.referrer);\n\n\t\tif (referrer.hostname !== window.location.hostname) {\n\t\t\tmedium = \"referral\";\n\t\t}\n\t}\n\n\tif(url.searchParams.get(\"utm_campaign\"))\n\t{\n\t\tcampaign = url.searchParams.get(\"utm_campaign\");\n\t}\n\n\treturn {source: source, medium: medium, campaign: campaign};\n}\n\nfunction nantuGetTotalElements(selector) {\n\treturn document.querySelectorAll(selector).length;\n}\n/*--includeend--*/\n</script>\n\n"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1691767393522",
+                "firingTriggerId": [
+                    "2147479553"
+                ],
+                "parentFolderId": "29",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NEEDED",
+                    "consentType": {
+                        "type": "LIST",
+                        "list": [
+                            {
+                                "type": "TEMPLATE",
+                                "value": "ad_storage"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "value": "analytics_storage"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "28",
+                "name": "Nantu QA Tab",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>\n// Description: QA Tab for Nantu AB Testing.\n// Author: Juan Castro\n// Last modified: 2023-08-02\n// License: Apache 2.0\n// Version: 1.0.2\n\n\nvar nantu_qa_tab_html = '<div id=\"nantu_qa_tab\" style=\"position: fixed;min-height: 30px;min-width: 50px;top: 50%;padding: 8px;right: 0;background: white;box-shadow: 2px 2px 5px #333;border-radius: 8px 0 0 8px; z-index: 10000000000;\"><span style=\"display:block;font-size:11px;text-align:center; font-family:sans-serif;\">Nantu Tests</span></div>';\n\nif(document.querySelectorAll(\"#nantu_qa_tab\").length == 0)\n{\n\tdocument.body.insertAdjacentHTML(\"beforeEnd\", nantu_qa_tab_html);\n}\n\nfunction nantu_qa_show_test(test_id, variation, version, variations, dimension) {\n\tvar nantu_qa_abbrev_regex = /(ontrol|ariation)/;\n\n\tif(document.querySelectorAll(\"#nantu_qa_tab\").length == 0) {\n\t\tdocument.body.insertAdjacentHTML(\"beforeEnd\", nantu_qa_tab_html);\n\t}\n\n\tdocument.querySelector(\"#nantu_qa_tab > span:first-child\").innerHTML = '<a href=\"javascript:window.nantu_qa_edit()\" style=\"padding: 6px; background: #666; color: white; text-decoration: none; border-radius: 4px; display: block; margin-bottom: 4px; font-size: 10px;\">Edit Variations</a>';\n\n\tif(document.querySelectorAll(\"#nantu_\" + test_id + \"_tab_line\").length == 0) {\n\t\tdocument.getElementById(\"nantu_qa_tab\").insertAdjacentHTML(\"beforeEnd\", '<span style=\"display: flex;font-size:11px;column-gap: 2px; align-items: center;\" id=\"nantu_' + test_id + '_tab_line\"><span class=\"nantu_qa_id\" style=\"font-weight:bold;\"></span><span class=\"nantu_qa_variation\"></span><span class=\"nantu_qa_dimension\"></span><span class=\"nantu_qa_dimension_links\" style=\"display:none; column-gap: 3px;\"></span></span>');\n\t}\n\n\tvar nantu_qa_button_style = 'style=\"display: flex; text-decoration: none; min-width: 40px;height: 30px;justify-content: center;align-items: center;font-size: 20px;background: #666;color: white;border-radius: 3px; padding: 0 4px;\"'; \n\n\tvar variations_list = variations.split(\",\");\n\n\tif(document.querySelectorAll(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_dimension_links > a\").length == 0) {\n\t\t// add buttons to change variations to QA tab\n\t\tfor(var i = 0; i < variations_list.length; i++) {\n\t\t\tvar this_variation = variations_list[i];\n\n\t\t\tvar short_variation = this_variation.replace(nantu_qa_abbrev_regex, \"\");\n\n\t\t\tdocument.querySelector(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_dimension_links\").insertAdjacentHTML(\"beforeEnd\", '<a href=\"javascript:void(0);\" onclick=\"window.nantu_qa_force_variation(' + test_id + ', \\'' + short_variation + '\\')\" ' + nantu_qa_button_style + '  >' + short_variation.toUpperCase() + '</a>');\n\t\t}\n\n\t\t// add button to turn off test\n\t\tdocument.querySelector(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_dimension_links\").insertAdjacentHTML(\"beforeEnd\", '<a href=\"javascript:void(0);\" onclick=\"window.nantu_qa_force_variation(' + test_id + ', \\'n\\')\" ' + nantu_qa_button_style + '  >OFF</a>');\n\t}\n\n\tdocument.querySelector(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_id\").innerText = test_id + \"-\" + version + \": \";\n\n\tvar nantu_qa_variation = variation.replace(nantu_qa_abbrev_regex, \"\").toUpperCase();\n\n\tdocument.querySelector(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_variation\").innerText = nantu_qa_variation;\n\n\tvar dimension_sent = \"\";\n\n\tif (dimension) {\n\t\tdimension_sent = \"✓\";\n\t}\n\n\tdocument.querySelector(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_dimension\").innerText = dimension_sent;\n}\n\nwindow.nantu_qa_edit = function()\n{\n\tdocument.querySelector(\"#nantu_qa_tab > span:first-child\").style.display = \"none\";\n\n\tvar nantu_qa_lines = document.querySelectorAll(\"span.nantu_qa_dimension_links[style*='none']\");\n\n\tfor(var nantu_qa_var_index = 0; nantu_qa_var_index < nantu_qa_lines.length; nantu_qa_var_index++)\n\t{\n\t\tnantu_qa_lines[nantu_qa_var_index].style.display = \"flex\";\n\n\t}\n}\n\nwindow.nantu_qa_force_variation = function(test_id, variation)\n{\n\tvar url = new URL(location.href);\n\n\turl.searchParams.set(\"nantu_variations\", \"variation_data\");\n\n\twindow.location = url.href.replace(\"variation_data\", test_id + \":\" + variation);\n}\n</script>\n"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1698247774905",
+                "firingTriggerId": [
+                    "26"
+                ],
+                "blockingTriggerId": [
+                    "27"
+                ],
+                "parentFolderId": "30",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NEEDED",
+                    "consentType": {
+                        "type": "LIST",
+                        "list": [
+                            {
+                                "type": "TEMPLATE",
+                                "value": "ad_storage"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "value": "analytics_storage"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "45",
+                "name": "Nantu Set QA Cookie",
+                "type": "cvt_115676190_42",
+                "fingerprint": "1700238382627",
+                "firingTriggerId": [
+                    "43",
+                    "44"
+                ],
+                "blockingTriggerId": [
+                    "27"
+                ],
+                "parentFolderId": "30",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            }
+        ],
+        "trigger": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "26",
+                "name": "Nantu Mode QA",
+                "type": "PAGEVIEW",
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Nantu Mode Cookie and Query}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "qa"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1691094635155",
+                "parentFolderId": "30"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "27",
+                "name": "Nantu Mode OFF",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": ".*"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{nantu_mode_query_var}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "off"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1691094635153",
+                "parentFolderId": "30"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "43",
+                "name": "Nantu Mode QA Query Var",
+                "type": "PAGEVIEW",
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Page URL}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "nantu_mode=qa"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1698248668718",
+                "parentFolderId": "30"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "44",
+                "name": "Nantu Mode QA Event",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "nantu_qa_mode"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1698251399043",
+                "parentFolderId": "30"
+            }
+        ],
+        "variable": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "18",
+                "name": "nantu_variation",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_variation"
+                    }
+                ],
+                "fingerprint": "1691094635157",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "19",
+                "name": "nantu_variation_name",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_variation_name"
+                    }
+                ],
+                "fingerprint": "1691094635177",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "20",
+                "name": "nantu_test_id",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_test_id"
+                    }
+                ],
+                "fingerprint": "1691094635179",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "21",
+                "name": "nantu_experiment",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_experiment"
+                    }
+                ],
+                "fingerprint": "1691094635175",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "22",
+                "name": "nantu_mode_cookie",
+                "type": "k",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "decodeCookie",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_mode"
+                    }
+                ],
+                "fingerprint": "1691094635178",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "23",
+                "name": "nantu_mode_query_var",
+                "type": "u",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "component",
+                        "value": "QUERY"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "queryKey",
+                        "value": "nantu_mode"
+                    }
+                ],
+                "fingerprint": "1691094635178",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "24",
+                "name": "nantu_test_variations",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_test_variations"
+                    }
+                ],
+                "fingerprint": "1691094635156",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "25",
+                "name": "Nantu Mode Cookie and Query",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "{{nantu_mode_cookie}}{{nantu_mode_query_var}}"
+                    }
+                ],
+                "fingerprint": "1691096189231",
+                "parentFolderId": "30",
+                "formatValue": {}
+            }
+        ],
+        "folder": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "folderId": "29",
+                "name": "Nantu Target Helper",
+                "fingerprint": "1691072080495"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "folderId": "30",
+                "name": "Nantu QA Tab",
+                "fingerprint": "1691072635447"
+            }
+        ],
+        "fingerprint": "1700245200956",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6098026418/containers/115676190/versions/0?apiLink=version",
+        "customTemplate": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "templateId": "42",
+                "name": "Nantu Set QA Cookie",
+                "fingerprint": "1698249294615",
+                "templateData": "___INFO___\n\n{\n  \"type\": \"TAG\",\n  \"id\": \"cvt_temp_public_id\",\n  \"version\": 1,\n  \"securityGroups\": [],\n  \"displayName\": \"Nantu Set QA Cookie\",\n  \"brand\": {\n    \"id\": \"brand_dummy\",\n    \"displayName\": \"\"\n  },\n  \"description\": \"Set Cookie for QA\",\n  \"containerContexts\": [\n    \"WEB\"\n  ]\n}\n\n\n___TEMPLATE_PARAMETERS___\n\n[]\n\n\n___SANDBOXED_JS_FOR_WEB_TEMPLATE___\n\n// Description: Cookie Template\n// Author: Juan Castro\n// Last modified: 2023-10-24\n// License: Apache 2.0\n// Version: 1.0.0\n\n// API imports\nconst queryPermission = require('queryPermission');\nconst setCookie = require('setCookie');\nconst copyFromDataLayer = require('copyFromDataLayer');\nconst getUrl = require('getUrl');\n\n// Constants\nconst nantuModeCookieName = 'nantu_mode';\nconst nantuModeQueryVariableName = 'nantu_mode';\nconst nantuQAModeEventName = 'nantu_qa_mode';\n\n\nif (isNantuQAModeEvent() || hasQAQuery()) {\n\tsetQAModeCookie();\n}\n\ndata.gtmOnSuccess();\n\nfunction isNantuQAModeEvent() {\n\tif (queryPermission('read_data_layer', 'event')) {\n\t\tconst dlEvent = copyFromDataLayer('event');\n\n\t\tif (dlEvent === nantuQAModeEventName) {\n\t\t\treturn true;\n\t\t}\n\t}\n\n\treturn false;\n}\n\n\nfunction hasQAQuery() {\n\tif (queryPermission('get_url', 'query')) {\n\t\tconst nantuModeQuery = getUrl('query');\n\n\t\tif (nantuModeQuery.indexOf(nantuModeQueryVariableName + \"=qa\") !== -1) {\n\t\t\treturn true;\n\t\t}\n\t}\n\n\treturn false;\n}\n\n//set the QA mode cookie\nfunction setQAModeCookie() {\n\t// Set Cookie Permissions\n\tconst options = {\n\t\t'domain': 'auto',\n\t\t'path': '/',\n\t\t'max-age': 60*60,\n\t\t'secure': true\n\t};\n\n\tif (queryPermission('set_cookies', nantuModeCookieName, options)) {\n\t\tsetCookie(nantuModeCookieName, 'qa', options);\n\t}\n}\n\n\n___WEB_PERMISSIONS___\n\n[\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"read_data_layer\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"allowedKeys\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"specific\"\n          }\n        },\n        {\n          \"key\": \"keyPatterns\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 1,\n                \"string\": \"event\"\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"set_cookies\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"allowedCookies\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"name\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"domain\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"path\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"secure\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"session\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_mode\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"*\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"*\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"any\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"any\"\n                  }\n                ]\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"get_url\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"urlParts\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        },\n        {\n          \"key\": \"queriesAllowed\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        }\n      ]\n    },\n    \"isRequired\": true\n  }\n]\n\n\n___TESTS___\n\nscenarios: []\n\n\n___NOTES___\n\n\n\n\n"
+            }
+        ]
+    }
+}
