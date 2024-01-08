@@ -1,3 +1,9 @@
+// Description: Target Selector Helper
+// Author: Juan Castro
+// Last modified: 2023-10-25
+// License: Apache 2.0
+// Version: 1.0.0
+
 const queryPermission = require('queryPermission');
 const copyFromWindow = require('copyFromWindow');
 const makeInteger = require('makeInteger');
