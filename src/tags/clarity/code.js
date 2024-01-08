@@ -1,3 +1,9 @@
+// Description: Nantu Add on - Microsoft Clarity setup
+// Author: Juan Castro
+// Last modified: 2023-10-25
+// License: Apache 2.0
+// Version: 1.0.0
+
 const injectScript = require('injectScript');
 const queryPermission = require('queryPermission');
 const createArgumentsQueue = require('createArgumentsQueue');
