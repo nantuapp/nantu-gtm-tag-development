@@ -1,0 +1,1106 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2024-01-08 20:58:48",
+    "containerVersion": {
+        "path": "accounts/6098026418/containers/115676190/versions/0",
+        "accountId": "6098026418",
+        "containerId": "115676190",
+        "containerVersionId": "0",
+        "container": {
+            "path": "accounts/6098026418/containers/115676190",
+            "accountId": "6098026418",
+            "containerId": "115676190",
+            "name": "nantu.app",
+            "publicId": "GTM-KQR8W86",
+            "usageContext": [
+                "WEB"
+            ],
+            "fingerprint": "1691766812264",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6098026418/containers/115676190/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": false,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": false
+            },
+            "tagIds": [
+                "GTM-KQR8W86"
+            ]
+        },
+        "tag": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "11",
+                "name": "Nantu Environment Variables",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>\n// Description: Environment Variables detection for A/B testing framework.\n// Author: Juan Castro\n// Last modified: 2023-07-25\n// License: Apache 2.0\n// Version: 1.0.0\n\n\nwindow.nantu_device = \"unknown\";\nwindow.nantu_browser_type = \"unknown\";\nwindow.nantu_browser = \"unknown\";\nwindow.nantu_browser_version = 0;\n\n\n// Detect device, browser, browser type and browser version\nvar nantuBrowserData = nantuDetectBrowser(navigator.userAgent);\n\nif (nantuBrowserData) {\n\twindow.nantu_device = nantuBrowserData.device;\n\twindow.nantu_browser_type = nantuBrowserData.browserType;\n\twindow.nantu_browser = nantuBrowserData.browser;\n\twindow.nantu_browser_version = nantuBrowserData.version;\n}\n\n\n// Check if source, medium and campaign are already set in localStorage\nif (localStorage.getItem('nantu_source')) {\n\twindow.nantu_source = localStorage.getItem('nantu_source');\n\twindow.nantu_medium = localStorage.getItem('nantu_medium');\n\twindow.nantu_campaign = localStorage.getItem('nantu_campaign');\n}\n\nvar nantuURL = new URL(window.location.href);\n\n// if source, medium and campaign are set in the URL, set them in localStorage\nif ( ! localStorage.getItem('nantu_source') || nantuURL.searchParams.get(\"utm_source\") || nantuURL.searchParams.get(\"utm_medium\") || nantuURL.searchParams.get(\"gclid\") || nantuURL.searchParams.get(\"fbclid\") || nantuURL.searchParams.get('msclkid')) {\n\tvar nantuSourceData = nantuGetSourceMedium();\n\n\tif (nantuSourceData) {\n\t\tlocalStorage.setItem('nantu_source', nantuSourceData.source);\n\t\tlocalStorage.setItem('nantu_medium', nantuSourceData.medium);\n\t\tlocalStorage.setItem('nantu_campaign', nantuSourceData.campaign);\n\n\t\twindow.nantu_source = nantuSourceData.source;\n\t\twindow.nantu_medium = nantuSourceData.medium;\n\t\twindow.nantu_campaign = nantuSourceData.campaign;\n\t}\n}\n\nwindow.dataLayer.push({event: 'nantu_page_view'});\n\n/*--include:detectors.js:--*/\n// Description: Device detection for A/B testing framework.\n// Author: Juan Castro\n// Last modified: 2023-07-25\n// License: Apache 2.0\n// Version: 1.0.0\n\nfunction nantuDetectBrowser(userAgent) {\n\tvar safariData = nantuIsSafariBrowser(userAgent);\n\n\tif (safariData) {\n\t\treturn safariData;\n\t}\n\n\tvar desktopBrowserData = nantuGetBrowser(userAgent);\n\n\tif (desktopBrowserData) {\n\t\treturn desktopBrowserData;\n\t}\n\n\treturn {device: \"unknown\", browser: \"unknown\", browserType: \"unknown\", version: 0};\n}\n\nfunction nantuIsSafariBrowser(userAgent) {\n\tvar isSafari = false;\n\n\tvar isDesktop = false;\n\tvar isMobile = false;\n\tvar isTabvar = false;\n\n\tvar supportedApplePlatforms = ['Macintosh', 'iPhone', 'iPad'];\n\n\tvar platformIndex = -1;\n\n\tfor (var i = 0; i < supportedApplePlatforms.length; i++) {\n\t\tvar platform = supportedApplePlatforms[i];\n\n\t\tif (userAgent.indexOf(platform) > -1) {\n\t\t\tif (platform === 'iPad') {\n\t\t\t\tisTabvar = true;\n\t\t\t}\n\t\t\tif (platform === 'Macintosh') {\n\t\t\t\tisDesktop = true;\n\t\t\t}\n\t\t\tif (platform === 'iPhone') {\n\t\t\t\tisMobile = true;\n\t\t\t}\n\n\t\t\tplatformIndex = userAgent.indexOf(platform);\n\t\t\tbreak;\n\t\t}\n\t}\n\n\tvar safariVersionRegex = /Version\\/[0-9]+/;\n\n\tif (platformIndex > -1) {\n\t\tif (safariVersionRegex.test(userAgent.slice(platformIndex))) {\n\t\t\tvar safariVersion = parseInt(userAgent.slice(platformIndex).match(safariVersionRegex)[0].split('/')[1]);\n\n\t\t\tif (safariVersion > 0) {\n\t\t\t\treturn {device: isDesktop ? 'desktop' : isMobile ? 'mobile' : isTabvar ? 'tablet' : null, browserType: 'safari', browser: 'safari', version: safariVersion};\n\t\t\t}\n\t\t}\n\t}\n\n\tvar chromeIosVersionRegex = /CriOS\\/[0-9]+/;\n\n\tif (chromeIosVersionRegex.test(userAgent)) {\n\t\tvar chromeIosVersion = parseInt(userAgent.match(chromeIosVersionRegex)[0].split('/')[1]);\n\n\t\tif (chromeIosVersion > 0) {\n\t\t\treturn {device: isDesktop ? 'desktop' : isMobile ? 'mobile' : isTabvar ? 'tablet' : null, browserType: 'safari', browser: 'chrome', version: chromeIosVersion};\n\t\t}\n\t}\n\n\treturn null;\n}\n\nfunction nantuGetBrowser(userAgent) {\n\tvar supportedPlatforms = ['Linux x86_64', 'Mac OS', 'Windows NT', 'CrOS', 'Android'];\n\tvar supportedBrowsers = [\n\t\t{\n\t\t\tname: 'Chrome',\n\t\t\tversionRegex: 'OPR/'\n\t\t},\n\t\t{\n\t\t\tname: 'Firefox',\n\t\t\tversionRegex: 'Firefox/'\n\t\t},\n\t\t{\n\t\t\tname: 'Chrome',\n\t\t\tversionRegex: 'Chrome/'\n\t\t},\n\t];\n\n\tvar platformIndex = -1;\n\n\tvar deviceType = \"desktop\";\n\n\tfor (var i = 0; i < supportedPlatforms.length; i++) {\n\t\tvar platform = supportedPlatforms[i];\n\n\t\tif (userAgent.indexOf(platform) > -1) {\n\t\t\tif (platform === 'Android') { \n\t\t\t\tif (userAgent.indexOf('Mobile') > -1) {\n\t\t\t\t\tdeviceType = \"mobile\";\n\t\t\t\t} else {\n\t\t\t\t\tdeviceType = \"tablet\";\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfor (var j = 0; j < supportedBrowsers.length; j++) {\n\t\t\t\tvar browser = supportedBrowsers[j];\n\n\t\t\t\tif (userAgent.indexOf(browser.name) > -1) {\n\n\t\t\t\t\tvar versionRegex = new RegExp(browser.versionRegex.replace('/', '\\\\/') + '[0-9]+');\n\n\t\t\t\t\tif (versionRegex.test(userAgent)) {\n\t\t\t\t\t\tvar browserVersion = parseInt(userAgent.slice(userAgent.indexOf(browser.name)).match(versionRegex)[0].split('/')[1]);\n\n\t\t\t\t\t\tif (browserVersion > 0) {\n\t\t\t\t\t\t\tvar browserType = browser.name.toLowerCase();\n\n\t\t\t\t\t\t\tvar browserName = browserType;\n\n\t\t\t\t\t\t\tif (userAgent.indexOf('Edg/') > -1) {\n\t\t\t\t\t\t\t\tbrowserName = 'edge';\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tif (userAgent.indexOf('OPR/') > -1) {\n\t\t\t\t\t\t\t\tbrowserName = 'opera';\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\treturn {device: deviceType, browserType: browserType, browser: browserName, version: browserVersion};\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\n\treturn null;\n}\n\n/*--includeend--*/\n/*--include:helpers.js:--*/\n// Description: Helpers for A/B testing framework.\n// Author: Juan Castro\n// Last modified: 2023-07-25\n// License: Apache 2.0\n// Version: 1.0.0\n\nfunction nantuCleanString(text) {\n\treturn text.replace(/[^a-z0-9._-]/gi, \"\").substr(0, 50);\n}\n\nfunction nantuGetHost(referrer) {\n\ttry {\n\t\treturn new URL(referrer).hostname.replace('www.', '').split('.')[0];\n\t}\n\tcatch(err)\n\t{\n\t\tconsole.error(err);\n\t}\n\n\treturn \"unknown\";\n}\n\nfunction nantuGetSourceMedium() {\n\n\tvar source = \"direct\";\n\tvar medium = \"none\";\n\tvar campaign = \"none\";\n\n\tvar searchEngineRegex = /(.*google\\..*)|(duckduckgo\\.com)|(.*bing\\.com)|(baidu\\..*)|(yandex\\..*)|(yahoo\\.com)/;\n\tvar searchEngineNameRegex = /(google|duckduckgo|bing|baidu|yandex|yahoo)/;\n\n\n\tvar url = new URL(window.location.href);\n\n\tif(url.searchParams.get(\"utm_source\") || url.searchParams.get(\"utm_medium\")) {\n\t\tif(url.searchParams.get(\"utm_source\")) {\n\t\t\tsource = url.searchParams.get(\"utm_source\");\n\t\t}\n\n\t\tif(url.searchParams.get(\"utm_medium\")) {\n\t\t\tmedium = url.searchParams.get(\"utm_medium\");\n\t\t}\n\t} else if(url.searchParams.get(\"gclid\")) {\n\t\tsource = \"google\";\n\t\tmedium = \"cpc\";\n\t} else if(url.searchParams.get(\"fbclid\")) {\n\t\tsource = \"facebook\";\n\t\tmedium = \"cpc\";\n\t} else if(url.searchParams.get(\"msclkid\")) {\n\t\tsource = \"bing\";\n\t\tmedium = \"cpc\";\n\t} else if(searchEngineRegex.test(document.referrer)) {\n\t\tsource = document.referrer.match(searchEngineNameRegex)[0];\n\n\t\tmedium = \"organic\";\n\t} else if(document.referrer !== '') {\n\n\t\tvar referrer = new URL(document.referrer);\n\n\t\tif (referrer.hostname !== window.location.hostname) {\n\t\t\tmedium = \"referral\";\n\t\t}\n\t}\n\n\tif(url.searchParams.get(\"utm_campaign\"))\n\t{\n\t\tcampaign = url.searchParams.get(\"utm_campaign\");\n\t}\n\n\treturn {source: source, medium: medium, campaign: campaign};\n}\n\nfunction nantuGetTotalElements(selector) {\n\treturn document.querySelectorAll(selector).length;\n}\n/*--includeend--*/\n</script>\n\n"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1704738696099",
+                "firingTriggerId": [
+                    "63"
+                ],
+                "parentFolderId": "29",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NEEDED",
+                    "consentType": {
+                        "type": "LIST",
+                        "list": [
+                            {
+                                "type": "TEMPLATE",
+                                "value": "ad_storage"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "value": "analytics_storage"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "28",
+                "name": "Nantu QA Tab",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>\n// Description: QA Tab for Nantu AB Testing.\n// Author: Juan Castro\n// Last modified: 2023-08-02\n// License: Apache 2.0\n// Version: 1.0.2\n\n\nvar nantu_qa_tab_html = '<div id=\"nantu_qa_tab\" style=\"position: fixed;min-height: 30px;min-width: 50px;top: 50%;padding: 8px;right: 0;background: white;box-shadow: 2px 2px 5px #333;border-radius: 8px 0 0 8px; z-index: 10000000000;\"><span style=\"display:block;font-size:11px;text-align:center; font-family:sans-serif;\">Nantu Tests</span></div>';\n\nif(document.querySelectorAll(\"#nantu_qa_tab\").length == 0)\n{\n\tdocument.body.insertAdjacentHTML(\"beforeEnd\", nantu_qa_tab_html);\n}\n\nfunction nantu_qa_show_test(test_id, variation, version, variations, dimension) {\n\tvar nantu_qa_abbrev_regex = /(ontrol|ariation)/;\n\n\tif(document.querySelectorAll(\"#nantu_qa_tab\").length == 0) {\n\t\tdocument.body.insertAdjacentHTML(\"beforeEnd\", nantu_qa_tab_html);\n\t}\n\n\tdocument.querySelector(\"#nantu_qa_tab > span:first-child\").innerHTML = '<a href=\"javascript:window.nantu_qa_edit()\" style=\"padding: 6px; background: #666; color: white; text-decoration: none; border-radius: 4px; display: block; margin-bottom: 4px; font-size: 10px;\">Edit Variations</a>';\n\n\tif(document.querySelectorAll(\"#nantu_\" + test_id + \"_tab_line\").length == 0) {\n\t\tdocument.getElementById(\"nantu_qa_tab\").insertAdjacentHTML(\"beforeEnd\", '<span style=\"display: flex;font-size:11px;column-gap: 2px; align-items: center;\" id=\"nantu_' + test_id + '_tab_line\"><span class=\"nantu_qa_id\" style=\"font-weight:bold;\"></span><span class=\"nantu_qa_variation\"></span><span class=\"nantu_qa_dimension\"></span><span class=\"nantu_qa_dimension_links\" style=\"display:none; column-gap: 3px;\"></span></span>');\n\t}\n\n\tvar nantu_qa_button_style = 'style=\"display: flex; text-decoration: none; min-width: 40px;height: 30px;justify-content: center;align-items: center;font-size: 20px;background: #666;color: white;border-radius: 3px; padding: 0 4px;\"'; \n\n\tvar variations_list = variations.split(\",\");\n\n\tif(document.querySelectorAll(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_dimension_links > a\").length == 0) {\n\t\t// add buttons to change variations to QA tab\n\t\tfor(var i = 0; i < variations_list.length; i++) {\n\t\t\tvar this_variation = variations_list[i];\n\n\t\t\tvar short_variation = this_variation.replace(nantu_qa_abbrev_regex, \"\");\n\n\t\t\tdocument.querySelector(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_dimension_links\").insertAdjacentHTML(\"beforeEnd\", '<a href=\"javascript:void(0);\" onclick=\"window.nantu_qa_force_variation(' + test_id + ', \\'' + short_variation + '\\')\" ' + nantu_qa_button_style + '  >' + short_variation.toUpperCase() + '</a>');\n\t\t}\n\n\t\t// add button to turn off test\n\t\tdocument.querySelector(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_dimension_links\").insertAdjacentHTML(\"beforeEnd\", '<a href=\"javascript:void(0);\" onclick=\"window.nantu_qa_force_variation(' + test_id + ', \\'n\\')\" ' + nantu_qa_button_style + '  >OFF</a>');\n\t}\n\n\tdocument.querySelector(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_id\").innerText = test_id + \"-\" + version + \": \";\n\n\tvar nantu_qa_variation = variation.replace(nantu_qa_abbrev_regex, \"\").toUpperCase();\n\n\tdocument.querySelector(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_variation\").innerText = nantu_qa_variation;\n\n\tvar dimension_sent = \"\";\n\n\tif (dimension) {\n\t\tdimension_sent = \"✓\";\n\t}\n\n\tdocument.querySelector(\"#nantu_\" + test_id + \"_tab_line > .nantu_qa_dimension\").innerText = dimension_sent;\n}\n\nwindow.nantu_qa_edit = function()\n{\n\tdocument.querySelector(\"#nantu_qa_tab > span:first-child\").style.display = \"none\";\n\n\tvar nantu_qa_lines = document.querySelectorAll(\"span.nantu_qa_dimension_links[style*='none']\");\n\n\tfor(var nantu_qa_var_index = 0; nantu_qa_var_index < nantu_qa_lines.length; nantu_qa_var_index++)\n\t{\n\t\tnantu_qa_lines[nantu_qa_var_index].style.display = \"flex\";\n\n\t}\n}\n\nwindow.nantu_qa_force_variation = function(test_id, variation)\n{\n\tvar url = new URL(location.href);\n\n\turl.searchParams.set(\"nantu_variations\", \"variation_data\");\n\n\twindow.location = url.href.replace(\"variation_data\", test_id + \":\" + variation);\n}\n</script>\n"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1698247774905",
+                "firingTriggerId": [
+                    "26"
+                ],
+                "blockingTriggerId": [
+                    "27"
+                ],
+                "parentFolderId": "30",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NEEDED",
+                    "consentType": {
+                        "type": "LIST",
+                        "list": [
+                            {
+                                "type": "TEMPLATE",
+                                "value": "ad_storage"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "value": "analytics_storage"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "37",
+                "name": "Nantu Clarity",
+                "type": "cvt_115676190_36",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "clarity_project_id",
+                        "value": "CHANGE_ME"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "has_clarity",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "all_tests",
+                        "value": "true"
+                    }
+                ],
+                "fingerprint": "1704723249438",
+                "firingTriggerId": [
+                    "60"
+                ],
+                "parentFolderId": "59",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "45",
+                "name": "Nantu Set QA Cookie",
+                "type": "cvt_115676190_42",
+                "fingerprint": "1701350386261",
+                "firingTriggerId": [
+                    "43",
+                    "44"
+                ],
+                "blockingTriggerId": [
+                    "27"
+                ],
+                "parentFolderId": "30",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "52",
+                "name": "Nantu AB Test - Data to GA4",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "userProperties",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "name",
+                                        "value": "nantu_ab_test{{nantu_ab_test_index}}"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "{{nantu_ab_test_experiment_name}}-{{nantu_ab_test_variation}}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "nantu_ga4_dimension"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "G-CHANGEME"
+                    }
+                ],
+                "fingerprint": "1701349144468",
+                "firingTriggerId": [
+                    "50"
+                ],
+                "parentFolderId": "46",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "57",
+                "name": "QA Container",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<!-- Google Tag Manager -->\n<!-- Insert Google Tag Manager Script here -->\n<!-- End Google Tag Manager -->"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1701349936603",
+                "firingTriggerId": [
+                    "56"
+                ],
+                "parentFolderId": "53",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "58",
+                "name": "Nantu - Set Environment Cookie",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>\nvar nantu_environment_cookie_domain = location.hostname;\n\nif(/nantu_environment=qa/.test(location.search))\n{\n\tvar nantu_environment_date = new Date();\n\tnantu_environment_date.setTime(nantu_environment_date.getTime() + 3600 * 1000);\n\tvar nantu_environment_expires = \"expires=\" + nantu_environment_date.toGMTString();\n\tdocument.cookie = \"nantu_environment=qa; \" + nantu_environment_expires + \"; path=/; domain=\" + nantu_environment_cookie_domain + \";\";\n}\n</script>\n"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1701349564619",
+                "firingTriggerId": [
+                    "55"
+                ],
+                "parentFolderId": "53",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            }
+        ],
+        "trigger": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "26",
+                "name": "Nantu Mode QA",
+                "type": "PAGEVIEW",
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Nantu Mode Cookie and Query}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "qa"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Correct Environment}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "yes"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1704738747626",
+                "parentFolderId": "30"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "27",
+                "name": "Nantu Mode OFF",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": ".*"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{nantu_mode_query_var}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "off"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1691094635153",
+                "parentFolderId": "30"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "43",
+                "name": "Nantu Mode QA Query Var",
+                "type": "PAGEVIEW",
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Page URL}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "nantu_mode=qa"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Correct Environment}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "yes"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1704738791893",
+                "parentFolderId": "30"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "44",
+                "name": "Nantu Mode QA Event",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "nantu_qa_mode"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Correct Environment}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "yes"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1704738780725",
+                "parentFolderId": "30"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "50",
+                "name": "Nantu AB Test event GA4",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "^nantu_ab_test"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{nantu_version}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "1.0"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Correct Environment}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "yes"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1704738594607",
+                "parentFolderId": "46"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "55",
+                "name": "Nantu Environment Query Var",
+                "type": "PAGEVIEW",
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Page URL}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "nantu_environment=qa"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Correct Environment}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "yes"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1704738552233",
+                "parentFolderId": "53"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "56",
+                "name": "Nantu - QA Environment",
+                "type": "PAGEVIEW",
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Nantu Environment}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "qa"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1701349564618",
+                "parentFolderId": "53"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "60",
+                "name": "Run on all Nantu Tests",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "^nantu_[0-9]*_execute"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Correct Environment}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "yes"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1704747009837",
+                "parentFolderId": "59"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "63",
+                "name": "All Pages Nantu Environment",
+                "type": "PAGEVIEW",
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Correct Environment}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "yes"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1704738725786",
+                "parentFolderId": "29"
+            }
+        ],
+        "variable": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "18",
+                "name": "nantu_variation",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_variation"
+                    }
+                ],
+                "fingerprint": "1691094635157",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "19",
+                "name": "nantu_variation_name",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_variation_name"
+                    }
+                ],
+                "fingerprint": "1691094635177",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "20",
+                "name": "nantu_test_id",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_test_id"
+                    }
+                ],
+                "fingerprint": "1691094635179",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "21",
+                "name": "nantu_experiment",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_experiment"
+                    }
+                ],
+                "fingerprint": "1691094635175",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "22",
+                "name": "nantu_mode_cookie",
+                "type": "k",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "decodeCookie",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_mode"
+                    }
+                ],
+                "fingerprint": "1691094635178",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "23",
+                "name": "nantu_mode_query_var",
+                "type": "u",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "component",
+                        "value": "QUERY"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "queryKey",
+                        "value": "nantu_mode"
+                    }
+                ],
+                "fingerprint": "1691094635178",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "24",
+                "name": "nantu_test_variations",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_test_variations"
+                    }
+                ],
+                "fingerprint": "1691094635156",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "25",
+                "name": "Nantu Mode Cookie and Query",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "{{nantu_mode_cookie}}{{nantu_mode_query_var}}"
+                    }
+                ],
+                "fingerprint": "1691096189231",
+                "parentFolderId": "30",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "47",
+                "name": "nantu_ab_test_experiment_name",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_ab_test_experiment_name"
+                    }
+                ],
+                "fingerprint": "1701349100986",
+                "parentFolderId": "46",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "48",
+                "name": "nantu_ab_test_variation",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_ab_test_variation"
+                    }
+                ],
+                "fingerprint": "1701349100986",
+                "parentFolderId": "46",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "49",
+                "name": "nantu_version",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_version"
+                    }
+                ],
+                "fingerprint": "1701349100987",
+                "parentFolderId": "46",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "51",
+                "name": "nantu_ab_test_index",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_ab_test_index"
+                    }
+                ],
+                "fingerprint": "1701349100987",
+                "parentFolderId": "46",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "54",
+                "name": "Nantu Environment",
+                "type": "jsm",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "javascript",
+                        "value": "function()\n{\n  if(/nantu_environment=qa/.test(location.search) || /nantu_environment=qa/.test(document.cookie))\n  {\n      return \"qa\";\n  }\n  \n   return \"production\"; \n}"
+                    }
+                ],
+                "fingerprint": "1701349564618",
+                "parentFolderId": "53",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "61",
+                "name": "Environment Type of this container",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "production"
+                    }
+                ],
+                "fingerprint": "1704737190572",
+                "parentFolderId": "53",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "62",
+                "name": "Correct Environment",
+                "type": "jsm",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "javascript",
+                        "value": "function() {\n   if(\"{{Nantu Environment}}\" == \"{{Environment Type of this container}}\") {\n     return \"yes\";\n   }\n  \n  return \"no\";\n}"
+                    }
+                ],
+                "fingerprint": "1704737716124",
+                "parentFolderId": "53",
+                "formatValue": {}
+            }
+        ],
+        "folder": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "folderId": "29",
+                "name": "Nantu Target Helper",
+                "fingerprint": "1691072080495"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "folderId": "30",
+                "name": "Nantu QA Tab",
+                "fingerprint": "1691072635447"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "folderId": "46",
+                "name": "Nantu Tracking",
+                "fingerprint": "1701349100985"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "folderId": "53",
+                "name": "Nantu QA Container",
+                "fingerprint": "1701349564617"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "folderId": "59",
+                "name": "Nantu Clarity",
+                "fingerprint": "1704722939807"
+            }
+        ],
+        "builtInVariable": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "type": "PAGE_URL",
+                "name": "Page URL"
+            }
+        ],
+        "fingerprint": "1704747528653",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6098026418/containers/115676190/versions/0?apiLink=version",
+        "customTemplate": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "templateId": "4",
+                "name": "Nantu A/B Test",
+                "fingerprint": "1700240151710",
+                "templateData": "___TERMS_OF_SERVICE___\n\nBy creating or modifying this file you agree to Google Tag Manager's Community\nTemplate Gallery Developer Terms of Service available at\nhttps://developers.google.com/tag-manager/gallery-tos (or such other URL as\nGoogle may provide), as modified from time to time.\n\n\n___INFO___\n\n{\n  \"type\": \"TAG\",\n  \"id\": \"cvt_temp_public_id\",\n  \"version\": 1,\n  \"securityGroups\": [],\n  \"displayName\": \"Nantu A/B Test\",\n  \"categories\": [\n    \"EXPERIMENTATION\"\n  ],\n  \"brand\": {\n    \"id\": \"brand_dummy\",\n    \"displayName\": \"\",\n    \"thumbnail\": \"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAjwCPAAD/4QD8RXhpZgAASUkqAAgAAAAIAA4BAgALAAAAbgAAABIBAwABAAAAAQAAABoBBQABAAAAegAAABsBBQABAAAAggAAACgBAwABAAAAAgAAADEBAgANAAAAigAAADIBAgAUAAAAmAAAAGmHBAABAAAArAAAAAAAAABTY3JlZW5zaG90AACQAAAAAQAAAJAAAAABAAAAR0lNUCAyLjEwLjM0AAAyMDIzOjA4OjE2IDA3OjM4OjM2AAQAhpIHABIAAADiAAAAAaADAAEAAAABAAAAAqAEAAEAAADIAgAAA6AEAAEAAADAAgAAAAAAAAAAAAAAAAAAU2NyZWVuc2hvdP/hDZ9odHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDQuNC4wLUV4aXYyIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtbG5zOkdJTVA9Imh0dHA6Ly93d3cuZ2ltcC5vcmcveG1wLyIgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIiB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXBNTTpEb2N1bWVudElEPSJnaW1wOmRvY2lkOmdpbXA6M2NmYTU3ODktODQ4NS00NjAxLWJmZTAtNWRlOTc3NjZmMjUzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOmIzNzMwYzY4LTY2YjYtNDUyNC1hYjRmLWFmNWIwYjI3ZjMzNyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjgzOTc1YzE5LWJiOWMtNDA3Yy05YTVhLTFmYmYxNzg1OGI5NiIgR0lNUDpBUEk9IjIuMCIgR0lNUDpQbGF0Zm9ybT0iTWFjIE9TIiBHSU1QOlRpbWVTdGFtcD0iMTY5MjE4OTUxNjg1NDkyOCIgR0lNUDpWZXJzaW9uPSIyLjEwLjM0IiBkYzpGb3JtYXQ9ImltYWdlL2pwZWciIGV4aWY6UGl4ZWxYRGltZW5zaW9uPSI3MTIiIGV4aWY6UGl4ZWxZRGltZW5zaW9uPSI3MDQiIHhtcDpDcmVhdG9yVG9vbD0iR0lNUCAyLjEwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDIzOjA4OjE2VDA3OjM4OjM2LTA1OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyMzowODoxNlQwNzozODozNi0wNTowMCI+IDx4bXBNTTpIaXN0b3J5PiA8cmRmOlNlcT4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDpjaGFuZ2VkPSIvIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOmM1OGFiZTgzLTA2YjAtNDVlOC05YWI1LTE2YzkxMDUxOTVmNCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iR2ltcCAyLjEwIChNYWMgT1MpIiBzdEV2dDp3aGVuPSIyMDIzLTA4LTE2VDA3OjM4OjM2LTA1OjAwIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8ZXhpZjpVc2VyQ29tbWVudD4gPHJkZjpBbHQ+IDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+U2NyZWVuc2hvdDwvcmRmOmxpPiA8L3JkZjpBbHQ+IDwvZXhpZjpVc2VyQ29tbWVudD4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg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\\u003d\"\n  },\n  \"description\": \"Open Source Google Tag Manager (GTM) Template for Creating A/B Tests.\",\n  \"containerContexts\": [\n    \"WEB\"\n  ]\n}\n\n\n___TEMPLATE_PARAMETERS___\n\n[\n  {\n    \"type\": \"CHECKBOX\",\n    \"name\": \"qaOnly\",\n    \"checkboxText\": \"QA Only\",\n    \"simpleValueType\": true,\n    \"defaultValue\": true,\n    \"help\": \"If this is enabled the test will appear only if nantu_mode\\u003dqa query var has been used\",\n    \"alwaysInSummary\": true\n  },\n  {\n    \"type\": \"TEXT\",\n    \"name\": \"experimentName\",\n    \"displayName\": \"Experiment Name\",\n    \"simpleValueType\": true,\n    \"valueValidators\": [\n      {\n        \"type\": \"NON_EMPTY\"\n      },\n      {\n        \"type\": \"REGEX\",\n        \"args\": [\n          \"^[a-zA-Z0-9\\\\s-]*$\"\n        ]\n      },\n      {\n        \"type\": \"STRING_LENGTH\",\n        \"args\": [\n          3,\n          20\n        ]\n      }\n    ]\n  },\n  {\n    \"type\": \"TEXT\",\n    \"name\": \"testIndex\",\n    \"displayName\": \"Test Index\",\n    \"simpleValueType\": true,\n    \"help\": \"Each A/B test needs a unique number\",\n    \"valueValidators\": [\n      {\n        \"type\": \"NON_EMPTY\"\n      },\n      {\n        \"type\": \"POSITIVE_NUMBER\"\n      }\n    ]\n  },\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"testWindow\",\n    \"displayName\": \"Test Window\",\n    \"groupStyle\": \"NO_ZIPPY\",\n    \"subParams\": [\n      {\n        \"type\": \"CHECKBOX\",\n        \"name\": \"testWindowEnabled\",\n        \"checkboxText\": \"Enable Test Window\",\n        \"simpleValueType\": true,\n        \"defaultValue\": false\n      },\n      {\n        \"type\": \"TEXT\",\n        \"name\": \"testWindowStart\",\n        \"displayName\": \"Start Date\",\n        \"simpleValueType\": true,\n        \"enablingConditions\": [\n          {\n            \"paramName\": \"testWindowEnabled\",\n            \"paramValue\": true,\n            \"type\": \"EQUALS\"\n          }\n        ],\n        \"defaultValue\": \"07/18/2023\",\n        \"valueValidators\": [\n          {\n            \"type\": \"NON_EMPTY\"\n          },\n          {\n            \"type\": \"REGEX\",\n            \"args\": [\n              \"^[0-1]*[0-9]\\\\/[0-3]*[0-9]\\\\/[0-9]{4}$\"\n            ],\n            \"errorMessage\": \"Please enter a valid date\"\n          }\n        ]\n      },\n      {\n        \"type\": \"TEXT\",\n        \"name\": \"testWindowEnd\",\n        \"displayName\": \"End Date\",\n        \"simpleValueType\": true,\n        \"enablingConditions\": [\n          {\n            \"paramName\": \"testWindowEnabled\",\n            \"paramValue\": true,\n            \"type\": \"EQUALS\"\n          }\n        ],\n        \"defaultValue\": \"12/31/2026\",\n        \"valueValidators\": [\n          {\n            \"type\": \"NON_EMPTY\"\n          },\n          {\n            \"type\": \"REGEX\",\n            \"args\": [\n              \"^[0-1]*[0-9]\\\\/[0-3]*[0-9]\\\\/[0-9]{4}$\"\n            ],\n            \"errorMessage\": \"Please enter a valid date\"\n          }\n        ]\n      }\n    ]\n  },\n  {\n    \"type\": \"TEXT\",\n    \"name\": \"allowedDomain\",\n    \"displayName\": \"Domain\",\n    \"simpleValueType\": true,\n    \"valueHint\": \"www.example.com\",\n    \"valueValidators\": [\n      {\n        \"type\": \"NON_EMPTY\"\n      }\n    ],\n    \"help\": \"Domain where the A/B Test will run\"\n  },\n  {\n    \"type\": \"PARAM_TABLE\",\n    \"name\": \"variations\",\n    \"displayName\": \"Variations\",\n    \"paramTableColumns\": [\n      {\n        \"param\": {\n          \"type\": \"TEXT\",\n          \"name\": \"id\",\n          \"displayName\": \"ID\",\n          \"simpleValueType\": true,\n          \"valueHint\": \"control or variation1 or variation2, etc\",\n          \"valueValidators\": [\n            {\n              \"type\": \"NON_EMPTY\"\n            },\n            {\n              \"type\": \"REGEX\",\n              \"args\": [\n                \"^(control|variation[1-9]+[0-9]*)$\"\n              ]\n            }\n          ]\n        },\n        \"isUnique\": true\n      },\n      {\n        \"param\": {\n          \"type\": \"TEXT\",\n          \"name\": \"name\",\n          \"displayName\": \"Name\",\n          \"simpleValueType\": true,\n          \"valueHint\": \"Control or Variation #\",\n          \"valueValidators\": [\n            {\n              \"type\": \"NON_EMPTY\"\n            },\n            {\n              \"type\": \"REGEX\",\n              \"args\": [\n                \"^[a-zA-Z0-9\\\\s-]*$\"\n              ]\n            },\n            {\n              \"type\": \"STRING_LENGTH\",\n              \"args\": [\n                2,\n                12\n              ]\n            }\n          ]\n        },\n        \"isUnique\": true\n      },\n      {\n        \"param\": {\n          \"type\": \"TEXT\",\n          \"name\": \"weight\",\n          \"displayName\": \"Weight\",\n          \"simpleValueType\": true,\n          \"defaultValue\": 50,\n          \"valueValidators\": [\n            {\n              \"type\": \"NON_EMPTY\"\n            },\n            {\n              \"type\": \"NON_NEGATIVE_NUMBER\"\n            }\n          ]\n        },\n        \"isUnique\": false\n      }\n    ],\n    \"newRowButtonText\": \"Add New Variation\",\n    \"valueValidators\": [\n      {\n        \"type\": \"NON_EMPTY\"\n      }\n    ]\n  }\n]\n\n\n___SANDBOXED_JS_FOR_WEB_TEMPLATE___\n\n// Description: Nantu A/B Testing Template\n// Author: Juan Castro\n// Last modified: 2023-08-02\n// License: Apache 2.0\n// Version: 1.0.1\n\n// What's new:\n// Experiment Name and Variation Name character limit\n\n// API imports\nconst Math = require('Math');\nconst log = require('logToConsole');\nconst queryPermission = require('queryPermission');\nconst localStorage = require('localStorage');\nconst generateRandom = require('generateRandom');\nconst getCookieValues = require('getCookieValues');\nconst getUrl = require('getUrl');\nconst setCookie = require('setCookie');\nconst createQueue = require('createQueue');\nconst getType = require('getType');\nconst getTimestampMillis = require('getTimestampMillis');\nconst decode = require('decodeUriComponent');\n\n\n// Constants\nconst nantuModeCookieName = 'nantu_mode';\nconst nantuModeQueryVariableName = 'nantu_mode';\nconst nantuVersion = '1.0.0';\nconst nantuVariationsQueryName = 'nantu_variations';\n\nif (isNantuOff()) {\n\tlog(\"Nantu is off\");\n\tdata.gtmOnSuccess();\n\treturn;\n}\n\nif (hasQAQuery()) {\n\tlog(\"QA mode is on, setting QA cookie\");\n\tsetQAModeCookie();\n}\n\ntestLog(\"Nantu Version: \" + nantuVersion);\n\n/* Get Permissions*/\n// localStorage Permissions\nconst nantuTestsKey = 'nantu_tests';\nlet savedNantuTests = \"[]\";\nif (queryPermission('access_local_storage', 'readwrite', nantuTestsKey)) {\n\tsavedNantuTests = localStorage.getItem(nantuTestsKey);\n} else {\n\tlog(\"Nantu can't access local storage\");\n\tdata.gtmOnFailure();\n\treturn;\n}\n\nvar domain = \"unset\";\n\n// URL Permissions\nif (queryPermission('get_url', 'host')) {\n\tdomain = getUrl('host');\n}\n\nif (domain === \"unset\") {\n\tlog(\"Nantu can't get the domain:\" + domain);\n\tdata.gtmOnSuccess();\n\treturn;\n}\n\nif (! isAllowedDomain(domain, data)) {\n\tlog(\"Nantu test is not allowed on this domain: \" + domain);\n\tdata.gtmOnSuccess();\n\treturn;\n}\n\nif (data.testWindowEnabled === true) {\n\tconst gaTimestamp = getGACookieTimestamp();\n\n\tconst getGADays = Math.floor(gaTimestamp / 86400);\n\n\tconst getStartDays = getDaysFrom1970(data.testWindowStart);\n\tconst getEndDays = getDaysFrom1970(data.testWindowEnd);\n\n\tif ( ! (getGADays >= getStartDays && getGADays <= getEndDays)) {\n\t\ttestLog(\"Nantu test is not running. First visit timestamp:\" + gaTimestamp);\n\t\tdata.gtmOnSuccess();\n\t\treturn;\n\t}\n}\n\nvar nantuTests = parseTestsVariations(savedNantuTests);\n\nconst variationFromURL = getVariationFromURL();\n\nvar selectedVariation = getSelectedVariation(nantuTests, data);\n\nif (variationFromURL !== null) {\n\tselectedVariation = variationFromURL;\n\n\tnantuTests = setTestVariation(nantuTests, data.testIndex, selectedVariation);\n\n\tlocalStorage.setItem(nantuTestsKey, serializeTestsVariations(nantuTests));\n\ttestLog(\"Forcing Variation: \" + selectedVariation);\n}\n\nif (selectedVariation == \"unset\") {\n\tselectedVariation = selectRandomVariation(data);\n\n\tnantuTests = setTestVariation(nantuTests, data.testIndex, selectedVariation);\n\n\tlocalStorage.setItem(nantuTestsKey, serializeTestsVariations(nantuTests));\n\ttestLog(\"Setting Variation: \" + selectedVariation);\n}\n\nvar testVariations = [];\n\nfor (let variationIndex = 0; variationIndex < data.variations.length; variationIndex++) {\n\tconst variation = data.variations[variationIndex];\n\n\ttestVariations.push(variation.id);\n}\n\nconst dataLayerPush = createQueue('dataLayer');\n\nif (data.qaOnly === false || data.qaOnly === true && isInQAMode()) {\n\tdataLayerPush({'event': 'nantu_' + data.testIndex + '_execute_' + selectedVariation, 'nantu_test_id' : data.testIndex, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experimentName, 'nantu_variation_name' : getVariationName(selectedVariation, data), 'nantu_test_variations' : testVariations.join(\",\")});\n}\n\nfunction getVariationFromURL() {\n\tif (queryPermission('get_url', 'query')) {\n\t\tconst nantuVariationsQuery = decode(getUrl('query'));\n\n\t\tconst nantuVariationsIndex = nantuVariationsQuery.indexOf(nantuVariationsQueryName);\n\n\t\tif (nantuVariationsIndex > -1) {\n\t\t\tconst nantuVariationsQueryValue = nantuVariationsQuery.slice(nantuVariationsIndex + nantuVariationsQueryName.length + 1);\n\n\t\t\tconst nantuVariationsQueryValueEnd = nantuVariationsQueryValue.indexOf('&');\n\n\t\t\tvar variationsValues = \"\";\n\n\t\t\tif (nantuVariationsQueryValueEnd > -1) {\n\t\t\t\tvariationsValues = nantuVariationsQueryValue.slice(0, nantuVariationsQueryValueEnd);\n\t\t\t} else {\n\t\t\t\tvariationsValues = nantuVariationsQueryValue;\n\t\t\t}\n\n\t\t\tconst queryVariations = parseTestsVariations(\"[\" + variationsValues + \"]\");\n\n\t\t\tfor (let variationIndex = 0; variationIndex < queryVariations.length; variationIndex++) {\n\t\t\t\tconst variation = queryVariations[variationIndex];\n\n\t\t\t\tif (variation.id == data.testIndex) {\n\t\t\t\t\treturn variation.variation;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\n\treturn null;\n}\n\n/*--include:helpers/helpers.js:--*/\n// Description: Helper functions for the A/B testing framework.\n// Author: Juan Castro\n// Last modified: 2023-05-26\n// License: Apache 2.0\n// Version: 1.0.0\n// Path: helpers.js\n\n// shortName converts a variation long name to a short name.\nfunction shortName(variationLongName) {\n\tif ( ! variationLongName ) {\n\t\treturn \"u\";\n\t}\n\n\tif (variationLongName === \"control\") {\n\t\treturn \"c\";\n\t} else if (variationLongName === \"none\") {\n\t\treturn \"n\";\n\t} else if (variationLongName.indexOf(\"variation\") === 0 && variationLongName.length >= 10) {\n\t\tconst variationNumber = variationLongName.slice(9);\n\t\tif (strToInt(variationNumber) > 0) {\n\t\t\treturn \"v\" + variationNumber;\n\t\t} else {\n\t\t\treturn \"u\";\n\t\t}\n\t} else {\n\t\treturn \"u\";\n\t}\n}\n\n// longName converts a variation short name to a long name.\nfunction longName(variationShortName) {\n\tif ( ! variationShortName ) {\n\t\treturn \"unset\";\n\t}\n\n\tif (variationShortName === \"c\") {\n\t\treturn \"control\";\n\t} else if (variationShortName === \"n\") {\n\t\treturn \"none\";\n\t} else if (variationShortName.indexOf(\"v\") === 0 && variationShortName.length >= 2) {\n\t\tconst variationNumber = variationShortName.slice(1);\n\t\tif (strToInt(variationNumber) > 0) {\n\t\t\treturn \"variation\" + variationNumber;\n\t\t} else {\n\t\t\treturn \"unset\";\n\t\t}\n\t} else {\n\t\treturn \"unset\";\n\t}\n}\n\n// strToInt converts a string to an integer. If the string is not a number, it returns null.\nfunction strToInt(num)\n{\n\tif(getType(num) == \"number\")\n\t{\n\t\treturn num;\n\t}\n\n\tlet total_value = 0;\n\n\tif(num) {\n\t\tfor(let char_index = 0; char_index < num.length; char_index++) {\n\t\t\tlet digit_value = 0;\n\t\t\tlet current_letter = num.charAt(char_index);\n\n\t\t\tif(current_letter === \"1\") {\n\t\t\t\tdigit_value = 1;\n\t\t\t}\n\t\t\telse if (current_letter === \"2\") {\n\t\t\t\tdigit_value = 2;\n\t\t\t}\n\t\t\telse if (current_letter === \"3\") {\n\t\t\t\tdigit_value = 3;\n\t\t\t}\n\t\t\telse if (current_letter === \"4\") {\n\t\t\t\tdigit_value = 4;\n\t\t\t}\n\t\t\telse if (current_letter === \"5\") {\n\t\t\t\tdigit_value = 5;\n\t\t\t}\n\t\t\telse if (current_letter === \"6\") {\n\t\t\t\tdigit_value = 6;\n\t\t\t}\n\t\t\telse if (current_letter === \"7\") {\n\t\t\t\tdigit_value = 7;\n\t\t\t}\n\t\t\telse if (current_letter === \"8\") {\n\t\t\t\tdigit_value = 8;\n\t\t\t}\n\t\t\telse if (current_letter === \"9\") {\n\t\t\t\tdigit_value = 9;\n\t\t\t}\n\t\t\telse if (current_letter !== \"0\") {\n\t\t\t\treturn null;\n\t\t\t}\n\n\t\t\ttotal_value += digit_value * Math.pow(10, num.length - char_index - 1);\n\t\t}\n\t} else {\n\t\treturn null;\n\t}\n\n\treturn total_value;\n}\n\n// parseTestsVariations parses a string of tests variations into an array of objects.\n// [123:v1,456:v2,789:v3,345:u,678:n] => [{id: 123, variation: variation}, {id: 456, variation: variation2}, {id: 789, variation: variation3}, {id: 345, variation: unset}, {id: 678, variation: none}]\nfunction parseTestsVariations(testsVariations) {\n\n\tif ( ! testsVariations ) {\n\t\treturn [];\n\t}\n\n\t// Split the string into an array of key-value pairs.\n\tconst pairs = testsVariations.slice(1, -1).split(',');\n\n\tconst results = [];\n\n\tconst firstChar = testsVariations.slice(0, 1);\n\tconst lastChar = testsVariations.slice(-1);\n\n\tif (firstChar !== \"[\" || lastChar !== \"]\") {\n\t\treturn results;\n\t}\n\n\tfor (const pair of pairs) {\n\t\tconst keyValue = pair.split(':');\n\n\t\tconst key = strToInt(keyValue[0]);\n\t\tconst value = longName(keyValue[1]);\n\n\t\tif (key > 0) {\n\t\t\tconst result = {\n\t\t\t\tid: key,\n\t\t\t\tvariation: value\n\t\t\t};\n\t\t\tresults.push(result);\n\t\t}\n\t}\n\n\treturn results;\n}\n\n// serializeTestsVariations serializes an array of tests variations into a string.\n// [{id: 123, variation: variation}, {id: 456, variation: variation2}, {id: 789, variation: variation3}, {id: 345, variation: unset}, {id: 678, variation: none}] => [123:v1,456:v2,789:v3,345:u,678:n]\nfunction serializeTestsVariations(testsVariations) {\n\tconst pairs = [];\n\n\tfor (const testVariation of testsVariations) {\n\t\tconst pair = testVariation.id + \":\" + shortName(testVariation.variation);\n\t\tpairs.push(pair);\n\t}\n\n\treturn \"[\" + pairs.join(',') + \"]\";\n}\n\nfunction setTestVariation(testsVariations, testId, variation) {\n\tconst testVariation = {\n\t\tid: testId,\n\t\tvariation: variation\n\t};\n\n\tconst newTestsVariations = [];\n\n\tlet found = false;\n\n\tfor (const currentTestVariation of testsVariations) {\n\t\tif (currentTestVariation.id == testId) {\n\t\t\tnewTestsVariations.push(testVariation);\n\t\t\tfound = true;\n\t\t} else {\n\t\t\tnewTestsVariations.push(currentTestVariation);\n\t\t}\n\t}\n\n\tif ( ! found ) {\n\t\tnewTestsVariations.push(testVariation);\n\t}\n\n\treturn newTestsVariations;\n}\n\n// check if the user is in Nantu off mode\n// Nantu off mode is set using a cookie or the query parameter nantu_mode=off\nfunction isNantuOff() {\n\tif (queryPermission('get_url', 'query')) {\n\t\tconst nantuModeQuery = getUrl('query');\n\n\t\tif (nantuModeQuery.indexOf(nantuModeQueryVariableName + \"=off\") !== -1) {\n\t\t\treturn true;\n\t\t}\n\t}\n\n\treturn false;\n}\n\n\nfunction getGACookieTimestamp() {\n\n\tconst GACookieName = \"_ga\";\n\n\tif (queryPermission('get_cookies', GACookieName)) {\n\t\tconst gaCookieValue = getCookieValues(GACookieName).join('');\n\n\t\tconst cookieParts = gaCookieValue.split(\".\");\n\n\t\tconst gaTimestamp = strToInt(cookieParts[cookieParts.length - 1]);\n\n\t\tif(gaTimestamp > 0)\n\t\t{\n\t\t\treturn gaTimestamp;\n\t\t}\n\n\t} else {\n\t\treturn 0;\n\t}\n\t\n\treturn Math.floor(getTimestampMillis()/1000);\n}\n\n//Check if the user is in QA mode\n//QA Mode is set using a cookie or the query parameter nantu_mode=qa\nfunction isInQAMode() {\n\tif (queryPermission('get_cookies', nantuModeCookieName)) {\n\t\tconst nantuModeCookie = getCookieValues(nantuModeCookieName).join('');\n\n\t\tif (nantuModeCookie === \"qa\" || hasQAQuery()) {\n\t\t\treturn true;\n\t\t}\n\t}\n\n\treturn false;\n}\n\nfunction hasQAQuery() {\n\tif (queryPermission('get_url', 'query')) {\n\t\tconst nantuModeQuery = getUrl('query');\n\n\t\tif (nantuModeQuery.indexOf(nantuModeQueryVariableName + \"=qa\") !== -1) {\n\t\t\treturn true;\n\t\t}\n\t}\n\n\treturn false;\n}\n\n//set the QA mode cookie\nfunction setQAModeCookie() {\n\t// Set Cookie Permissions\n\tconst options = {\n\t\t'domain': 'auto',\n\t\t'path': '/',\n\t\t'max-age': 60*60,\n\t\t'secure': true\n\t};\n\n\tif (queryPermission('set_cookies', nantuModeCookieName, options)) {\n\t\tsetCookie(nantuModeCookieName, 'qa', options);\n\t}\n}\n\n// display log messages in the console if nantu is in QA mode, also include the test index\nfunction testLog(message1, message2) {\n\tif (isInQAMode()) {\n\t\tlog(\"Nantu Test \" + data.testIndex + \": \" + message1, message2);\n\t}\n}\n\nfunction getNumberAfterString(text, string) {\n\tconst index = text.indexOf(string);\n\n\tif (index !== -1) {\n\t\tlet startOfNumberIndex = index + string.length;\n\t\tlet endOfNumberIndex = startOfNumberIndex;\n\t\twhile (endOfNumberIndex < text.length) {\n\t\t\tif (strToInt(text[endOfNumberIndex]) !== null) {\n\t\t\t\tendOfNumberIndex++;\n\t\t\t} else {\n\t\t\t\tbreak;\n\t\t\t}\n\t\t}\n\n\t\tconst number = text.slice(startOfNumberIndex, endOfNumberIndex);\n\n\t\treturn strToInt(number);\n\t}\n\n\treturn null;\n}\n\nfunction isAllowedDomain(domain, testData) {\n\tif (testData.allowedDomain === domain) {\n\t\treturn true;\n\t}\n\n\treturn false;\n}\n\nfunction getSelectedVariation(savedVariations, testData) {\n\tfor (const savedVariation of savedVariations) {\n\t\tif (savedVariation.id === strToInt(testData.testIndex)) {\n\t\t\treturn savedVariation.variation;\n\t\t}\n\t}\n\n\treturn \"unset\";\n}\n\nfunction getVariationName(variation, testData) {\n\tfor (const variationData of testData.variations) {\n\t\tif (variationData.id === variation) {\n\t\t\treturn variationData.name;\n\t\t}\n\t}\n\n\treturn \"unknown\";\n}\n\n\nfunction selectRandomVariation(testData) {\n\tconst variations = testData.variations;\n\n\tlet maxWeight = 0;\n\n\tfor (const variation of variations) {\n\t\tmaxWeight += strToInt(variation.weight);\n\t}\n\n\tconst randomWeight = generateRandom(0, maxWeight - 1);\n\n\tlet currentWeight = 0;\n\n\tfor (const variation of variations) {\n\t\tcurrentWeight += strToInt(variation.weight);\n\t\tif (randomWeight < currentWeight) {\n\t\t\treturn variation.id;\n\t\t}\n\t}\n\n\treturn \"unset\";\n}\n\nfunction getDaysFrom1970(dateString) {\n\tconst dateParts = dateString.split('/');\n\n\tif (dateParts.length !== 3) {\n\t\treturn 0;\n\t}\n\n\tconst month = strToInt(dateParts[0]);\n\tconst day = strToInt(dateParts[1]);\n\tconst year = strToInt(dateParts[2]);\n\n\t// Days per month (assuming non-leap year for February)\n\tconst daysPerMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];\n\n\t// Calculate the total number of days from the Unix Epoch to the given date\n\tlet totalDays = 0;\n\n\tfor (let y = 1970; y < year; y++) {\n\t\ttotalDays += isLeapYear(y) ? 366 : 365;\n\t}\n\n\tfor (let m = 1; m < month; m++) {\n\n\t\ttotalDays += daysPerMonth[m];\n\n\n\t\tif (m === 2 && isLeapYear(year)) {\n\t\t\ttotalDays += 1; // February has 29 days in a leap year\n\t\t}\n\n\t}\n\ttotalDays += day - 1; // Subtract 1 as the Unix Epoch starts from January 1, 1970\n\n\treturn totalDays;\n}\n\nfunction isLeapYear(year) {\n\treturn (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;\n}\n\n/*--includeend--*/\n\n// Call data.gtmOnSuccess when the tag is finished.\ndata.gtmOnSuccess();\n\n\n___WEB_PERMISSIONS___\n\n[\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"logging\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"environments\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"all\"\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"access_local_storage\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"keys\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_tests\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  }\n                ]\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"get_cookies\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"cookieAccess\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"specific\"\n          }\n        },\n        {\n          \"key\": \"cookieNames\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 1,\n                \"string\": \"nantu_mode\"\n              },\n              {\n                \"type\": 1,\n                \"string\": \"_ga\"\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"get_url\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"queriesAllowed\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        },\n        {\n          \"key\": \"urlParts\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"specific\"\n          }\n        },\n        {\n          \"key\": \"query\",\n          \"value\": {\n            \"type\": 8,\n            \"boolean\": true\n          }\n        },\n        {\n          \"key\": \"host\",\n          \"value\": {\n            \"type\": 8,\n            \"boolean\": true\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"set_cookies\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"allowedCookies\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"name\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"domain\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"path\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"secure\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"session\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_mode\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"*\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"*\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"any\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"any\"\n                  }\n                ]\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"access_globals\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"keys\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"dataLayer\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  }\n                ]\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  }\n]\n\n\n___TESTS___\n\nscenarios: []\n\n\n___NOTES___\n\nCreated on 7/31/2021, 10:51:07 AM\n\n\n"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "templateId": "36",
+                "name": "Nantu Add on - Microsoft Clarity setup",
+                "fingerprint": "1704721183170",
+                "templateData": "___INFO___\n\n{\n  \"type\": \"TAG\",\n  \"id\": \"cvt_temp_public_id\",\n  \"version\": 1,\n  \"securityGroups\": [],\n  \"displayName\": \"Nantu Add on - Microsoft Clarity setup\",\n  \"brand\": {\n    \"id\": \"brand_dummy\",\n    \"displayName\": \"\"\n  },\n  \"description\": \"\",\n  \"containerContexts\": [\n    \"WEB\"\n  ]\n}\n\n\n___TEMPLATE_PARAMETERS___\n\n[\n  {\n    \"type\": \"CHECKBOX\",\n    \"name\": \"has_clarity\",\n    \"checkboxText\": \"Site already has Microsoft Clarity\",\n    \"simpleValueType\": true,\n    \"defaultValue\": true\n  },\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"clarity_setup\",\n    \"displayName\": \"Microsoft Clarity Project ID\",\n    \"groupStyle\": \"NO_ZIPPY\",\n    \"subParams\": [\n      {\n        \"type\": \"TEXT\",\n        \"name\": \"clarity_project_id\",\n        \"displayName\": \"\",\n        \"simpleValueType\": true,\n        \"valueValidators\": [\n          {\n            \"type\": \"NON_EMPTY\"\n          }\n        ]\n      }\n    ],\n    \"enablingConditions\": [\n      {\n        \"paramName\": \"has_clarity\",\n        \"paramValue\": false,\n        \"type\": \"EQUALS\"\n      }\n    ]\n  },\n  {\n    \"type\": \"CHECKBOX\",\n    \"name\": \"all_tests\",\n    \"checkboxText\": \"Run on all Nantu tests?\",\n    \"simpleValueType\": true,\n    \"defaultValue\": true\n  },\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"tests\",\n    \"displayName\": \"Run on the following tests only:\",\n    \"groupStyle\": \"NO_ZIPPY\",\n    \"subParams\": [\n      {\n        \"type\": \"SIMPLE_TABLE\",\n        \"name\": \"tests_list\",\n        \"displayName\": \"Test List\",\n        \"simpleTableColumns\": [\n          {\n            \"defaultValue\": \"\",\n            \"displayName\": \"Nantu Test Index\",\n            \"name\": \"index\",\n            \"type\": \"TEXT\"\n          }\n        ]\n      }\n    ],\n    \"enablingConditions\": [\n      {\n        \"paramName\": \"all_tests\",\n        \"paramValue\": false,\n        \"type\": \"EQUALS\"\n      }\n    ]\n  }\n]\n\n\n___SANDBOXED_JS_FOR_WEB_TEMPLATE___\n\n// Description: Nantu Add on - Microsoft Clarity setup\n// Author: Juan Castro\n// Last modified: 2023-10-25\n// License: Apache 2.0\n// Version: 1.0.0\n\nconst injectScript = require('injectScript');\nconst queryPermission = require('queryPermission');\nconst createArgumentsQueue = require('createArgumentsQueue');\nconst encodeUri = require('encodeUri');\nconst log = require('logToConsole');\nconst copyFromWindow = require('copyFromWindow');\nconst copyFromDataLayer = require('copyFromDataLayer');\n\nconst nantuEventPrefix = 'nantu_';\nconst nantuEventPrefixLength = nantuEventPrefix.length;\n\nconst nantuEventExecute = '_execute_';\nconst nantuEventExecuteLength = nantuEventExecute.length;\n\nconst eventName = copyFromDataLayer('event');\n\nif (eventName.indexOf(nantuEventPrefix) === -1) {\n\tlog('Nantu Add on should be used only with Nantu events');\n\tdata.gtmOnFailure();\n\treturn;\n}\n\nconst executeIndex = eventName.indexOf(nantuEventExecute);\n\nif (executeIndex === -1) {\n\tlog('Error with event name' + eventName);\n\tdata.gtmOnFailure();\n\treturn;\n}\n\nif (data.all_tests === false) {\n\tconst testIndex = eventName.indexOf(nantuEventPrefixLength, executeIndex - nantuEventPrefixLength);\n\n\tlog('Test index: ' + testIndex);\n}\n\nconst testName = eventName.substring(0, executeIndex);\nconst testVariation = eventName.substring(executeIndex + nantuEventExecuteLength);\n\nvar clarity;\n\nconst clarityCheck = copyFromWindow('clarity');\n\nif (typeof clarityCheck != 'undefined') {\n\tlog('Clarity is already loaded');\n\tclarity = copyFromWindow('clarity');\n} else {\n\tlog('Clarity is not loaded');\n\tclarity = createArgumentsQueue('clarity', 'clarity.q');\n}\n\nclarity(\"set\", testName, testVariation);\n\n\nif (data.has_clarity === false) {\n\t// Reconstruct customer clarity script URL\n\tconst url = \"https://www.clarity.ms/tag/\"+encodeUri(data.clarity_project_id)+\"?ref=gtm\";\n\n\t// Handle Success\n\tconst onCustomerSuccess = () => {\n\t\tdata.gtmOnSuccess();\n\t};\n\n\t// Handle Failure\n\tconst onCustomerFailure = () => {\n\t\tdata.gtmOnFailure();\n\t};\n\n\t// If the URL input by the user matches the permissions set for the template,\n\t// inject the script with the onSuccess and onFailure methods as callbacks.\n\tif (queryPermission('inject_script', \"https://www.clarity.ms\")) {\n\t\tinjectScript(url, onCustomerSuccess, onCustomerFailure);\n\t} else {\n\t\tdata.gtmOnFailure();\n\t}\n} else {\n\tdata.gtmOnSuccess();\n}\n\n\n___WEB_PERMISSIONS___\n\n[\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"logging\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"environments\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"debug\"\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"access_globals\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"keys\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"clarity\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  }\n                ]\n              },\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"clarity.q\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  }\n                ]\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"inject_script\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"urls\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 1,\n                \"string\": \"https://www.clarity.ms/*\"\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"read_data_layer\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"allowedKeys\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"specific\"\n          }\n        },\n        {\n          \"key\": \"keyPatterns\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 1,\n                \"string\": \"event\"\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  }\n]\n\n\n___TESTS___\n\nscenarios: []\n\n\n___NOTES___\n\n\n\n\n"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "templateId": "42",
+                "name": "Nantu Set QA Cookie",
+                "fingerprint": "1698249294615",
+                "templateData": "___INFO___\n\n{\n  \"type\": \"TAG\",\n  \"id\": \"cvt_temp_public_id\",\n  \"version\": 1,\n  \"securityGroups\": [],\n  \"displayName\": \"Nantu Set QA Cookie\",\n  \"brand\": {\n    \"id\": \"brand_dummy\",\n    \"displayName\": \"\"\n  },\n  \"description\": \"Set Cookie for QA\",\n  \"containerContexts\": [\n    \"WEB\"\n  ]\n}\n\n\n___TEMPLATE_PARAMETERS___\n\n[]\n\n\n___SANDBOXED_JS_FOR_WEB_TEMPLATE___\n\n// Description: Cookie Template\n// Author: Juan Castro\n// Last modified: 2023-10-24\n// License: Apache 2.0\n// Version: 1.0.0\n\n// API imports\nconst queryPermission = require('queryPermission');\nconst setCookie = require('setCookie');\nconst copyFromDataLayer = require('copyFromDataLayer');\nconst getUrl = require('getUrl');\n\n// Constants\nconst nantuModeCookieName = 'nantu_mode';\nconst nantuModeQueryVariableName = 'nantu_mode';\nconst nantuQAModeEventName = 'nantu_qa_mode';\n\n\nif (isNantuQAModeEvent() || hasQAQuery()) {\n\tsetQAModeCookie();\n}\n\ndata.gtmOnSuccess();\n\nfunction isNantuQAModeEvent() {\n\tif (queryPermission('read_data_layer', 'event')) {\n\t\tconst dlEvent = copyFromDataLayer('event');\n\n\t\tif (dlEvent === nantuQAModeEventName) {\n\t\t\treturn true;\n\t\t}\n\t}\n\n\treturn false;\n}\n\n\nfunction hasQAQuery() {\n\tif (queryPermission('get_url', 'query')) {\n\t\tconst nantuModeQuery = getUrl('query');\n\n\t\tif (nantuModeQuery.indexOf(nantuModeQueryVariableName + \"=qa\") !== -1) {\n\t\t\treturn true;\n\t\t}\n\t}\n\n\treturn false;\n}\n\n//set the QA mode cookie\nfunction setQAModeCookie() {\n\t// Set Cookie Permissions\n\tconst options = {\n\t\t'domain': 'auto',\n\t\t'path': '/',\n\t\t'max-age': 60*60,\n\t\t'secure': true\n\t};\n\n\tif (queryPermission('set_cookies', nantuModeCookieName, options)) {\n\t\tsetCookie(nantuModeCookieName, 'qa', options);\n\t}\n}\n\n\n___WEB_PERMISSIONS___\n\n[\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"read_data_layer\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"allowedKeys\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"specific\"\n          }\n        },\n        {\n          \"key\": \"keyPatterns\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 1,\n                \"string\": \"event\"\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"set_cookies\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"allowedCookies\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"name\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"domain\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"path\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"secure\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"session\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_mode\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"*\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"*\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"any\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"any\"\n                  }\n                ]\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"get_url\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"urlParts\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        },\n        {\n          \"key\": \"queriesAllowed\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        }\n      ]\n    },\n    \"isRequired\": true\n  }\n]\n\n\n___TESTS___\n\nscenarios: []\n\n\n___NOTES___\n\n\n\n\n"
+            }
+        ]
+    }
+}
