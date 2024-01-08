@@ -1,0 +1,11 @@
+<script>
+var nantu_environment_cookie_domain = location.hostname;
+
+if(/nantu_environment=qa/.test(location.search))
+{
+	var nantu_environment_date = new Date();
+	nantu_environment_date.setTime(nantu_environment_date.getTime() + 3600 * 1000);
+	var nantu_environment_expires = "expires=" + nantu_environment_date.toGMTString();
+	document.cookie = "nantu_environment=qa; " + nantu_environment_expires + "; path=/; domain=" + nantu_environment_cookie_domain + ";";
+}
+</script>
