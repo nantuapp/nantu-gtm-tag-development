@@ -1,6 +1,6 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2024-01-21 19:14:43",
+    "exportTime": "2024-01-31 19:30:03",
     "containerVersion": {
         "path": "accounts/6098026418/containers/115676190/versions/0",
         "accountId": "6098026418",
@@ -204,6 +204,11 @@
                         "value": "false"
                     },
                     {
+                        "type": "BOOLEAN",
+                        "key": "enhancedUserId",
+                        "value": "false"
+                    },
+                    {
                         "type": "LIST",
                         "key": "userProperties",
                         "list": [
@@ -232,10 +237,10 @@
                     {
                         "type": "TEMPLATE",
                         "key": "measurementIdOverride",
-                        "value": "G-CHANGEME"
+                        "value": "{{Nantu GA Measurement ID}}"
                     }
                 ],
-                "fingerprint": "1701349144468",
+                "fingerprint": "1706729090064",
                 "firingTriggerId": [
                     "50"
                 ],
@@ -1030,6 +1035,23 @@
                 "fingerprint": "1704737716124",
                 "parentFolderId": "53",
                 "formatValue": {}
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "69",
+                "name": "Nantu GA Measurement ID",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "G-CHANGEME"
+                    }
+                ],
+                "fingerprint": "1706729077391",
+                "parentFolderId": "46",
+                "formatValue": {}
             }
         ],
         "folder": [
@@ -1077,7 +1099,7 @@
                 "name": "Page URL"
             }
         ],
-        "fingerprint": "1705864483623",
+        "fingerprint": "1706729403747",
         "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6098026418/containers/115676190/versions/0?apiLink=version",
         "customTemplate": [
             {
