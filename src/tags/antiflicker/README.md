@@ -34,7 +34,7 @@ body.nantu_antiflicker {
 </style>
 ```
 
-2. Add the class **`nantu_antiflicker`** to the body tag of your HTML document
+2. Add the class `nantu_antiflicker` to the body tag of your HTML document
 
 ```html
 <body class="nantu_antiflicker">
