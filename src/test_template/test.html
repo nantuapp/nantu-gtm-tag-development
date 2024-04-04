@@ -71,7 +71,14 @@ if(nantu_x_trigger_event.indexOf("nantu_x_execute") > -1) {
 	if (/^(unknown|none)$/.test(nantu_x_selected_variation) === false) {
 
 		//The code of the A/B test variations goes here
+
+		// Revealing the page if anti-flicker is enabled
+		window.nantu_unhide = true;
+		document.body.classList.remove("nantu_antiflicker");
+
+		// Push data to data layer to track the test results
 		nantu_x_push_to_data_layer();
+
 
 		// End of A/B test variations code
 	}
