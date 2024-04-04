@@ -8,7 +8,7 @@ This script is designed to help reduce the flicker effect by hiding the page unt
 
 ### Installation
 
-1. Insert this <style> tag into your HTML document's <head> tag
+1. Insert this <style> tag into your HTML document <head> tag
 
 Change the value of the `animation-duration` property and the value of the `nantu_flicker_duration` variable to shorten or lengthen the duration of the flicker effect. Most of the time the page will be displayed before this duration, this is the worst case scenario.
 
