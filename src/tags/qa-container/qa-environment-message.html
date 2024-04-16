@@ -1,0 +1,51 @@
+<script>
+var nantu_environment_cookie_domain = location.hostname;
+
+function nantu_qa_delete_cookie()
+{
+	document.cookie = "nantu_environment=qa; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/; domain=" + nantu_environment_cookie_domain + ";";
+	var env_url = window.location.href.replace("nantu_environment=qa", "");
+
+	window.location = env_url;
+}
+</script>
+<div id="nantu_qa_enviroment_message">
+	<a href="javascript:void(0);" onclick="this.parentNode.style.display='none'" class="nantu_qa_close">&times;</a>
+	<span>You are previewing the QA environment Container</span>
+	<a id="nantu_qa_disable" href="javascript:void(0);" onclick="nantu_qa_delete_cookie()">Disable QA Environment</a>
+</div>
+<style>
+#nantu_qa_enviroment_message{
+	position:fixed;
+	bottom:0;
+	left:0;
+	right:0;
+	background:red;
+	color:white;
+	z-index:100000000000000000;
+	font-family:Arial;
+	padding:20px;
+	font-size:1.7rem;
+	display:flex;
+	justify-content: space-between;
+	align-items: center;
+}
+a#nantu_qa_disable {
+	background: white;
+	color: red;
+	padding: 20px;
+	border-radius: 5px;
+}
+a.nantu_qa_close {
+	color: white;
+	text-decoration: none;
+	padding-right: 10px;
+	font-size:32px;
+}
+@media (max-width:800px) {
+	div#nantu_qa_enviroment_message {
+		font-size: 0.8em;
+	}
+}
+</style>
+

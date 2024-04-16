@@ -7,5 +7,7 @@ window.nantu_unhide = true;
 
 if(typeof(nantu_show_page) === 'function') {
 	nantu_show_page();
+} else {
+	document.body.classList.remove("nantu_antiflicker");
 }
 </script>

@@ -1,0 +1,190 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2024-04-16 20:37:27",
+    "containerVersion": {
+        "path": "accounts/6098026418/containers/115676190/versions/0",
+        "accountId": "6098026418",
+        "containerId": "115676190",
+        "containerVersionId": "0",
+        "container": {
+            "path": "accounts/6098026418/containers/115676190",
+            "accountId": "6098026418",
+            "containerId": "115676190",
+            "name": "nantu.app",
+            "publicId": "GTM-KQR8W86",
+            "usageContext": [
+                "WEB"
+            ],
+            "fingerprint": "1691766812264",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6098026418/containers/115676190/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": false,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": false
+            },
+            "tagIds": [
+                "GTM-KQR8W86"
+            ]
+        },
+        "tag": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "tagId": "77",
+                "name": "Nantu Antiflicker - Display Page",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>\n\n// This tag works in conjunction with the Anti-flicker CSS and JavaScript installed in the <head> and before the </body> closing tag respectively.\n// Will display the page immediately to improve the user experience\n\nwindow.nantu_unhide = true;\n\nif(typeof(nantu_show_page) === 'function') {\n\tnantu_show_page();\n} else {\n\tdocument.body.classList.remove(\"nantu_antiflicker\");\n}\n</script>\n"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1713293393598",
+                "firingTriggerId": [
+                    "76"
+                ],
+                "blockingTriggerId": [
+                    "27"
+                ],
+                "parentFolderId": "75",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            }
+        ],
+        "trigger": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "27",
+                "name": "Nantu Mode OFF",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": ".*"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{nantu_mode_query_var}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "off"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1691094635153",
+                "parentFolderId": "30"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "76",
+                "name": "All Pages - Nantu Page View",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "nantu_page_view"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1710896950605",
+                "parentFolderId": "75"
+            }
+        ],
+        "variable": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "variableId": "23",
+                "name": "nantu_mode_query_var",
+                "type": "u",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "component",
+                        "value": "QUERY"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "queryKey",
+                        "value": "nantu_mode"
+                    }
+                ],
+                "fingerprint": "1691094635178",
+                "parentFolderId": "30",
+                "formatValue": {}
+            }
+        ],
+        "folder": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "folderId": "30",
+                "name": "Nantu QA Tab",
+                "fingerprint": "1691072635447"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "folderId": "75",
+                "name": "Nantu Antiflicker",
+                "fingerprint": "1710896492347"
+            }
+        ],
+        "fingerprint": "1713299847041",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6098026418/containers/115676190/versions/0?apiLink=version"
+    }
+}
