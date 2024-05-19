@@ -1,0 +1,118 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2024-05-06 14:18:07",
+    "containerVersion": {
+        "path": "accounts/4702650641/containers/171246049/versions/0",
+        "accountId": "4702650641",
+        "containerId": "171246049",
+        "containerVersionId": "0",
+        "container": {
+            "path": "accounts/4702650641/containers/171246049",
+            "accountId": "4702650641",
+            "containerId": "171246049",
+            "name": "GraduationSource QA Container",
+            "publicId": "GTM-5XC9TTGS",
+            "usageContext": [
+                "WEB"
+            ],
+            "fingerprint": "1700245963922",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/4702650641/containers/171246049/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": false,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": false
+            },
+            "tagIds": [
+                "GTM-5XC9TTGS"
+            ]
+        },
+        "tag": [
+            {
+                "accountId": "4702650641",
+                "containerId": "171246049",
+                "tagId": "23",
+                "name": "QA Environment Message",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>\nvar nantu_environment_cookie_domain = location.hostname;\n\nfunction nantu_qa_delete_cookie()\n{\n\tdocument.cookie = \"nantu_environment=qa; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/; domain=\" + nantu_environment_cookie_domain + \";\";\n\twindow.location = window.location.href.replace(\"nantu_environment=qa\", \"nantu_environment=production\");\n}\n</script>\n<div id=\"nantu_qa_enviroment_message\">\n\t<a href=\"javascript:void(0);\" onclick=\"this.parentNode.style.display='none'\" class=\"nantu_qa_close\">&times;</a>\n\t<span>You are previewing the QA environment Container</span>\n\t<a id=\"nantu_qa_disable\" href=\"javascript:void(0);\" onclick=\"nantu_qa_delete_cookie()\">Disable QA Environment</a>\n</div>\n<style>\n#nantu_qa_enviroment_message{\n\tposition:fixed;\n\tbottom:0;\n\tleft:0;\n\tright:0;\n\tbackground:red;\n\tcolor:white;\n\tz-index:100000000000000000;\n\tfont-family:Arial;\n\tpadding:20px;\n\tfont-size:1.7rem;\n\tdisplay:flex;\n\tjustify-content: space-between;\n\talign-items: center;\n}\na#nantu_qa_disable {\n\tbackground: white;\n\tcolor: red;\n\tpadding: 20px;\n\tborder-radius: 5px;\n}\na.nantu_qa_close {\n\tcolor: white;\n\ttext-decoration: none;\n\tpadding-right: 10px;\n\tfont-size:32px;\n}\n@media (max-width:800px) {\n\tdiv#nantu_qa_enviroment_message {\n\t\tfont-size: 0.8em;\n\t}\n}\n</style>\n\n"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1700490992885",
+                "firingTriggerId": [
+                    "22"
+                ],
+                "parentFolderId": "21",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            }
+        ],
+        "trigger": [
+            {
+                "accountId": "4702650641",
+                "containerId": "171246049",
+                "triggerId": "22",
+                "name": "QA Container All Pages DOM Ready",
+                "type": "DOM_READY",
+                "filter": [
+                    {
+                        "type": "CONTAINS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Page URL}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "nantu_hide_qa_banner=yes"
+                            },
+                            {
+                                "type": "BOOLEAN",
+                                "key": "negate",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1700490307639",
+                "parentFolderId": "21"
+            }
+        ],
+        "folder": [
+            {
+                "accountId": "4702650641",
+                "containerId": "171246049",
+                "folderId": "21",
+                "name": "QA Environment Items",
+                "fingerprint": "1700489955495"
+            }
+        ],
+        "fingerprint": "1715005087191",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/4702650641/containers/171246049/versions/0?apiLink=version"
+    }
+}
