@@ -1,0 +1,238 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2024-05-20 20:09:57",
+    "containerVersion": {
+        "path": "accounts/6226242273/containers/182513704/versions/0",
+        "accountId": "6226242273",
+        "containerId": "182513704",
+        "containerVersionId": "0",
+        "container": {
+            "path": "accounts/6226242273/containers/182513704",
+            "accountId": "6226242273",
+            "containerId": "182513704",
+            "name": "arcrypto.io",
+            "publicId": "GTM-5TM3262R",
+            "usageContext": [
+                "WEB"
+            ],
+            "fingerprint": "1712851958200",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6226242273/containers/182513704/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": false,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": false
+            },
+            "tagIds": [
+                "GTM-5TM3262R"
+            ]
+        },
+        "tag": [
+            {
+                "accountId": "6226242273",
+                "containerId": "182513704",
+                "tagId": "8",
+                "name": "Nantu Affiliate Cookie",
+                "type": "cvt_182513704_7",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "query_var",
+                        "value": "affiliate_id"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "domain",
+                        "value": "auto"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "expire_days",
+                        "value": "30"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "campaign_query_var",
+                        "value": "utm_campaign"
+                    }
+                ],
+                "fingerprint": "1716235326312",
+                "firingTriggerId": [
+                    "6",
+                    "14"
+                ],
+                "parentFolderId": "4",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            }
+        ],
+        "trigger": [
+            {
+                "accountId": "6226242273",
+                "containerId": "182513704",
+                "triggerId": "6",
+                "name": "Nantu Affiliate Query",
+                "type": "PAGEVIEW",
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{nantu_affiliate_id}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "undefined"
+                            },
+                            {
+                                "type": "BOOLEAN",
+                                "key": "negate",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1716205876336",
+                "parentFolderId": "4"
+            },
+            {
+                "accountId": "6226242273",
+                "containerId": "182513704",
+                "triggerId": "14",
+                "name": "Nantu Campaign Query",
+                "type": "PAGEVIEW",
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{nantu_campaign_id}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "undefined"
+                            },
+                            {
+                                "type": "BOOLEAN",
+                                "key": "negate",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1716235279976",
+                "parentFolderId": "4"
+            }
+        ],
+        "variable": [
+            {
+                "accountId": "6226242273",
+                "containerId": "182513704",
+                "variableId": "5",
+                "name": "nantu_affiliate_id",
+                "type": "u",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "component",
+                        "value": "QUERY"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "queryKey",
+                        "value": "affiliate_id"
+                    }
+                ],
+                "fingerprint": "1716205876335",
+                "parentFolderId": "4",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6226242273",
+                "containerId": "182513704",
+                "variableId": "10",
+                "name": "Affiliate Cookie",
+                "type": "k",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "decodeCookie",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "nantu_affiliate_id"
+                    }
+                ],
+                "fingerprint": "1716206848360",
+                "parentFolderId": "4",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6226242273",
+                "containerId": "182513704",
+                "variableId": "13",
+                "name": "nantu_campaign_id",
+                "type": "u",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "component",
+                        "value": "QUERY"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "queryKey",
+                        "value": "utm_campaign"
+                    }
+                ],
+                "fingerprint": "1716235205161",
+                "parentFolderId": "4",
+                "formatValue": {}
+            }
+        ],
+        "folder": [
+            {
+                "accountId": "6226242273",
+                "containerId": "182513704",
+                "folderId": "4",
+                "name": "Nantu Affiliate",
+                "fingerprint": "1716205876334"
+            }
+        ],
+        "fingerprint": "1716235797739",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6226242273/containers/182513704/versions/0?apiLink=version",
+        "customTemplate": [
+            {
+                "accountId": "6226242273",
+                "containerId": "182513704",
+                "templateId": "7",
+                "name": "Nantu Set Affiliate Cookie",
+                "fingerprint": "1716235131692",
+                "templateData": "___INFO___\n\n{\n  \"type\": \"TAG\",\n  \"id\": \"cvt_temp_public_id\",\n  \"version\": 1,\n  \"securityGroups\": [],\n  \"displayName\": \"Nantu Set Affiliate Cookie\",\n  \"brand\": {\n    \"id\": \"brand_dummy\",\n    \"displayName\": \"\"\n  },\n  \"description\": \"\",\n  \"containerContexts\": [\n    \"WEB\"\n  ]\n}\n\n\n___TEMPLATE_PARAMETERS___\n\n[\n  {\n    \"type\": \"TEXT\",\n    \"name\": \"expire_days\",\n    \"displayName\": \"Cookie Expiration in Days\",\n    \"simpleValueType\": true,\n    \"defaultValue\": 30,\n    \"valueValidators\": [\n      {\n        \"type\": \"POSITIVE_NUMBER\"\n      }\n    ]\n  },\n  {\n    \"type\": \"TEXT\",\n    \"name\": \"query_var\",\n    \"displayName\": \"Query variable\",\n    \"simpleValueType\": true,\n    \"defaultValue\": \"affiliate_id\",\n    \"valueValidators\": [\n      {\n        \"type\": \"NON_EMPTY\"\n      }\n    ]\n  },\n  {\n    \"type\": \"TEXT\",\n    \"name\": \"campaign_query_var\",\n    \"displayName\": \"Query variable\",\n    \"simpleValueType\": true,\n    \"defaultValue\": \"utm_campaign\",\n    \"valueValidators\": [\n      {\n        \"type\": \"NON_EMPTY\"\n      }\n    ]\n  },\n  {\n    \"type\": \"TEXT\",\n    \"name\": \"domain\",\n    \"displayName\": \"Domain\",\n    \"simpleValueType\": true,\n    \"defaultValue\": \"auto\",\n    \"valueValidators\": [\n      {\n        \"type\": \"NON_EMPTY\"\n      }\n    ]\n  }\n]\n\n\n___SANDBOXED_JS_FOR_WEB_TEMPLATE___\n\n// API imports\nconst queryPermission = require('queryPermission');\nconst setCookie = require('setCookie');\nconst getUrl = require('getUrl');\nconst getQueryParameters = require('getQueryParameters');\n\n// Constants\nconst nantuAffiliateCookieName = 'nantu_affiliate_id';\nconst nantuCampaignCookieName = 'nantu_campaign_id';\n\nif (getAffiliateQuery() != '') {\n\tsetAffiliateCookie(nantuAffiliateCookieName, getAffiliateQuery());\n}\n\nif (getCampaignQuery() != '') {\n\tsetAffiliateCookie(nantuCampaignCookieName, getCampaignQuery());\n}\n\ndata.gtmOnSuccess();\n\nfunction getAffiliateQuery() {\n\tif (queryPermission('get_url', 'query')) {\n\t\tconst affiliateQuery = getQueryParameters(data.query_var);\n\n\t\tif (affiliateQuery != 'undefined') {\n\t\t\treturn affiliateQuery;\n\t\t}\n\t}\n\n\treturn '';\n}\n\nfunction getCampaignQuery() {\n\tif (queryPermission('get_url', 'query')) {\n\t\tconst campaignQuery = getQueryParameters(data.campaign_query_var);\n\n\t\tif (campaignQuery != 'undefined') {\n\t\t\treturn campaignQuery;\n\t\t}\n\t}\n\n\treturn '';\n}\n\n//set the QA mode cookie\nfunction setAffiliateCookie(cookieName, cookieValue) {\n\t// Set Cookie Permissions\n\tconst options = {\n\t\t'domain': data.domain,\n\t\t'path': '/',\n\t\t'max-age': 60*60*24*data.expire_days,\n\t\t'secure': true\n\t};\n\n\tif (queryPermission('set_cookies', cookieName, options)) {\n\t\tsetCookie(cookieName, cookieValue, options);\n\t}\n}\n\n\n___WEB_PERMISSIONS___\n\n[\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"set_cookies\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"allowedCookies\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"name\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"domain\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"path\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"secure\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"session\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_affiliate_id\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"*\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"*\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"any\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"any\"\n                  }\n                ]\n              },\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"name\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"domain\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"path\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"secure\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"session\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_campaign_id\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"*\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"*\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"any\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"any\"\n                  }\n                ]\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"get_url\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"urlParts\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        },\n        {\n          \"key\": \"queriesAllowed\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  }\n]\n\n\n___TESTS___\n\nscenarios: []\n\n\n___NOTES___\n\n\n\n\n"
+            }
+        ]
+    }
+}

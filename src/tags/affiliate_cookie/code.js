@@ -6,9 +6,14 @@ const getQueryParameters = require('getQueryParameters');
 
 // Constants
 const nantuAffiliateCookieName = 'nantu_affiliate_id';
+const nantuCampaignCookieName = 'nantu_campaign_id';
 
 if (getAffiliateQuery() != '') {
-	setAffiliateCookie(getAffiliateQuery());
+	setAffiliateCookie(nantuAffiliateCookieName, getAffiliateQuery());
+}
+
+if (getCampaignQuery() != '') {
+	setAffiliateCookie(nantuCampaignCookieName, getCampaignQuery());
 }
 
 data.gtmOnSuccess();
@@ -25,8 +30,20 @@ function getAffiliateQuery() {
 	return '';
 }
 
+function getCampaignQuery() {
+	if (queryPermission('get_url', 'query')) {
+		const campaignQuery = getQueryParameters(data.campaign_query_var);
+
+		if (campaignQuery != 'undefined') {
+			return campaignQuery;
+		}
+	}
+
+	return '';
+}
+
 //set the QA mode cookie
-function setAffiliateCookie(cookieValue) {
+function setAffiliateCookie(cookieName, cookieValue) {
 	// Set Cookie Permissions
 	const options = {
 		'domain': data.domain,
@@ -35,7 +52,7 @@ function setAffiliateCookie(cookieValue) {
 		'secure': true
 	};
 
-	if (queryPermission('set_cookies', nantuAffiliateCookieName, options)) {
-		setCookie(nantuAffiliateCookieName, cookieValue, options);
+	if (queryPermission('set_cookies', cookieName, options)) {
+		setCookie(cookieName, cookieValue, options);
 	}
 }
