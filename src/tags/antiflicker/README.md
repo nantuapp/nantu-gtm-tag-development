@@ -42,7 +42,7 @@ body.nantu_antiflicker {
 </body>
 ```
 
-3. Insert this script tag into your HTML document before the </body> closing tag
+3. Insert this script tag into your HTML document before the **body** closing tag
 
 ```html
 <script>
