@@ -1,6 +1,6 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2024-06-04 16:58:07",
+    "exportTime": "2024-07-03 17:42:50",
     "containerVersion": {
         "path": "accounts/6098026418/containers/115676190/versions/0",
         "accountId": "6098026418",
@@ -704,6 +704,32 @@
                 ],
                 "fingerprint": "1704738725786",
                 "parentFolderId": "29"
+            },
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "triggerId": "79",
+                "name": "Test Off",
+                "type": "PAGEVIEW",
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Page URL}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "Test Off"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1720028234426",
+                "parentFolderId": "29"
             }
         ],
         "variable": [
@@ -1142,7 +1168,7 @@
                 "name": "Page URL"
             }
         ],
-        "fingerprint": "1717520287500",
+        "fingerprint": "1720028570001",
         "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6098026418/containers/115676190/versions/0?apiLink=version",
         "customTemplate": [
             {
