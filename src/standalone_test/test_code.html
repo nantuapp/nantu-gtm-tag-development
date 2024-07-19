@@ -1,0 +1,311 @@
+<script>
+/*
+--GTM A/B test Configuration--
+
+Developers Note: replace all "nantu_x_" ocurrences. Use a unique id that matches the Jira Epic ID for every test to avoid name collisions
+*/
+var nantu_x_experiment_name = ""; // Experiment Name = VWO Campaign Name
+var nantu_x_cookie_name = "nantu_x_variation_id"; //Cookie Name: Make sure each A/B test has a unique cookie name, the name must have alphanumeric characters and _ only - This cookie name the Cookie name Field of the 1st Party Cookie variable must be the same
+var nantu_x_ga_slot = 40; // GA custom dimesion slot for this test
+
+var nantu_x_enable_test_window = true; //Set to true to exclude returning visitors. We use GA cookies to find the first visit date, so we need that the nantu_x_test_window has the right values (allowed values: true, false)
+var nantu_x_test_window = ['2021-02-01', '2023-10-30']; //If nantu_x_enable_test_window is set to true only the visitors that visit this site beetwen this dates for the first time will be included Only ISO Format is allowed YYYY-MM-DD : UTC Date
+var nantu_x_allowed_domains = []; // list of allowed domains - leave blank to allow all domains
+
+// Variations setup
+var nantu_x_variations = [
+	{
+		"id": "control", // don't change this variation id
+		"name": "Control", // don't change this variation name
+		"traffic_percent": 50 // percent of traffic for control variation
+	}
+	,{
+		"id": "variation1",
+		"name": "",
+		"traffic_percent": 50
+	}
+];
+
+var nantu_x_debug = true; // Developers set to true to see debug console messages
+
+var nantu_x_test_version = 1;
+
+// Configuration end
+
+var nantu_x_query_var_regex = /inflow(=|-)qa/;
+
+var nantu_x_random_number = Math.floor(Math.random() * 9999999);
+
+var nantu_x_variation_name = "";
+var nantu_x_execute_for_this_visitor;
+var nantu_x_variation;
+var nantu_x_ga_timestamp = parseInt(new Date().getTime() / 1000);
+var nantu_x_cookies_data = document.cookie.split(";");
+
+nantu_x_initialize();
+
+function nantu_x_initialize()
+{
+	// check if browsers supports localStorage
+	if( ! nantu_x_support_localstorage())
+	{
+		nantu_x_log("doesn't support localStorage");
+		return false;
+	}
+
+	if (/nantu_x_variation(=|-)/.test(location.search) == false)
+	{
+		// if url doesn't have nantu_x_variation query variable get the variation from localStorage or the cookie, localStorage overrides cookie
+		if (typeof(localStorage.nantu_x_force_variation) == "string")
+		{
+			nantu_x_variation = localStorage.nantu_x_force_variation;
+		}
+		else
+		{
+			nantu_x_variation = nantu_x_read_cookie(nantu_x_cookie_name);
+		}
+	}
+	else
+	{
+		// if url have nantu_x_variation query variable set the localStorage variable
+		var nantu_x_query_var_force_regex = /(&|_-_)nantu_x_variation(=|-)(control|variation[0-9]+)/;
+
+		if(nantu_x_query_var_force_regex.test(location.search))
+		{
+			nantu_x_variation = location.search.match(nantu_x_query_var_force_regex)[0].replace(/(&|_-_)nantu_x_variation(=|-)/, "");
+			localStorage.nantu_x_force_variation = nantu_x_variation;	
+		}
+	}
+
+	// check if allowed domains variable is set
+	if (nantu_x_allowed_domains.length == 0)
+	{
+		// no allowed domains in the list so run on all domains
+		nantu_x_execute_for_this_visitor = true;
+	}
+	else
+	{
+		// set var to false, change to true only if site domain matches one of the allowed domains
+		nantu_x_execute_for_this_visitor = false;
+
+		for (var nantu_x_domain_index = 0; nantu_x_domain_index < nantu_x_allowed_domains.length; nantu_x_domain_index++)
+		{
+			if (location.hostname == nantu_x_allowed_domains[nantu_x_domain_index])
+			{
+				nantu_x_execute_for_this_visitor = true;
+			}
+		}
+	}
+
+	nantu_x_log("Execute on this domain (" + location.hostname + "): " + ((nantu_x_execute_for_this_visitor) ? "yes" : "no"));
+
+	// try to get the first visit timestamp from Classic GA cookie __utma
+	for (var nantu_x_i = 0; nantu_x_i < nantu_x_cookies_data.length; nantu_x_i++)
+	{
+		if (nantu_x_cookies_data[nantu_x_i].indexOf("__utma=") != -1)
+		{
+			var nantu_x_ga_cookie_parts = nantu_x_cookies_data[nantu_x_i].split(".");
+
+			nantu_x_ga_timestamp = parseInt(nantu_x_ga_cookie_parts[2]);
+		}
+	}
+
+	// try to get the first visit timestamp from Universal GA cookie _ga
+	for (var nantu_x_i = 0; nantu_x_i < nantu_x_cookies_data.length; nantu_x_i++)
+	{
+		if (nantu_x_cookies_data[nantu_x_i].indexOf("_ga=GA") != -1)
+		{
+			var nantu_x_ga_cookie_parts = nantu_x_cookies_data[nantu_x_i].split(".");
+
+			nantu_x_ga_timestamp = parseInt(nantu_x_ga_cookie_parts[nantu_x_ga_cookie_parts.length - 1]);
+		}
+	}
+
+	// if test window is enabled check if GA cookie timestamp is between the test window dates to execute the code test
+	if (nantu_x_enable_test_window)
+	{
+		nantu_x_start_timestamp = new Date(nantu_x_test_window[0]).getTime() / 1000;
+		nantu_x_end_timestamp = new Date(nantu_x_test_window[1]).getTime() / 1000;
+
+		nantu_x_log("Test Window:" + new Date(nantu_x_test_window[0]).toUTCString() + " - " + new Date(nantu_x_test_window[1]).toUTCString());
+		nantu_x_log("Inflow timestamp:" + nantu_x_ga_timestamp + " (" + nantu_x_start_timestamp + "-" + nantu_x_end_timestamp + ")");
+
+		if (!(nantu_x_ga_timestamp >= nantu_x_start_timestamp && nantu_x_ga_timestamp <= nantu_x_end_timestamp))
+		{
+			nantu_x_execute_for_this_visitor = false;
+		}
+	}
+
+	// check if this device should be included in test
+	if (nantu_x_execute_for_this_visitor || typeof(localStorage.nantu_x_force_variation) == "string")
+	{
+		nantu_x_execute_test();
+	}
+	else
+	{
+		nantu_x_log(nantu_x_experiment_name + " test is not running on this device");
+	}
+
+}
+// check if browser has localStorage support (Incognito Safari fix)
+function nantu_x_support_localstorage()
+{
+	try{
+		localStorage.setItem("nantu_x_localstorage_support", "yes");
+
+		if(localStorage.nantu_x_localstorage_support == "yes")
+		{
+			return true;
+		}
+	}
+	catch(nantu_x_error)
+	{
+		return false;
+	}
+}
+// get cookie value
+function nantu_x_read_cookie(nantu_x_name)
+{
+	var nantu_x_name_eq = nantu_x_name + "=";
+	var nantu_x_ca = document.cookie.split(';');
+	for (var nantu_x_i = 0; nantu_x_i < nantu_x_ca.length; nantu_x_i++)
+	{
+		var nantu_x_c = nantu_x_ca[nantu_x_i];
+		while (nantu_x_c.charAt(0) == ' ')
+		{
+			nantu_x_c = nantu_x_c.substring(1, nantu_x_c.length);
+		}
+		if (nantu_x_c.indexOf(nantu_x_name_eq) == 0)
+		{
+			return nantu_x_c.substring(nantu_x_name_eq.length, nantu_x_c.length);
+		}
+	}
+	return "undefined";
+}
+// log message in the browser log
+function nantu_x_log(nantu_x_message)
+{
+	if (nantu_x_debug || localStorage.nantu_x_debug == "yes")
+	{
+		console.log("nantu_x:" + nantu_x_message);
+	}
+}
+
+// select the variation randomly by using the GTM or Geolocation random number
+function nantu_x_get_selected_variation(nantu_x_random_value)
+{
+	var nantu_x_traffic = 0;
+
+	for (var nantu_x_i = 0; nantu_x_i < nantu_x_variations.length; nantu_x_i++)
+	{
+		if (nantu_x_variations[nantu_x_i].traffic_percent > 0)
+		{
+			nantu_x_traffic += nantu_x_variations[nantu_x_i].traffic_percent;
+
+			if (nantu_x_traffic > nantu_x_random_value)
+			{
+				nantu_x_variation_name = nantu_x_variations[nantu_x_i].name;
+				return nantu_x_variations[nantu_x_i].id;
+			}
+		}
+	}
+}
+
+// Send data to data layer
+function nantu_x_push_to_data_layer()
+{
+	var nantu_x_data = {
+		"inflow_abtest_experiment_name": nantu_x_experiment_name,
+		"inflow_abtest_variation": nantu_x_variation_name,
+		"inflow_abtest_ga_flag": "nantu_x_test_set",
+		"inflow_abtest_gaslot": nantu_x_ga_slot,
+		"event": "inflow_abtest " + nantu_x_experiment_name + " " + nantu_x_variation
+	};
+
+	nantu_x_log("set dimension: " + nantu_x_ga_slot);
+
+	if(document.querySelectorAll("#nantu_x_tab_line > .inflow_qa_dimension").length > 0)
+	{
+		document.querySelector("#nantu_x_tab_line > .inflow_qa_dimension").innerText = " | " + nantu_x_ga_slot;
+	}
+
+	var nantu_x_data_string = JSON.stringify(nantu_x_data);
+
+	if (nantu_x_data_string != window.nantu_x_data_sent)
+	{
+		//only push data if it is the first time or data has been changed
+		window.nantu_x_data_sent = nantu_x_data_string;
+
+		if(localStorage.getItem("nantu_x_test_set") != nantu_x_variation_name)
+		{
+			//dataLayer.push(nantu_x_data);
+		}
+	}
+}
+// set variation id, set data layer variables and execute test code
+function nantu_x_execute_test()
+{
+	var nantu_x_selected_variation = null;
+	var nantu_x_total_traffic = 0;
+	for (var nantu_x_i = 0; nantu_x_i < nantu_x_variations.length; nantu_x_i++)
+	{
+		nantu_x_total_traffic += nantu_x_variations[nantu_x_i].traffic_percent;
+		if (nantu_x_variation == nantu_x_variations[nantu_x_i].id)
+		{
+			nantu_x_variation_name = nantu_x_variations[nantu_x_i].name;
+			nantu_x_selected_variation = nantu_x_i;
+		}
+	}
+
+	if (nantu_x_selected_variation == null)
+	{
+		var nantu_x_selected_random = nantu_x_random_number % nantu_x_total_traffic;
+
+		nantu_x_variation = nantu_x_get_selected_variation(nantu_x_selected_random);
+	}
+
+	// Set GTM A/B test cookie
+	var nantu_x_date = new Date();
+	nantu_x_date.setTime(nantu_x_date.getTime() + 180 * 24 * 3600 * 1000);
+	var nantu_x_expires = "expires=" + nantu_x_date.toGMTString();
+	document.cookie = nantu_x_cookie_name + "=" + nantu_x_variation + "; " + nantu_x_expires + "; path=/;";
+
+	nantu_x_log("nantu_x_variation:" + nantu_x_variation);
+
+	if(document.cookie.indexOf("inflow_cookie=qa") != -1)
+	{
+		if(document.querySelectorAll("#inflow_qa_tab").length == 0)
+		{
+			document.body.insertAdjacentHTML("beforeEnd", '<div id="inflow_qa_tab" style="position: fixed;min-height: 30px;min-width: 50px;top: 50%;padding: 5px;left: 0;background: white;box-shadow: 2px 2px 5px #333;"><span style="display:block;font-size:11px;text-align:center;">QA</span></div>');
+		}
+
+		if(document.querySelectorAll("#nantu_x_tab_line").length == 0)
+		{
+			document.getElementById("inflow_qa_tab").insertAdjacentHTML("beforeEnd", '<span style="display:block;font-size:11px;" id="nantu_x_tab_line"><span class="inflow_qa_id" style="font-weight:bold;"></span><span class="inflow_qa_variation"></span><span class="inflow_qa_dimension"></span></span>');
+		}
+
+		var nantu_x_test_id = "nantu_x_".replace("inflow_g_", "").replace("_", "");
+
+		document.querySelector("#nantu_x_tab_line > .inflow_qa_id").innerText = nantu_x_test_id + "-" + nantu_x_test_version + ": ";
+
+		var nantu_x_qa_variation = "C";
+
+		if(nantu_x_variation != "control")
+		{
+			nantu_x_qa_variation = "V" + nantu_x_variation.replace("variation", "");
+		}
+
+		document.querySelector("#nantu_x_tab_line > .inflow_qa_variation").innerText = nantu_x_qa_variation;
+	}
+
+	//The code of the A/B test variations goes here
+
+	nantu_x_push_to_data_layer(); // call this function when the variation changes has been applied
+
+	// End of A/B test variations code
+}
+</script>
+<style>
+</style>
+
+
