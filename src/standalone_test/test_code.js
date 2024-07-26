@@ -6,7 +6,7 @@ Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches 
 (function (window, document) {
 	const data = {
 		experimentName: "Exp Name",
-		testIndex: "123",
+		testIndex: 123,
 		testWindowEnabled: false,
 		testWindowEnd: "12/31/2029",
 		testWindowStart: "07/26/2024",
@@ -15,12 +15,12 @@ Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches 
 			{
 				id: "control",
 				name: "Control",
-				weight: "50",
+				weight: 50,
 			},
 			{
 				id: "variation1",
 				name: "Variation 1",
-				weight: "50",
+				weight: 50,
 			},
 		],
 		qaOnly: true,
@@ -696,15 +696,13 @@ function nantu_x_log(nantu_x_message) {
 }
 // Send data to data layer
 function nantu_x_push_to_data_layer() {
-	if (typeof nantu_qa_show_test == "function") {
-		nantu_qa_show_test(
-			nantu_x_test_id,
-			nantu_x_selected_variation,
-			nantu_x_test_version,
-			nantu_x_variations,
-			true,
-		);
-	}
+	nantu_x_qa_show_test(
+		nantu_x_test_id,
+		nantu_x_selected_variation,
+		nantu_x_test_version,
+		nantu_x_variations,
+		true,
+	);
 
 	var nantu_ga4_data = {
 		nantu_version: "1.0",
@@ -773,17 +771,37 @@ function nantu_x_setup_trigger() {
 	}
 }
 
-// Execute the test
-function nantu_x_execute_test() {
+function nantu_x_qa_show_test(nantu_x_test_id, nantu_x_selected_variation, nantu_x_test_version, nantu_x_variations, nantu_x_set_dimension) {
 	if (typeof nantu_qa_show_test == "function") {
 		nantu_qa_show_test(
 			nantu_x_test_id,
 			nantu_x_selected_variation,
 			nantu_x_test_version,
 			nantu_x_variations,
-			false,
+			nantu_x_set_dimension,
 		);
+	} else {
+		window.nantu_qa_tests_list = window.nantu_qa_tests_list || {};
+
+		window.nantu_qa_tests_list[nantu_x_test_id] = {
+			id: nantu_x_test_id,
+			selected_variation: nantu_x_selected_variation,
+			version: nantu_x_test_version,
+			variations: nantu_x_variations,
+			set_dimension: nantu_x_set_dimension,
+		};
 	}
+}
+
+// Execute the test
+function nantu_x_execute_test() {
+	nantu_x_qa_show_test(
+		nantu_x_test_id,
+		nantu_x_selected_variation,
+		nantu_x_test_version,
+		nantu_x_variations,
+		false,
+	);
 
 	// don't run if test is off
 	if (/^(unknown|none)$/.test(nantu_x_selected_variation) === false) {
@@ -808,7 +826,7 @@ function nantu_x_change_page() {
 	//The code to change the page goes here
 
 	document.body.classList.add(
-		"nantu_x_variation_" + nantu_x_selected_variation,
+		"nantu_x_" + nantu_x_selected_variation,
 	);
 
 	nantu_x_add_css_code();
