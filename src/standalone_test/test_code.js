@@ -1,8 +1,20 @@
 /*
 --Nantu A/B Test Standalone template--
 
+// Author: Juan Castro
+// Last modified: 2024-07-29
+// License: Apache 2.0
+// Version: 1.0.0
+
+// What's new:
+// First Version
+
 Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches the clickup card ID for every test to avoid name collisions
 */
+
+var nantu_x_test_version = 1; //Increase this number every time the test is being changed after receiving feedback from QA
+var nantu_x_debug = false; // Set to false to turn off debug log messages
+
 (function (window, document, navigator) {
 	const data = {
 		experimentName: "Exp Name",
@@ -462,6 +474,10 @@ Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches 
 		const variation = data.variations[variationIndex];
 
 		testVariations.push(variation.id);
+	}
+
+	if(isInQAMode()) {
+		window.nantu_x_debug = true;
 	}
 
 	if (data.qaOnly === false || (data.qaOnly === true && isInQAMode())) {
@@ -1055,18 +1071,6 @@ function nantuGetBrowser(userAgent) {
 /*--includeend--*/
 })(window, document, navigator);
 
-var nantu_x_test_version = 1; //Increase this number every time the test is being changed after receiving feedback from QA
-var nantu_x_debug = false; // Set to false to turn off debug log messages
-
-var nantu_x_variation_name = "{{nantu_variation_name}}";
-
-if (
-	"qa" === "{{nantu_mode_cookie}}" ||
-	"qa" === "{{nantu_mode_query_var}}" ||
-	localStorage.getItem("nantu_log_enable") == "yes"
-) {
-	nantu_x_debug = true;
-}
 
 // log message in the browser log
 function nantu_x_log(nantu_x_message) {
