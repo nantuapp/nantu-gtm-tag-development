@@ -10,6 +10,11 @@
 
 	if(location.hostname === 'nantu.app') {
 
+		if (location.search.indexOf("nantu_environment=qa") > -1 || document.cookie.indexOf('nantu_environment=qa') > -1) {
+			console.log('Nantu test script for test ID ' + test_id + ' is not intended to run on QA environment.');
+			return;
+		}
+
 		if (document.getElementById('nantu_install_script_' + test_id)) {
 			console.log('Nantu test script for test ID ' + test_id + ' is already installed.');
 			return;
