@@ -2,12 +2,12 @@
 --Nantu A/B Test Standalone template--
 
 // Author: Juan Castro
-// Last modified: 2024-07-29
+// Last modified: 2024-09-16
 // License: Apache 2.0
-// Version: 1.0.0
+// Version: 1.0.1
 
 // What's new:
-// First Version
+// Send data layer event when test is executed
 
 Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches the clickup card ID for every test to avoid name collisions
 */
@@ -1204,6 +1204,10 @@ function nantu_x_execute_test() {
 
 		// End of A/B test variations code
 	}
+
+	window.dataLayer = window.dataLayer || [];
+
+	window.dataLayer.push({'event': 'nantu_' + nantu_x_test_id + '_execute_' + nantu_x_selected_variation, 'nantu_test_id' : nantu_x_test_id, 'nantu_variation' : nantu_x_selected_variation, 'nantu_experiment' : nantu_x_experiment, 'nantu_variation_name' : nantu_x_variation_name, 'nantu_test_variations' : nantu_x_variations});
 }
 
 function nantu_x_change_page() {
