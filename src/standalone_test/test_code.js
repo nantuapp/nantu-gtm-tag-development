@@ -1203,11 +1203,10 @@ function nantu_x_execute_test() {
 		}
 
 		// End of A/B test variations code
+		window.dataLayer = window.dataLayer || [];
+
+		window.dataLayer.push({'event': 'nantu_' + nantu_x_test_id + '_execute_' + nantu_x_selected_variation, 'nantu_test_id' : nantu_x_test_id, 'nantu_variation' : nantu_x_selected_variation, 'nantu_experiment' : nantu_x_experiment, 'nantu_variation_name' : nantu_x_variation_name, 'nantu_test_variations' : nantu_x_variations});
 	}
-
-	window.dataLayer = window.dataLayer || [];
-
-	window.dataLayer.push({'event': 'nantu_' + nantu_x_test_id + '_execute_' + nantu_x_selected_variation, 'nantu_test_id' : nantu_x_test_id, 'nantu_variation' : nantu_x_selected_variation, 'nantu_experiment' : nantu_x_experiment, 'nantu_variation_name' : nantu_x_variation_name, 'nantu_test_variations' : nantu_x_variations});
 }
 
 function nantu_x_change_page() {
