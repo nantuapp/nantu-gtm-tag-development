@@ -1,5 +1,29 @@
-<script>
+<div id="nantu_qa_enviroment_message">
+	<a href="#" class="nantu_qa_close">&times;</a>
+	<span>You are previewing the QA environment Container</span>
+	<a id="nantu_qa_disable" href="#">Disable QA Environment</a>
+</div>
+<script id="nantu_environment_script">
+// Description: QA Environment Message
+// Author: Juan Castro
+// Last modified: 2024-09-26
+// License: Apache 2.0
+// Version: 1.0.1
+
+// What's new:
+// Prepare for CSP compliance using hashes in security headers.
+
 var nantu_environment_cookie_domain = location.hostname;
+
+document.querySelector("a.nantu_qa_close").addEventListener("click", function(evt) {
+	evt.preventDefault();
+	document.querySelector("#nantu_qa_enviroment_message").style.display = "none";
+});
+
+document.querySelector("a#nantu_qa_disable").addEventListener("click", function(evt) {
+	evt.preventDefault();
+	nantu_qa_delete_cookie();
+});
 
 function nantu_qa_delete_cookie()
 {
@@ -9,11 +33,6 @@ function nantu_qa_delete_cookie()
 	window.location = env_url;
 }
 </script>
-<div id="nantu_qa_enviroment_message">
-	<a href="javascript:void(0);" onclick="this.parentNode.style.display='none'" class="nantu_qa_close">&times;</a>
-	<span>You are previewing the QA environment Container</span>
-	<a id="nantu_qa_disable" href="javascript:void(0);" onclick="nantu_qa_delete_cookie()">Disable QA Environment</a>
-</div>
 <style>
 #nantu_qa_enviroment_message{
 	position:fixed;
