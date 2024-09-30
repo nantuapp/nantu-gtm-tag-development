@@ -1,12 +1,13 @@
 <script id="nantu_qa_tab_script">
 // Description: QA Tab for Nantu AB Testing.
 // Author: Juan Castro
-// Last modified: 2024-07-26
+// Last modified: 2024-09-30
+// URL: https://github.com/nantuapp/nantu-gtm-tag-development/blob/main/src/tags/qa/tag.html
 // License: Apache 2.0
-// Version: 1.0.6
+// Version: 1.0.7
 
 // What's new:
-// Prepare for CSP compliance using hashes in security headers.
+// Fix force variation button not working after CSP changes.
 
 
 var nantu_qa_tab_html = '<div id="nantu_qa_tab" style="position: fixed;min-height: 30px;min-width: 50px;top: 50%;padding: 8px;right: 0;background: white;box-shadow: 2px 2px 5px #333;border-radius: 8px 0 0 8px; z-index: 10000000000;display: flex;flex-direction: column;row-gap: 5px;align-items: flex-end;"><span style="display:block;font-size:11px;text-align:center; font-family:sans-serif;" id="nantu_qa_tab_title">Nantu Tests</span></div>';
@@ -140,10 +141,12 @@ function nantu_qa_show_test(test_id, variation, version, variations, dimension) 
 			force_variation_button.href = "#";
 			force_variation_button.setAttribute("style", nantu_qa_button_style);
 			force_variation_button.innerText = short_variation.toUpperCase();
+			force_variation_button.dataset.test = test_id;
+			force_variation_button.dataset.variation = short_variation;
 
 			force_variation_button.addEventListener("click", function(evt) {
 				evt.preventDefault();
-				window.nantu_qa_force_variation(test_id, short_variation);
+				window.nantu_qa_force_variation(evt.target.dataset.test, evt.target.dataset.variation);
 			});
 
 			document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension_links").appendChild(force_variation_button);
@@ -154,10 +157,11 @@ function nantu_qa_show_test(test_id, variation, version, variations, dimension) 
 		turn_off_button.href = "#";
 		turn_off_button.setAttribute("style", nantu_qa_button_style);
 		turn_off_button.innerText = "OFF";
+		turn_off_button.dataset.test = test_id;
 
 		turn_off_button.addEventListener("click", function(evt) {
 			evt.preventDefault();
-			window.nantu_qa_force_variation(test_id, "n");
+			window.nantu_qa_force_variation(evt.target.dataset.test, "n");
 		});
 
 		document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension_links").appendChild(turn_off_button);
