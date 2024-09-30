@@ -1,21 +1,31 @@
 <script id="nantu_x_test_script">
-/*
---GTM A/B test Variations code template--
+// Description: GTM A/B test Variations code template
+// Author: Juan Castro
+// Last modified: 2024-09-30
+// URL: https://github.com/nantuapp/nantu-gtm-tag-development/blob/main/src/test_template/test.html
+// License: Apache 2.0
+// Version: 1.0.1
 
-Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches the clickup card ID for every test to avoid name collisions
-*/
+// What's new:
+// Replace usage of GTM variables with JS variables to have more predictable hashes for CSP
+
+//Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches the clickup card ID for every test to avoid name collisions
 
 var nantu_x_test_version = 1; //Increase this number every time the test is being changed after receiving feedback from QA
 var nantu_x_debug = false; // Set to false to turn off debug log messages
 
-var nantu_x_selected_variation = "{{nantu_variation}}";
-var nantu_x_variation_name = "{{nantu_variation_name}}";
-var nantu_x_test_id = "{{nantu_test_id}}";
-var nantu_x_experiment = "{{nantu_experiment}}";
-var nantu_x_variations = "{{nantu_test_variations}}"
-var nantu_x_trigger_event = "{{Event}}";
+var nantu_x_gtmid = "{{Container ID}}";
 
-if("qa" === "{{nantu_mode_cookie}}" || "qa" === "{{nantu_mode_query_var}}" || localStorage.getItem("nantu_log_enable") == "yes") {
+var nantu_x_gtm = google_tag_manager[nantu_x_gtmid];
+
+var nantu_x_selected_variation = nantu_x_gtm.dataLayer.get("nantu_variation");
+var nantu_x_variation_name = nantu_x_gtm.dataLayer.get("nantu_variation_name");
+var nantu_x_test_id = nantu_x_gtm.dataLayer.get("nantu_test_id");
+var nantu_x_experiment = nantu_x_gtm.dataLayer.get("nantu_experiment");
+var nantu_x_variations = nantu_x_gtm.dataLayer.get("nantu_test_variations")
+var nantu_x_trigger_event = nantu_x_gtm.dataLayer.get("event");
+
+if("qa" === nantu_x_gtm.dataLayer.get("nantu_mode_cookie") || "qa" === nantu_x_gtm.dataLayer.get("nantu_mode_query_var") || localStorage.getItem("nantu_log_enable") == "yes") {
 	nantu_x_debug = true;
 }
 
