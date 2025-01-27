@@ -154,7 +154,13 @@ function getVariationFromURL() {
 				const variation = queryVariations[variationIndex];
 
 				if (variation.id == data.testIndex) {
-					return variation.variation;
+					const variationToDisplay = getVariationToDisplay(variation.variation, data);
+
+					if (variationToDisplay !== "removed") {
+						return variationToDisplay;
+					} else {
+						return null;
+					}
 				}
 			}
 		}
@@ -466,23 +472,27 @@ function isAllowedDomain(domain, testData) {
 function getSelectedVariation(savedVariations, testData) {
 	for (const savedVariation of savedVariations) {
 		if (savedVariation.id === strToInt(testData.testIndex)) {
-			for (const variationData of testData.variations) {
-				if (variationData.id === savedVariation.variation) {
-					if (variationData.weight === "0") {
-						return variationData.variation_when_disabled;
-					} else {
-						return savedVariation.variation;
-					}
-				}
-			}
-
-			testLog("Selected variation does not exist", savedVariation.variation);
-
-			return "removed";
+			return getVariationToDisplay(savedVariation.variation, testData);
 		}
 	}
 
 	return "unset";
+}
+
+function getVariationToDisplay(variation, testData) {
+	for (const variationData of testData.variations) {
+		if (variationData.id === variation) {
+			if (variationData.weight === "0") {
+				return variationData.variation_when_disabled;
+			} else {
+				return variation;
+			}
+		}
+	}
+
+	testLog("Selected variation does not exist", variation);
+
+	return "removed";
 }
 
 function getVariationName(variation, testData) {
