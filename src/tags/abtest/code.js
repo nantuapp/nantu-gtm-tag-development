@@ -1,11 +1,12 @@
 // Description: Nantu A/B Testing Template
 // Author: Juan Castro
-// Last modified: 2023-08-02
+// Last modified: 2025-01-24
 // License: Apache 2.0
-// Version: 1.0.1
+// Version: 1.0.2
 
 // What's new:
-// Experiment Name and Variation Name character limit
+// Select which variation to run when the weight of a variation is 0.
+// Exclude visitors from running the test if the variation they are assigned to has been removed.
 
 // API imports
 const Math = require('Math');
@@ -109,6 +110,9 @@ if (selectedVariation == "unset") {
 
 	localStorage.setItem(nantuTestsKey, serializeTestsVariations(nantuTests));
 	testLog("Setting Variation: " + selectedVariation);
+} else if (selectedVariation == "removed") {
+	data.gtmOnSuccess();
+	return;
 }
 
 var testVariations = [];
@@ -462,7 +466,19 @@ function isAllowedDomain(domain, testData) {
 function getSelectedVariation(savedVariations, testData) {
 	for (const savedVariation of savedVariations) {
 		if (savedVariation.id === strToInt(testData.testIndex)) {
-			return savedVariation.variation;
+			for (const variationData of testData.variations) {
+				if (variationData.id === savedVariation.variation) {
+					if (variationData.weight === "0") {
+						return variationData.variation_when_disabled;
+					} else {
+						return savedVariation.variation;
+					}
+				}
+			}
+
+			testLog("Selected variation does not exist", savedVariation.variation);
+
+			return "removed";
 		}
 	}
 

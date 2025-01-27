@@ -1,6 +1,6 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2024-09-27 23:01:59",
+    "exportTime": "2025-01-27 20:42:38",
     "containerVersion": {
         "path": "accounts/6098026418/containers/196193501/versions/0",
         "accountId": "6098026418",
@@ -48,7 +48,7 @@
                     {
                         "type": "TEMPLATE",
                         "key": "html",
-                        "value": "<div id=\"nantu_qa_enviroment_message\">\n\t<a href=\"#\" class=\"nantu_qa_close\">&times;</a>\n\t<span>You are previewing the QA environment Container</span>\n\t<a id=\"nantu_qa_disable\" href=\"#\">Disable QA Environment</a>\n</div>\n<script id=\"nantu_environment_script\">\n// Description: QA Environment Message\n// Author: Juan Castro\n// Last modified: 2024-09-26\n// License: Apache 2.0\n// Version: 1.0.1\n\n// What's new:\n// Prepare for CSP compliance using hashes in security headers.\n\nvar nantu_environment_cookie_domain = location.hostname;\n\ndocument.querySelector(\"a.nantu_qa_close\").addEventListener(\"click\", function(evt) {\n\tevt.preventDefault();\n\tdocument.querySelector(\"#nantu_qa_enviroment_message\").style.display = \"none\";\n});\n\ndocument.querySelector(\"a#nantu_qa_disable\").addEventListener(\"click\", function(evt) {\n\tevt.preventDefault();\n\tnantu_qa_delete_cookie();\n});\n\nfunction nantu_qa_delete_cookie()\n{\n\tdocument.cookie = \"nantu_environment=qa; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/; domain=\" + nantu_environment_cookie_domain + \";\";\n\tvar env_url = window.location.href.replace(\"nantu_environment=qa\", \"\");\n\n\twindow.location = env_url;\n}\n</script>\n<style>\n#nantu_qa_enviroment_message{\n\tposition:fixed;\n\tbottom:0;\n\tleft:0;\n\tright:0;\n\tbackground:red;\n\tcolor:white;\n\tz-index:100000000000000000;\n\tfont-family:Arial;\n\tpadding:20px;\n\tfont-size:1.7rem;\n\tdisplay:flex;\n\tjustify-content: space-between;\n\talign-items: center;\n}\na#nantu_qa_disable {\n\tbackground: white;\n\tcolor: red;\n\tpadding: 20px;\n\tborder-radius: 5px;\n}\na.nantu_qa_close {\n\tcolor: white;\n\ttext-decoration: none;\n\tpadding-right: 10px;\n\tfont-size:32px;\n}\n@media (max-width:800px) {\n\tdiv#nantu_qa_enviroment_message {\n\t\tfont-size: 0.8em;\n\t}\n}\n</style>\n\n"
+                        "value": "<div id=\"nantu_qa_enviroment_message\">\n\t<a href=\"#\" class=\"nantu_qa_close\">&times;</a>\n\t<span>You are previewing the QA environment Container</span>\n\t<a id=\"nantu_qa_disable\" href=\"#\">Disable QA Environment</a>\n</div>\n<script id=\"nantu_environment_script\">\n// Description: QA Environment Message\n// Author: Juan Castro\n// Last modified: 2025-10-27\n// License: Apache 2.0\n// Version: 1.0.2\n\n// What's new:\n// Auto Detect Domain for cookie removal\n\nvar nantu_environment_cookie_domain = 'auto'; // replace with your domain if the auto detection doesn't work\n\nif (nantu_environment_cookie_domain === 'auto') {\n\tvar nantu_environment_detected_domain = \"\";\n\n\tvar nantu_environment_domain_parts = location.hostname.split('.');\n\n\tfor (var i = nantu_environment_domain_parts.length - 1; i >= 0; i--) {\n\t\tvar nantu_environment_domain_part = nantu_environment_domain_parts[i];\n\n\t\tnantu_environment_detected_domain = \".\" + nantu_environment_domain_part + nantu_environment_detected_domain;\n\n\t\tif (nantu_environment_domain_part.length > 3) {\n\t\t\tbreak;\n\t\t}\n\t}\n\n\tnantu_environment_cookie_domain = nantu_environment_detected_domain;\n}\n\nconsole.log(\"nantu_environment_cookie_domain\", nantu_environment_cookie_domain);\n\ndocument.querySelector(\"a.nantu_qa_close\").addEventListener(\"click\", function(evt) {\n\tevt.preventDefault();\n\tdocument.querySelector(\"#nantu_qa_enviroment_message\").style.display = \"none\";\n});\n\ndocument.querySelector(\"a#nantu_qa_disable\").addEventListener(\"click\", function(evt) {\n\tevt.preventDefault();\n\tnantu_qa_delete_cookie();\n});\n\nfunction nantu_qa_delete_cookie()\n{\n\tdocument.cookie = \"nantu_environment=qa; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/; domain=\" + nantu_environment_cookie_domain + \";\";\n\tvar env_url = window.location.href.replace(\"nantu_environment=qa\", \"\");\n\n\twindow.location = env_url;\n}\n</script>\n<style>\n#nantu_qa_enviroment_message{\n\tposition:fixed;\n\tbottom:0;\n\tleft:0;\n\tright:0;\n\tbackground:red;\n\tcolor:white;\n\tz-index:100000000000000000;\n\tfont-family:Arial;\n\tpadding:20px;\n\tfont-size:1.7rem;\n\tdisplay:flex;\n\tjustify-content: space-between;\n\talign-items: center;\n}\na#nantu_qa_disable {\n\tbackground: white;\n\tcolor: red;\n\tpadding: 20px;\n\tborder-radius: 5px;\n}\na.nantu_qa_close {\n\tcolor: white;\n\ttext-decoration: none;\n\tpadding-right: 10px;\n\tfont-size:32px;\n}\n@media (max-width:800px) {\n\tdiv#nantu_qa_enviroment_message {\n\t\tfont-size: 0.8em;\n\t}\n}\n</style>\n\n"
                     },
                     {
                         "type": "BOOLEAN",
@@ -56,7 +56,7 @@
                         "value": "false"
                     }
                 ],
-                "fingerprint": "1727403716848",
+                "fingerprint": "1738002867450",
                 "firingTriggerId": [
                     "50"
                 ],
@@ -120,7 +120,7 @@
                 "name": "Page URL"
             }
         ],
-        "fingerprint": "1727478119776",
+        "fingerprint": "1738010558520",
         "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6098026418/containers/196193501/versions/0?apiLink=version"
     }
 }
