@@ -1,0 +1,353 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2025-04-18 23:41:35",
+    "containerVersion": {
+        "path": "accounts/6006169642/containers/192608734/versions/0",
+        "accountId": "6006169642",
+        "containerId": "192608734",
+        "containerVersionId": "0",
+        "container": {
+            "path": "accounts/6006169642/containers/192608734",
+            "accountId": "6006169642",
+            "containerId": "192608734",
+            "name": "CT Nantu Tests",
+            "publicId": "GTM-TSFQJVST",
+            "usageContext": [
+                "WEB"
+            ],
+            "fingerprint": "1722961981210",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6006169642/containers/192608734/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": false,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": false
+            },
+            "tagIds": [
+                "GTM-TSFQJVST"
+            ]
+        },
+        "trigger": [
+            {
+                "accountId": "6006169642",
+                "containerId": "192608734",
+                "triggerId": "48",
+                "name": "Nantu Test 1 - Homepage",
+                "type": "DOM_READY",
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Correct Environment}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "yes"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Nantu Test 1 - Run Test}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "yes"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1722963021111",
+                "parentFolderId": "46"
+            },
+            {
+                "accountId": "6006169642",
+                "containerId": "192608734",
+                "triggerId": "50",
+                "name": "nantu_1_execute",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "^nantu_1_execute"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Correct Environment}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "yes"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1722963164653",
+                "parentFolderId": "46"
+            }
+        ],
+        "variable": [
+            {
+                "accountId": "6006169642",
+                "containerId": "192608734",
+                "variableId": "47",
+                "name": "Nantu Test 1 - Run Test",
+                "type": "cvt_192608734_44",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "chrome_ipad",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "safari_desktop",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "urls_enabled",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "opera_desktop_version",
+                        "value": "80"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "element_enable",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "firefox_desktop",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "edge_desktop",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "safari_ipad_version",
+                        "value": "14"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "chrome_android_version",
+                        "value": "90"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "tablet",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "firefox_mobile_version",
+                        "value": "80"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "urls_table",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "url_type",
+                                        "value": "path"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "url_condition",
+                                        "value": "equals"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "url_value",
+                                        "value": "/"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "desktop",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "all_sources",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "firefox_tablet",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "chrome_ipad_version",
+                        "value": "90"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "chrome_desktop_version",
+                        "value": "90"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "safari_desktop_version",
+                        "value": "14"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "firefox_tablet_version",
+                        "value": "80"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "firefox_mobile",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "qa_mode",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "chrome_iphone_version",
+                        "value": "90"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "mobile",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "chrome_android_mobile",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "chrome_android_mobile_version",
+                        "value": "90"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "chrome_android",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "safari_ipad",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "safari_mobile",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "chrome_iphone",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "edge_desktop_version",
+                        "value": "90"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "opera_desktop",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "firefox_desktop_version",
+                        "value": "80"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "chrome_desktop",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "safari_mobile_version",
+                        "value": "14"
+                    }
+                ],
+                "fingerprint": "1722962420635",
+                "parentFolderId": "46",
+                "formatValue": {}
+            }
+        ],
+        "folder": [
+            {
+                "accountId": "6006169642",
+                "containerId": "192608734",
+                "folderId": "46",
+                "name": "Nantu Test 1",
+                "fingerprint": "1722962361453"
+            }
+        ],
+        "fingerprint": "1745019695686",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6006169642/containers/192608734/versions/0?apiLink=version",
+        "customTemplate": [
+            {
+                "accountId": "6006169642",
+                "containerId": "192608734",
+                "templateId": "44",
+                "name": "Nantu Target Selector",
+                "fingerprint": "1744889670133",
+                "templateData": "___INFO___\n\n{\n  \"type\": \"MACRO\",\n  \"id\": \"cvt_temp_public_id\",\n  \"version\": 1,\n  \"securityGroups\": [],\n  \"displayName\": \"Nantu Target Selector\",\n  \"description\": \"Variable that helps to select the target\",\n  \"containerContexts\": [\n    \"WEB\"\n  ]\n}\n\n\n___TEMPLATE_PARAMETERS___\n\n[\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"qa_mode_group\",\n    \"displayName\": \"QA Mode\",\n    \"groupStyle\": \"NO_ZIPPY\",\n    \"subParams\": [\n      {\n        \"type\": \"CHECKBOX\",\n        \"name\": \"qa_mode\",\n        \"checkboxText\": \"Run only when QA Mode is enabled\",\n        \"simpleValueType\": true\n      }\n    ]\n  },\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"device_label_group\",\n    \"displayName\": \"Device Types\",\n    \"groupStyle\": \"NO_ZIPPY\",\n    \"subParams\": []\n  },\n  {\n    \"type\": \"CHECKBOX\",\n    \"name\": \"desktop\",\n    \"checkboxText\": \"Enable for Desktop\",\n    \"simpleValueType\": true,\n    \"defaultValue\": true,\n    \"alwaysInSummary\": false\n  },\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"desktop_group\",\n    \"displayName\": \"Targeted Desktop Browsers\",\n    \"groupStyle\": \"ZIPPY_CLOSED\",\n    \"subParams\": [\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"chrome_desktop_group\",\n        \"displayName\": \"Chrome\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"chrome_desktop\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"chrome_desktop_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 90\n          }\n        ]\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"safari_desktop_group\",\n        \"displayName\": \"Safari\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"safari_desktop\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"safari_desktop_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 14\n          }\n        ]\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"edge_desktop_group\",\n        \"displayName\": \"Edge\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"edge_desktop\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"edge_desktop_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 90\n          }\n        ]\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"firefox_desktop_group\",\n        \"displayName\": \"Firefox\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"firefox_desktop\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"firefox_desktop_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 80\n          }\n        ]\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"opera_desktop_group\",\n        \"displayName\": \"Opera\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"opera_desktop\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"opera_desktop_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 80\n          }\n        ]\n      }\n    ]\n  },\n  {\n    \"type\": \"CHECKBOX\",\n    \"name\": \"tablet\",\n    \"checkboxText\": \"Enable for Tablet\",\n    \"simpleValueType\": true,\n    \"alwaysInSummary\": false\n  },\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"tablet_group\",\n    \"displayName\": \"Targeted Tablet Browsers\",\n    \"groupStyle\": \"ZIPPY_CLOSED\",\n    \"subParams\": [\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"safari_tablet_group\",\n        \"displayName\": \"Safari\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"safari_ipad\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"safari_ipad_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 14\n          }\n        ]\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"chrome_android_group\",\n        \"displayName\": \"Chrome Android\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"chrome_android\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"chrome_android_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 90\n          }\n        ]\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"chrome_ipad_group\",\n        \"displayName\": \"Chrome iOS\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"chrome_ipad\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"chrome_ipad_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 90\n          }\n        ]\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"firefox_tablet_group\",\n        \"displayName\": \"Firefox\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"firefox_tablet\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"firefox_tablet_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 80\n          }\n        ]\n      }\n    ]\n  },\n  {\n    \"type\": \"CHECKBOX\",\n    \"name\": \"mobile\",\n    \"checkboxText\": \"Enable for Mobile\",\n    \"simpleValueType\": true,\n    \"alwaysInSummary\": false\n  },\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"mobile_group\",\n    \"displayName\": \"Targeted Mobile Browsers\",\n    \"groupStyle\": \"ZIPPY_CLOSED\",\n    \"subParams\": [\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"safari_mobile_group\",\n        \"displayName\": \"Safari\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"safari_mobile\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"safari_mobile_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 14\n          }\n        ]\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"chrome_mobile_group\",\n        \"displayName\": \"Chrome Android\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"chrome_android_mobile\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"chrome_android_mobile_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 90\n          }\n        ]\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"chrome_mobile_ios_group\",\n        \"displayName\": \"Chrome iOS\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"chrome_iphone\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"chrome_iphone_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 90\n          }\n        ]\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"firefox_mobile_group\",\n        \"displayName\": \"Firefox\",\n        \"groupStyle\": \"NO_ZIPPY\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"firefox_mobile\",\n            \"checkboxText\": \"Enable\",\n            \"simpleValueType\": true\n          },\n          {\n            \"type\": \"TEXT\",\n            \"name\": \"firefox_mobile_version\",\n            \"displayName\": \"Minimum Version\",\n            \"simpleValueType\": true,\n            \"defaultValue\": 80\n          }\n        ]\n      }\n    ]\n  },\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"visitor_sources_group\",\n    \"displayName\": \"Visitor Sources\",\n    \"groupStyle\": \"NO_ZIPPY\",\n    \"subParams\": [\n      {\n        \"type\": \"CHECKBOX\",\n        \"name\": \"all_sources\",\n        \"checkboxText\": \"Target Users from all Sources\",\n        \"simpleValueType\": true,\n        \"defaultValue\": true\n      },\n      {\n        \"type\": \"GROUP\",\n        \"name\": \"visitors_sources_details\",\n        \"displayName\": \"\",\n        \"groupStyle\": \"ZIPPY_OPEN\",\n        \"subParams\": [\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"visitors_organic\",\n            \"checkboxText\": \"Target Organic Visitors\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"visitors_paid\",\n            \"checkboxText\": \"Target Paid Visitors\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"visitors_direct\",\n            \"checkboxText\": \"Target Direct Visitors\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          },\n          {\n            \"type\": \"CHECKBOX\",\n            \"name\": \"visitors_email\",\n            \"checkboxText\": \"Target Email Visitors\",\n            \"simpleValueType\": true,\n            \"defaultValue\": true\n          }\n        ],\n        \"enablingConditions\": [\n          {\n            \"paramName\": \"all_sources\",\n            \"paramValue\": true,\n            \"type\": \"NOT_EQUALS\"\n          }\n        ]\n      }\n    ]\n  },\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"urls_group\",\n    \"displayName\": \"URLs\",\n    \"groupStyle\": \"NO_ZIPPY\",\n    \"subParams\": [\n      {\n        \"type\": \"CHECKBOX\",\n        \"name\": \"urls_enabled\",\n        \"checkboxText\": \"Run on specific urls\",\n        \"simpleValueType\": true\n      },\n      {\n        \"type\": \"PARAM_TABLE\",\n        \"name\": \"urls_table\",\n        \"displayName\": \"URLs List\",\n        \"paramTableColumns\": [\n          {\n            \"param\": {\n              \"type\": \"SELECT\",\n              \"name\": \"url_type\",\n              \"displayName\": \"URL Section\",\n              \"macrosInSelect\": false,\n              \"selectItems\": [\n                {\n                  \"value\": \"href\",\n                  \"displayValue\": \"Page URL\"\n                },\n                {\n                  \"value\": \"path\",\n                  \"displayValue\": \"Page Path\"\n                }\n              ],\n              \"simpleValueType\": true\n            },\n            \"isUnique\": false\n          },\n          {\n            \"param\": {\n              \"type\": \"SELECT\",\n              \"name\": \"url_condition\",\n              \"displayName\": \"Condition Type\",\n              \"macrosInSelect\": false,\n              \"selectItems\": [\n                {\n                  \"value\": \"equals\",\n                  \"displayValue\": \"Equals\"\n                },\n                {\n                  \"value\": \"contains\",\n                  \"displayValue\": \"Contains\"\n                },\n                {\n                  \"value\": \"starts\",\n                  \"displayValue\": \"Starts With\"\n                },\n                {\n                  \"value\": \"ends\",\n                  \"displayValue\": \"Ends With\"\n                }\n              ],\n              \"simpleValueType\": true\n            },\n            \"isUnique\": false\n          },\n          {\n            \"param\": {\n              \"type\": \"TEXT\",\n              \"name\": \"url_value\",\n              \"displayName\": \"URL\",\n              \"simpleValueType\": true\n            },\n            \"isUnique\": true\n          }\n        ],\n        \"enablingConditions\": [\n          {\n            \"paramName\": \"urls_enabled\",\n            \"paramValue\": true,\n            \"type\": \"EQUALS\"\n          }\n        ]\n      }\n    ]\n  },\n  {\n    \"type\": \"GROUP\",\n    \"name\": \"elements_group\",\n    \"displayName\": \"Page Elements\",\n    \"groupStyle\": \"NO_ZIPPY\",\n    \"subParams\": [\n      {\n        \"type\": \"CHECKBOX\",\n        \"name\": \"element_enable\",\n        \"checkboxText\": \"Run only if page contains specific element\",\n        \"simpleValueType\": true\n      },\n      {\n        \"type\": \"TEXT\",\n        \"name\": \"element_selector\",\n        \"displayName\": \"CSS selector of element\",\n        \"simpleValueType\": true,\n        \"enablingConditions\": [\n          {\n            \"paramName\": \"element_enable\",\n            \"paramValue\": true,\n            \"type\": \"EQUALS\"\n          }\n        ],\n        \"valueValidators\": [\n          {\n            \"type\": \"NON_EMPTY\"\n          }\n        ]\n      }\n    ]\n  }\n]\n\n\n___SANDBOXED_JS_FOR_WEB_TEMPLATE___\n\n// Description: Target Selector Helper\n// Author: Juan Castro\n// Last modified: 2023-10-25\n// License: Apache 2.0\n// Version: 1.0.0\n\nconst queryPermission = require('queryPermission');\nconst copyFromWindow = require('copyFromWindow');\nconst makeInteger = require('makeInteger');\nconst getCookieValues = require('getCookieValues');\nconst getUrl = require('getUrl');\n//const log = require('logToConsole');\n\nconst nantuModeCookieName = 'nantu_mode';\nconst nantuModeQueryVariableName = 'nantu_mode';\n\nvar return_value = 'yes';\n\nvar nantu_device = getVariableValue('nantu_device');\nvar nantu_browser = getVariableValue('nantu_browser');\nvar nantu_browser_type = getVariableValue('nantu_browser_type');\nvar nantu_browser_version = getVariableValue('nantu_browser_version');\n\nvar nantu_source = getVariableValue('nantu_source');\nvar nantu_medium = getVariableValue('nantu_medium');\nvar nantu_campaign = getVariableValue('nantu_campaign');\n\nfunction getTotalElements(selector) {\n\tif (queryPermission('access_globals', 'read', 'nantuGetTotalElements')) {\n\t\tconst nantuGetTotalElements = copyFromWindow('nantuGetTotalElements');\n\n\t\treturn nantuGetTotalElements(selector);\n\t}\n\n\treturn 0;\n}\n\nfunction getVariableValue(variableName) {\n\tif (queryPermission('access_globals', 'read', variableName)) {\n\t\treturn copyFromWindow(variableName);\n\t}\n\n\tif(variableName === 'nantu_browser_version') {\n\t\treturn 0;\n\t}\n\n\treturn \"unknown\";\n}\n\n//Check if the user is in QA mode\n//QA Mode is set using a cookie or the query parameter nantu_mode=qa\nfunction isInQAMode() {\n\tif (queryPermission('get_cookies', nantuModeCookieName)) {\n\t\tconst nantuModeCookie = getCookieValues(nantuModeCookieName).join('');\n\n\t\tif (nantuModeCookie === \"qa\" || hasQAQuery()) {\n\t\t\treturn true;\n\t\t}\n\t}\n\n\treturn false;\n}\n\nfunction hasQAQuery() {\n\tif (queryPermission('get_url', 'query')) {\n\t\tconst nantuModeQuery = getUrl('query');\n\n\t\tif (nantuModeQuery.indexOf(nantuModeQueryVariableName + \"=qa\") !== -1) {\n\t\t\treturn true;\n\t\t}\n\t}\n\n\treturn false;\n}\n\nfunction isAllowedURL(type, condition, value) {\n\tif (queryPermission('get_url', type)) {\n\t\tvar url = getUrl(type);\n\n\t\tif (condition === 'contains') {\n\t\t\tif (url.indexOf(value) !== -1) {\n\t\t\t\treturn true;\n\t\t\t}\n\t\t} else if (condition === 'equals') {\n\t\t\tif (url === value) {\n\t\t\t\treturn true;\n\t\t\t}\n\t\t} else if (condition === 'starts') {\n\t\t\tif (url.indexOf(value) === 0) {\n\t\t\t\treturn true;\n\t\t\t}\n\t\t} else if (condition === 'ends') {\n\t\t\tif (url.indexOf(value) === url.length - value.length) {\n\t\t\t\treturn true;\n\t\t\t}\n\t\t}\n\t}\n\n\treturn false;\n}\n\nif (data.qa_mode === true && isInQAMode() === false) {\n//log('QA Mode is not enabled');\n\treturn 'no';\n}\n\nif (nantu_device === 'unknown' || nantu_browser === 'unknown' || nantu_browser_type === 'unknown' || nantu_browser_version === 0) {\n//log('Unknown device or browser');\n\treturn 'no';\n}\n\nif (nantu_device === 'desktop') {\n\tif (data.desktop === false) {\n//log('Desktop is not allowed');\n\t\treturn 'no';\n\t}\n\n\tif (nantu_browser === 'safari') {\n\t\tif (data.safari_desktop === false) {\n//log('Safari desktop is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.safari_desktop_version)) {\n//log('Safari desktop version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\t}\n\n\tif (nantu_browser === 'chrome') {\n\t\tif (data.chrome_desktop === false) {\n//log('Chrome desktop is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.chrome_desktop_version)) {\n//log('Chrome desktop version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\t}\n\n\n\tif (nantu_browser === 'firefox') {\n\t\tif (data.firefox_desktop === false) {\n//log('Firefox desktop is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.firefox_desktop_version)) {\n//log('Firefox desktop version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\t}\n\n\tif (nantu_browser === 'edge') {\n\t\tif (data.edge_desktop === false) {\n//log('Edge desktop is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.edge_desktop_version)) {\n//log('Edge desktop version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\t}\n\n\tif (nantu_browser === 'opera') {\n\t\tif (data.opera_desktop === false) {\n//log('Opera desktop is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.opera_desktop_version)) {\n//log('Opera desktop version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\t}\n}\n\nif (nantu_device === 'tablet') {\n\tif (data.tablet === false) {\n//log('Tablet is not allowed');\n\t\treturn 'no';\n\t}\n\n\tif (nantu_browser === 'safari') {\n\t\tif (data.safari_ipad === false) {\n//log('Safari iPad is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.safari_ipad_version)) {\n//log('Safari iPad version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\t}\n\n\tif (nantu_browser === 'chrome') {\n\t\tif (data.chrome_android === false) {\n//log('Chrome Tablet is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.chrome_android_version)) {\n//log('Chrome Tablet version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\t}\n\n\tif (nantu_browser === 'firefox') {\n\t\tif (data.firefox_tablet === false) {\n//log('Firefox Tablet is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.firefox_tablet_version)) {\n//log('Firefox Tablet version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\t}\n}\n\nif (nantu_device === 'mobile') {\n\tif (data.mobile === false) {\n//log('Mobile is not allowed');\n\t\treturn 'no';\n\t}\n\n\tif (nantu_browser === 'safari') {\n\t\tif (data.safari_mobile === false) \n\t\t{\n//log('Safari mobile is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.safari_mobile_version)) {\n//log('Safari mobile version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\t}\n\n\tif (nantu_browser === 'chrome') {\n\t\tif (data.chrome_android_mobile === false) {\n//log('Chrome Android mobile is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.chrome_android_mobile_version)) {\n//log('Chrome Android mobile version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_type === 'safari') {\n\t\t\tif (data.chrome_iphone === false) {\n//log('Chrome iPhone is not allowed');\n\t\t\t\treturn 'no';\n\t\t\t}\n\n\t\t\tif (nantu_browser_version < makeInteger(data.chrome_iphone_version)) {\n//log('Chrome iPhone version is not allowed');\n\t\t\t\treturn 'no';\n\t\t\t}\n\t\t}\t\n\t}\n\n\tif (nantu_browser === 'firefox') {\n\t\tif (data.firefox_mobile === false) {\n//log('Firefox mobile is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\n\t\tif (nantu_browser_version < makeInteger(data.firefox_mobile_version)) {\n//log('Firefox mobile version is not allowed');\n\t\t\treturn 'no';\n\t\t}\n\t}\n}\n\nif (data.all_sources === false) {\n\tif (nantu_medium === 'unknown') {\n//log('Medium unknown not allowed');\n\t\treturn 'no';\n\t}\n\n\tif (nantu_medium === 'organic' && data.visitors_organic === false) {\n//log('Organic not allowed');\n\t\treturn 'no';\n\t}\n\n\tif (nantu_medium === 'cpc' && data.visitors_paid === false) {\n//log('Paid not allowed');\n\t\treturn 'no';\n\t}\n\n\tif (nantu_medium === 'direct' && data.visitors_direct === false) {\n//log('Direct not allowed');\n\t\treturn 'no';\n\t}\n\n\tif (nantu_medium === 'email' && data.visitors_email === false) {\n//log('Email not allowed');\n\t\treturn 'no';\n\t}\n}\n\nif (data.urls_enabled === true) {\n\treturn_value = 'no';\n\n\tfor (let i = 0; i < data.urls_table.length; i++) {\n\t\tlet url_rule = data.urls_table[i];\n\n\t\tif (isAllowedURL(url_rule.url_type, url_rule.url_condition, url_rule.url_value) === true) {\n\t\t\treturn_value = 'yes';\n\t\t}\n\t}\n}\n\nif (data.element_enable === true) {\n\tif (getTotalElements(data.element_selector) > 0) {\n\t\treturn 'yes';\n\t}\n\n\treturn 'no';\n}\n\nreturn return_value;\n\n\n___WEB_PERMISSIONS___\n\n[\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"access_globals\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"keys\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_device\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  }\n                ]\n              },\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_browser\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  }\n                ]\n              },\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_browser_type\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  }\n                ]\n              },\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_browser_version\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  }\n                ]\n              },\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_source\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  }\n                ]\n              },\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_medium\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  }\n                ]\n              },\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantu_campaign\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  }\n                ]\n              },\n              {\n                \"type\": 3,\n                \"mapKey\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"key\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"read\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"write\"\n                  },\n                  {\n                    \"type\": 1,\n                    \"string\": \"execute\"\n                  }\n                ],\n                \"mapValue\": [\n                  {\n                    \"type\": 1,\n                    \"string\": \"nantuGetTotalElements\"\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": false\n                  },\n                  {\n                    \"type\": 8,\n                    \"boolean\": true\n                  }\n                ]\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"get_cookies\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"cookieAccess\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"specific\"\n          }\n        },\n        {\n          \"key\": \"cookieNames\",\n          \"value\": {\n            \"type\": 2,\n            \"listItem\": [\n              {\n                \"type\": 1,\n                \"string\": \"nantu_mode\"\n              }\n            ]\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"get_url\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"urlParts\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        },\n        {\n          \"key\": \"queriesAllowed\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  }\n]\n\n\n___TESTS___\n\nscenarios: []\n\n\n___NOTES___\n\n\n\n\n"
+            }
+        ]
+    }
+}
