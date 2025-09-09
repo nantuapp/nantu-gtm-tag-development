@@ -1,0 +1,214 @@
+// Description: QA Tab for Nantu AB Testing.
+// Author: Juan Castro
+// Last modified: 2024-09-30
+// URL: https://github.com/nantuapp/nantu-gtm-tag-development/blob/main/src/tags/qa/tag.html
+// License: Apache 2.0
+// Version: 1.0.7
+
+// What's new:
+// Fix force variation button not working after CSP changes.
+
+
+const nantuQAModeString = "nantu_mode=qa";
+
+
+if (document.cookie.indexOf(nantuQAModeString) > -1 || location.search.indexOf(nantuQAModeString) > -1) {
+
+	const expires = new Date();
+	expires.setTime(expires.getTime() + 60 * 60 * 1000);
+	document.cookie = "nantu_mode=qa;expires=" + expires.toUTCString();
+
+var nantu_qa_tab_html = '<div id="nantu_qa_tab" style="position: fixed;min-height: 30px;min-width: 50px;top: 50%;padding: 8px;right: 0;background: white;box-shadow: 2px 2px 5px #333;border-radius: 8px 0 0 8px; z-index: 10000000000;display: flex;flex-direction: column;row-gap: 5px;align-items: flex-end;"><span style="display:block;font-size:11px;text-align:center; font-family:sans-serif;" id="nantu_qa_tab_title">Nantu Tests</span></div>';
+
+if(document.querySelectorAll("#nantu_qa_tab").length == 0)
+{
+	document.body.insertAdjacentHTML("beforeEnd", nantu_qa_tab_html);
+}
+
+var nantu_current_url = new URL(location.href);
+
+var nantu_variations = nantu_current_url.searchParams.get("nantu_variations");
+
+if(nantu_variations)
+{
+	var nantu_variations_data = nantuJSONLikeStringToObject("[" + nantu_variations + "]");
+
+	if(nantu_variations_data)
+	{
+		var nantu_current_variations_data = localStorage.getItem("nantu_tests");
+
+		var nantu_current_variations = {};
+
+		if(nantu_current_variations_data)
+		{
+			nantu_current_variations = nantuJSONLikeStringToObject(nantu_current_variations_data);
+		}
+
+		for(var nantu_test_id in nantu_variations_data)
+		{
+			console.log("forcing variation for test: ", nantu_test_id, nantu_variations_data[nantu_test_id]);
+
+			nantu_current_variations[nantu_test_id] = nantu_variations_data[nantu_test_id];
+		}
+
+		localStorage.setItem("nantu_tests", nantuObjectToJSONLikeString(nantu_current_variations));
+	}
+
+}
+
+if(typeof(nantu_qa_tests_list) === "object")
+{
+	var nantu_qa_keys = Object.keys(nantu_qa_tests_list);
+
+	for(var nantu_qa_index = 0; nantu_qa_index < nantu_qa_keys.length; nantu_qa_index++) {
+		var nantu_qa_test = nantu_qa_tests_list[nantu_qa_keys[nantu_qa_index]];
+		try {
+			nantu_qa_show_test(nantu_qa_test.id, nantu_qa_test.selected_variation, nantu_qa_test.version, nantu_qa_test.variations, nantu_qa_test.set_dimension);
+		} catch (e) {
+			console.error("Error showing test: " + e);
+		}
+	}
+}
+
+function nantuJSONLikeStringToObject(json_like_string) {
+	var nantu_json_like_string = json_like_string
+		.replace(/^\[/, '{')
+		.replace(/\]$/, '}')
+		.replace(/\:v([0-9]*)/g, ':"v$1"')
+		.replace(/\:c/g, ':"c"')
+		.replace(/\:n/g, ':"n"')
+		.replace(/([0-9]+):/g, '"$1":');
+
+	try {
+		return JSON.parse(nantu_json_like_string);
+	} catch (e) {
+		console.error("Error parsing variations: " + e);
+	}
+
+	return null;
+}
+
+function nantuObjectToJSONLikeString(obj)
+{
+	var nantu_json_string = JSON.stringify(obj);
+
+	nantu_json_string = nantu_json_string
+		.replace(/^\{/, '[')
+		.replace(/\}$/, ']')
+		.replace(/"/g, '')
+
+	return nantu_json_string;
+}
+
+function nantu_qa_show_test(test_id, variation, version, variations, dimension) {
+	var nantu_qa_abbrev_regex = /(ontrol|ariation)/;
+
+	if(document.querySelectorAll("#nantu_qa_tab").length == 0) {
+		document.body.insertAdjacentHTML("beforeEnd", nantu_qa_tab_html);
+	}
+
+	var edit_button = document.createElement("a");
+	edit_button.style.padding = "6px";
+	edit_button.style.background = "#666";
+	edit_button.style.color = "white";
+	edit_button.style.textDecoration = "none";
+	edit_button.style.borderRadius = "4px";
+	edit_button.style.display = "block";
+	edit_button.style.marginBottom = "4px";
+	edit_button.style.fontSize = "10px";
+	edit_button.href = "#";
+	edit_button.innerText = "Edit Variations";
+
+	edit_button.addEventListener("click", function(evt) {
+		evt.preventDefault();
+		window.nantu_qa_edit();
+	});
+
+	var qa_tab_first_child = document.querySelector("#nantu_qa_tab > span:first-child");
+
+	qa_tab_first_child.innerHTML = "";
+
+	qa_tab_first_child.appendChild(edit_button);
+
+	if(document.querySelectorAll("#nantu_" + test_id + "_tab_line").length == 0) {
+		document.getElementById("nantu_qa_tab").insertAdjacentHTML("beforeEnd", '<span style="display: flex;font-size:11px;column-gap: 2px; align-items: center;" id="nantu_' + test_id + '_tab_line"><span class="nantu_qa_id" style="font-weight:bold;"></span><span class="nantu_qa_variation"></span><span class="nantu_qa_dimension"></span><span class="nantu_qa_dimension_links" style="display:none; column-gap: 3px;"></span></span>');
+	}
+
+	var nantu_qa_button_style = 'display: flex; text-decoration: none; min-width: 40px;height: 30px;justify-content: center;align-items: center;font-size: 20px;background: #666;color: white;border-radius: 3px; padding: 0 4px;'; 
+
+	var variations_list = variations.split(",");
+
+	if(document.querySelectorAll("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension_links > a").length == 0) {
+		// add buttons to change variations to QA tab
+		for(var i = 0; i < variations_list.length; i++) {
+			var this_variation = variations_list[i];
+
+			var short_variation = this_variation.replace(nantu_qa_abbrev_regex, "");
+
+			var force_variation_button = document.createElement("a");
+			force_variation_button.href = "#";
+			force_variation_button.setAttribute("style", nantu_qa_button_style);
+			force_variation_button.innerText = short_variation.toUpperCase();
+			force_variation_button.dataset.test = test_id;
+			force_variation_button.dataset.variation = short_variation;
+
+			force_variation_button.addEventListener("click", function(evt) {
+				evt.preventDefault();
+				window.nantu_qa_force_variation(evt.target.dataset.test, evt.target.dataset.variation);
+			});
+
+			document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension_links").appendChild(force_variation_button);
+		}
+
+		// add button to turn off test
+		var turn_off_button = document.createElement("a");
+		turn_off_button.href = "#";
+		turn_off_button.setAttribute("style", nantu_qa_button_style);
+		turn_off_button.innerText = "OFF";
+		turn_off_button.dataset.test = test_id;
+
+		turn_off_button.addEventListener("click", function(evt) {
+			evt.preventDefault();
+			window.nantu_qa_force_variation(evt.target.dataset.test, "n");
+		});
+
+		document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension_links").appendChild(turn_off_button);
+	}
+
+	document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_id").innerText = test_id + "-" + version + ": ";
+
+	var nantu_qa_variation = variation.replace(nantu_qa_abbrev_regex, "").toUpperCase();
+
+	document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_variation").innerText = nantu_qa_variation;
+
+	var dimension_sent = "";
+
+	if (dimension) {
+		dimension_sent = "✓";
+	}
+
+	document.querySelector("#nantu_" + test_id + "_tab_line > .nantu_qa_dimension").innerText = dimension_sent;
+}
+
+window.nantu_qa_edit = function()
+{
+	document.querySelector("#nantu_qa_tab > span:first-child").style.display = "none";
+
+	var nantu_qa_lines = document.querySelectorAll("span.nantu_qa_dimension_links[style*='none']");
+
+	for(var nantu_qa_var_index = 0; nantu_qa_var_index < nantu_qa_lines.length; nantu_qa_var_index++)
+	{
+		nantu_qa_lines[nantu_qa_var_index].style.display = "flex";
+
+	}
+}
+
+window.nantu_qa_force_variation = function(test_id, variation)
+{
+	var url = new URL(location.href);
+
+	url.searchParams.set("nantu_variations", "variation_data");
+
+	window.location = url.href.replace("variation_data", test_id + ":" + variation);
+}
+}
