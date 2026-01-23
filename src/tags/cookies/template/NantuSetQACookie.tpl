@@ -19,16 +19,37 @@
 
 ___TEMPLATE_PARAMETERS___
 
-[]
+[
+  {
+    "type": "SELECT",
+    "name": "cookieType",
+    "displayName": "Cookie Type",
+    "macrosInSelect": false,
+    "selectItems": [
+      {
+        "value": "nantu_environment",
+        "displayValue": "Environment Cookie"
+      },
+      {
+        "value": "nantu_mode",
+        "displayValue": "Nantu Mode Cookie"
+      }
+    ],
+    "simpleValueType": true
+  }
+]
 
 
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 // Description: Cookie Template
 // Author: Juan Castro
-// Last modified: 2023-10-24
+// Last modified: 2024-09-30
 // License: Apache 2.0
-// Version: 1.0.0
+// Version: 1.0.2
+
+// What's new 
+// Fix environment cookie issue
 
 // API imports
 const queryPermission = require('queryPermission');
@@ -41,9 +62,17 @@ const nantuModeCookieName = 'nantu_mode';
 const nantuModeQueryVariableName = 'nantu_mode';
 const nantuQAModeEventName = 'nantu_qa_mode';
 
+if(data.cookieType == "nantu_mode") {
 
-if (isNantuQAModeEvent() || hasQAQuery()) {
-	setQAModeCookie();
+  if (isNantuQAModeEvent() || hasQAQuery()) {
+	setNantuCookie("nantu_mode");
+  }
+}
+
+if(data.cookieType == "nantu_environment") {
+  if (hasEnvironmentQuery()) {
+    setNantuCookie("nantu_environment");
+  }
 }
 
 data.gtmOnSuccess();
@@ -65,7 +94,19 @@ function hasQAQuery() {
 	if (queryPermission('get_url', 'query')) {
 		const nantuModeQuery = getUrl('query');
 
-		if (nantuModeQuery.indexOf(nantuModeQueryVariableName + "=qa") !== -1) {
+		if (nantuModeQuery.indexOf("nantu_mode=qa") !== -1) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function hasEnvironmentQuery() {
+    if (queryPermission('get_url', 'query')) {
+		const nantuEnvironmentQuery = getUrl('query');
+
+		if (nantuEnvironmentQuery.indexOf("nantu_environment=qa") !== -1) {
 			return true;
 		}
 	}
@@ -74,7 +115,7 @@ function hasQAQuery() {
 }
 
 //set the QA mode cookie
-function setQAModeCookie() {
+function setNantuCookie(cookieName) {
 	// Set Cookie Permissions
 	const options = {
 		'domain': 'auto',
@@ -83,8 +124,8 @@ function setQAModeCookie() {
 		'secure': true
 	};
 
-	if (queryPermission('set_cookies', nantuModeCookieName, options)) {
-		setCookie(nantuModeCookieName, 'qa', options);
+	if (queryPermission('set_cookies', cookieName, options)) {
+		setCookie(cookieName, 'qa', options);
 	}
 }
 
@@ -183,6 +224,53 @@ ___WEB_PERMISSIONS___
                     "string": "any"
                   }
                 ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "name"
+                  },
+                  {
+                    "type": 1,
+                    "string": "domain"
+                  },
+                  {
+                    "type": 1,
+                    "string": "path"
+                  },
+                  {
+                    "type": 1,
+                    "string": "secure"
+                  },
+                  {
+                    "type": 1,
+                    "string": "session"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "nantu_environment"
+                  },
+                  {
+                    "type": 1,
+                    "string": "*"
+                  },
+                  {
+                    "type": 1,
+                    "string": "*"
+                  },
+                  {
+                    "type": 1,
+                    "string": "any"
+                  },
+                  {
+                    "type": 1,
+                    "string": "any"
+                  }
+                ]
               }
             ]
           }
@@ -229,6 +317,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 10/25/2023, 11:12:20 AM
+Created on 1/23/2026, 1:39:57 PM
 
 

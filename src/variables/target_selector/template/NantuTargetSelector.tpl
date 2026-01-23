@@ -546,6 +546,12 @@ ___TEMPLATE_PARAMETERS___
 
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
+// Description: Target Selector Helper
+// Author: Juan Castro
+// Last modified: 2023-10-25
+// License: Apache 2.0
+// Version: 1.0.0
+
 const queryPermission = require('queryPermission');
 const copyFromWindow = require('copyFromWindow');
 const makeInteger = require('makeInteger');
@@ -1276,6 +1282,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 11/20/2023, 9:48:40 AM
+Created on 1/23/2026, 1:44:57 PM
 
 

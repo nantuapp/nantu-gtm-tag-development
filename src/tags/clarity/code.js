@@ -153,4 +153,3 @@ function nantuLog(message1, message2, message3) {
 		log("Nantu Clarity: " + message1, message2, message3);
 	}
 }
-
