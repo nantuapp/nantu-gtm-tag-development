@@ -105,7 +105,7 @@ ___TEMPLATE_PARAMETERS___
             "type": "EQUALS"
           }
         ],
-        "defaultValue": "07/18/2023",
+        "defaultValue": "01/23/2026",
         "valueValidators": [
           {
             "type": "NON_EMPTY"
@@ -131,7 +131,7 @@ ___TEMPLATE_PARAMETERS___
             "type": "EQUALS"
           }
         ],
-        "defaultValue": "12/31/2026",
+        "defaultValue": "12/31/2046",
         "valueValidators": [
           {
             "type": "NON_EMPTY"
@@ -150,7 +150,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "allowedDomain",
-    "displayName": "Domain",
+    "displayName": "Domain or subdomain",
     "simpleValueType": true,
     "valueHint": "www.example.com",
     "valueValidators": [
@@ -158,7 +158,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "NON_EMPTY"
       }
     ],
-    "help": "Domain where the A/B Test will run"
+    "help": "Domain or subdomain where the A/B Test will run"
   },
   {
     "type": "PARAM_TABLE",
