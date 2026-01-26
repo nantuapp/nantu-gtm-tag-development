@@ -1199,6 +1199,7 @@ function nantu_x_execute_test() {
 		nantu_x_push_to_data_layer();
 
 		if (nantu_x_selected_variation !== "control") {
+			// nantu_x_add_css_code(nantu_x_selected_variation); // Adds the CSS code
 			nantu_x_change_page();
 		}
 
@@ -1211,15 +1212,13 @@ function nantu_x_execute_test() {
 
 function nantu_x_change_page() {
 	//The code to change the page goes here
+}
 
+function nantu_x_add_css_code(nantu_x_selected_variation) {
 	document.body.classList.add(
 		"nantu_x_" + nantu_x_selected_variation,
 	);
 
-	nantu_x_add_css_code();
-}
-
-function nantu_x_add_css_code() {
 	const css_code = `
 	/* Add your CSS code here */
 	`;
