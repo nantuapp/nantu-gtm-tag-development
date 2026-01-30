@@ -24,7 +24,15 @@ ___TEMPLATE_PARAMETERS___
 
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
-// Enter your template code here.
+// Description: Nantu Cross Domain Tracking
+// Author: Juan Castro
+// Last modified: 2026-01-29
+// License: Apache 2.0
+// Version: 1.0.0
+//
+// What's new?
+// - Initial release
+
 const log = require('logToConsole');
 const queryPermission = require('queryPermission');
 const getQueryParameters = require('getQueryParameters');
@@ -266,6 +274,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 1/29/2026, 9:03:26 AM
+Created on 1/30/2026, 9:16:51 AM
 
 

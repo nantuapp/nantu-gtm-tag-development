@@ -1,4 +1,12 @@
-// Enter your template code here.
+// Description: Nantu Cross Domain Tracking
+// Author: Juan Castro
+// Last modified: 2026-01-29
+// License: Apache 2.0
+// Version: 1.0.0
+//
+// What's new?
+// - Initial release
+
 const log = require('logToConsole');
 const queryPermission = require('queryPermission');
 const getQueryParameters = require('getQueryParameters');
