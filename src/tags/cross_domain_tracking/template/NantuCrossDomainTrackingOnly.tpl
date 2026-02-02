@@ -68,12 +68,12 @@ for (let i = 0; i < tests.length; i++) {
 		continue;
 	}
 
-	const testId = makePositiveInt(t.test_id);
-	const experimentName = asString(t.experiment_name);
-	const selectedVariation = normalizeVariation(t.selected_variation);
-	const variationName = asString(t.variation_name);
+	const testId = makePositiveInt(t.nantu_ab_test_index);
+	const experimentName = asString(t.nantu_ab_test_experiment_name);
+	const selectedVariation = asString(t.nantu_ab_test_variation_id);
+	const variationName = asString(t.nantu_ab_test_variation);
 
-	if (!testId || !experimentName || !selectedVariation) {
+	if (!testId || !experimentName || !selectedVariation || !variationName) {
 		continue;
 	}
 
@@ -101,28 +101,6 @@ function getQueryParamValue(paramName) {
 	}
 
 	return v;
-}
-
-function normalizeVariation(v) {
-	const s = asString(v);
-	if (!s) {
-		return '';
-	}
-
-	if (s === 'control') {
-		return 'control';
-	}
-
-	if (s.indexOf('variation') !== 0 || s.length < 10) {
-		return '';
-	}
-
-	const n = makePositiveInt(s.slice(9));
-	if (!n) {
-		return '';
-	}
-
-	return 'variation' + n;
 }
 
 function asString(v) {
@@ -274,6 +252,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 1/30/2026, 9:16:51 AM
+Created on 2/2/2026, 10:03:49 AM
 
 
