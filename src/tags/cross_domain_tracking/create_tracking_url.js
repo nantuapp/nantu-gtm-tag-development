@@ -20,8 +20,17 @@ function nantu_x_cross_domain_tracking_url(url) {
 	return urlObj.toString();
 }
 
-/*const links = document.querySelectorAll("a[href*='nginx.org']");
+const links = document.querySelectorAll("a[href*='nginx.org']");
 
 links.forEach(link => {
-	link.href = nantu_x_cross_domain_tracking_url(link.href);
-});*/
+	if (link.href.includes('nantu_crossdomain_tests')) {
+		return;
+	}
+
+	const crossDomainURL = nantu_x_cross_domain_tracking_url(link.href);
+
+	if (link.href !== crossDomainURL) {
+		console.log('Cross domain URL:', crossDomainURL);
+		link.href = crossDomainURL;
+	}
+});
