@@ -1,6 +1,6 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2026-03-10 15:52:57",
+    "exportTime": "2026-03-10 23:05:07",
     "containerVersion": {
         "path": "accounts/6098026418/containers/115676190/versions/0",
         "accountId": "6098026418",
@@ -553,7 +553,15 @@
                 "fingerprint": "1772747727760"
             }
         ],
-        "fingerprint": "1773157977034",
+        "builtInVariable": [
+            {
+                "accountId": "6098026418",
+                "containerId": "115676190",
+                "type": "CONTAINER_ID",
+                "name": "Container ID"
+            }
+        ],
+        "fingerprint": "1773183907740",
         "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6098026418/containers/115676190/versions/0?apiLink=version",
         "customTemplate": [
             {
