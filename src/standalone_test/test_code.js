@@ -2,12 +2,12 @@
 --Nantu A/B Test Standalone template--
 
 // Author: Juan Castro
-// Last modified: 2024-09-16
+// Last modified: 2026-07-03
 // License: Apache 2.0
-// Version: 1.0.1
+// Version: 1.0.2
 
 // What's new:
-// Send data layer event when test is executed
+// Option to send data to GA4 using gtag
 
 Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches the clickup card ID for every test to avoid name collisions
 */
@@ -37,8 +37,8 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 		],
 		qaOnly: true,
 		desktop: true,
-		tablet: false,
-		mobile: false,
+		tablet: true,
+		mobile: true,
 	};
 
 	const enabledBrowserData = {
@@ -70,8 +70,7 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 		"firefox_mobile_version": "80",
 		"safari_mobile": true,
 		"safari_mobile_version": "14",
-	}
-
+	};
 
 	const log = console.log;
 	const makeInteger = parseInt;
@@ -192,7 +191,7 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 	const nantuVersion = "1.0.0";
 	const nantuVariationsQueryName = "nantu_variations";
 
-	if(data.experimentName.length > 20) {
+	if (data.experimentName.length > 20) {
 		log("Experiment name length is greater than 20 characters");
 		return;
 	}
@@ -253,7 +252,6 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 		}
 	}
 
-
 	/* Device Detection start */
 
 	const nantuBrowserData = nantuDetectBrowser(navigator.userAgent);
@@ -263,168 +261,202 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 	const nantu_browser_type = nantuBrowserData.browserType;
 	const nantu_browser_version = nantuBrowserData.version;
 
-	if (nantu_device === 'desktop') {
+	if (nantu_device === "desktop") {
 		if (data.desktop === false) {
-			log('Desktop is not allowed');
+			log("Desktop is not allowed");
 			return;
 		}
 
-		if (nantu_browser === 'safari') {
+		if (nantu_browser === "safari") {
 			if (enabledBrowserData.safari_desktop === false) {
-				log('Safari desktop is not allowed');
+				log("Safari desktop is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.safari_desktop_version)) {
-				log('Safari desktop version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.safari_desktop_version)
+			) {
+				log("Safari desktop version is not allowed");
 				return;
 			}
 		}
 
-		if (nantu_browser === 'chrome') {
+		if (nantu_browser === "chrome") {
 			if (enabledBrowserData.chrome_desktop === false) {
-				log('Chrome desktop is not allowed');
+				log("Chrome desktop is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.chrome_desktop_version)) {
-				log('Chrome desktop version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.chrome_desktop_version)
+			) {
+				log("Chrome desktop version is not allowed");
 				return;
 			}
 		}
 
-
-		if (nantu_browser === 'firefox') {
+		if (nantu_browser === "firefox") {
 			if (enabledBrowserData.firefox_desktop === false) {
-				log('Firefox desktop is not allowed');
+				log("Firefox desktop is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.firefox_desktop_version)) {
-				log('Firefox desktop version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.firefox_desktop_version)
+			) {
+				log("Firefox desktop version is not allowed");
 				return;
 			}
 		}
 
-		if (nantu_browser === 'edge') {
+		if (nantu_browser === "edge") {
 			if (enabledBrowserData.edge_desktop === false) {
-				log('Edge desktop is not allowed');
+				log("Edge desktop is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.edge_desktop_version)) {
-				log('Edge desktop version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.edge_desktop_version)
+			) {
+				log("Edge desktop version is not allowed");
 				return;
 			}
 		}
 
-		if (nantu_browser === 'opera') {
+		if (nantu_browser === "opera") {
 			if (enabledBrowserData.opera_desktop === false) {
-				log('Opera desktop is not allowed');
+				log("Opera desktop is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.opera_desktop_version)) {
-				log('Opera desktop version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.opera_desktop_version)
+			) {
+				log("Opera desktop version is not allowed");
 				return;
 			}
 		}
 	}
 
-	if (nantu_device === 'tablet') {
+	if (nantu_device === "tablet") {
 		if (data.tablet === false) {
-				log('Tablet is not allowed');
+			log("Tablet is not allowed");
 			return;
 		}
 
-		if (nantu_browser === 'safari') {
+		if (nantu_browser === "safari") {
 			if (enabledBrowserData.safari_ipad === false) {
-				log('Safari iPad is not allowed');
+				log("Safari iPad is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.safari_ipad_version)) {
-				log('Safari iPad version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.safari_ipad_version)
+			) {
+				log("Safari iPad version is not allowed");
 				return;
 			}
 		}
 
-		if (nantu_browser === 'chrome') {
+		if (nantu_browser === "chrome") {
 			if (enabledBrowserData.chrome_android === false) {
-				log('Chrome Tablet is not allowed');
+				log("Chrome Tablet is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.chrome_android_version)) {
-				log('Chrome Tablet version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.chrome_android_version)
+			) {
+				log("Chrome Tablet version is not allowed");
 				return;
 			}
 		}
 
-		if (nantu_browser === 'firefox') {
+		if (nantu_browser === "firefox") {
 			if (enabledBrowserData.firefox_tablet === false) {
-				log('Firefox Tablet is not allowed');
+				log("Firefox Tablet is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.firefox_tablet_version)) {
-				log('Firefox Tablet version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.firefox_tablet_version)
+			) {
+				log("Firefox Tablet version is not allowed");
 				return;
 			}
 		}
 	}
 
-	if (nantu_device === 'mobile') {
+	if (nantu_device === "mobile") {
 		if (data.mobile === false) {
-				log('Mobile is not allowed');
+			log("Mobile is not allowed");
 			return;
 		}
 
-		if (nantu_browser === 'safari') {
-			if (enabledBrowserData.safari_mobile === false) 
-			{
-				log('Safari mobile is not allowed');
+		if (nantu_browser === "safari") {
+			if (enabledBrowserData.safari_mobile === false) {
+				log("Safari mobile is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.safari_mobile_version)) {
-				log('Safari mobile version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.safari_mobile_version)
+			) {
+				log("Safari mobile version is not allowed");
 				return;
 			}
 		}
 
-		if (nantu_browser === 'chrome') {
+		if (nantu_browser === "chrome") {
 			if (enabledBrowserData.chrome_android_mobile === false) {
-				log('Chrome Android mobile is not allowed');
+				log("Chrome Android mobile is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.chrome_android_mobile_version)) {
-				log('Chrome Android mobile version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.chrome_android_mobile_version)
+			) {
+				log("Chrome Android mobile version is not allowed");
 				return;
 			}
 
-			if (nantu_browser_type === 'safari') {
+			if (nantu_browser_type === "safari") {
 				if (enabledBrowserData.chrome_iphone === false) {
-				log('Chrome iPhone is not allowed');
+					log("Chrome iPhone is not allowed");
 					return;
 				}
 
-				if (nantu_browser_version < makeInteger(enabledBrowserData.chrome_iphone_version)) {
-				log('Chrome iPhone version is not allowed');
+				if (
+					nantu_browser_version <
+						makeInteger(enabledBrowserData.chrome_iphone_version)
+				) {
+					log("Chrome iPhone version is not allowed");
 					return;
 				}
-			}	
+			}
 		}
 
-		if (nantu_browser === 'firefox') {
+		if (nantu_browser === "firefox") {
 			if (enabledBrowserData.firefox_mobile === false) {
-				log('Firefox mobile is not allowed');
+				log("Firefox mobile is not allowed");
 				return;
 			}
 
-			if (nantu_browser_version < makeInteger(enabledBrowserData.firefox_mobile_version)) {
-				log('Firefox mobile version is not allowed');
+			if (
+				nantu_browser_version <
+					makeInteger(enabledBrowserData.firefox_mobile_version)
+			) {
+				log("Firefox mobile version is not allowed");
 				return;
 			}
 		}
@@ -476,7 +508,7 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 		testVariations.push(variation.id);
 	}
 
-	if(isInQAMode()) {
+	if (isInQAMode()) {
 		window.nantu_x_debug = true;
 	}
 
@@ -503,8 +535,9 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 					nantuVariationsIndex + nantuVariationsQueryName.length + 1,
 				);
 
-				const nantuVariationsQueryValueEnd =
-					nantuVariationsQueryValue.indexOf("&");
+				const nantuVariationsQueryValueEnd = nantuVariationsQueryValue.indexOf(
+					"&",
+				);
 
 				var variationsValues = "";
 
@@ -539,538 +572,571 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 	}
 
 	/*--include:../tags/abtest/helpers/helpers.js:--*/
-// Description: Helper functions for the A/B testing framework.
-// Author: Juan Castro
-// Last modified: 2023-05-26
-// License: Apache 2.0
-// Version: 1.0.0
-// Path: helpers.js
+	// Description: Helper functions for the A/B testing framework.
+	// Author: Juan Castro
+	// Last modified: 2023-05-26
+	// License: Apache 2.0
+	// Version: 1.0.0
+	// Path: helpers.js
 
-// shortName converts a variation long name to a short name.
-function shortName(variationLongName) {
-	if ( ! variationLongName ) {
-		return "u";
-	}
+	// shortName converts a variation long name to a short name.
+	function shortName(variationLongName) {
+		if (!variationLongName) {
+			return "u";
+		}
 
-	if (variationLongName === "control") {
-		return "c";
-	} else if (variationLongName === "none") {
-		return "n";
-	} else if (variationLongName.indexOf("variation") === 0 && variationLongName.length >= 10) {
-		const variationNumber = variationLongName.slice(9);
-		if (strToInt(variationNumber) > 0) {
-			return "v" + variationNumber;
+		if (variationLongName === "control") {
+			return "c";
+		} else if (variationLongName === "none") {
+			return "n";
+		} else if (
+			variationLongName.indexOf("variation") === 0 &&
+			variationLongName.length >= 10
+		) {
+			const variationNumber = variationLongName.slice(9);
+			if (strToInt(variationNumber) > 0) {
+				return "v" + variationNumber;
+			} else {
+				return "u";
+			}
 		} else {
 			return "u";
 		}
-	} else {
-		return "u";
-	}
-}
-
-// longName converts a variation short name to a long name.
-function longName(variationShortName) {
-	if ( ! variationShortName ) {
-		return "unset";
 	}
 
-	if (variationShortName === "c") {
-		return "control";
-	} else if (variationShortName === "n") {
-		return "none";
-	} else if (variationShortName.indexOf("v") === 0 && variationShortName.length >= 2) {
-		const variationNumber = variationShortName.slice(1);
-		if (strToInt(variationNumber) > 0) {
-			return "variation" + variationNumber;
+	// longName converts a variation short name to a long name.
+	function longName(variationShortName) {
+		if (!variationShortName) {
+			return "unset";
+		}
+
+		if (variationShortName === "c") {
+			return "control";
+		} else if (variationShortName === "n") {
+			return "none";
+		} else if (
+			variationShortName.indexOf("v") === 0 && variationShortName.length >= 2
+		) {
+			const variationNumber = variationShortName.slice(1);
+			if (strToInt(variationNumber) > 0) {
+				return "variation" + variationNumber;
+			} else {
+				return "unset";
+			}
 		} else {
 			return "unset";
 		}
-	} else {
-		return "unset";
-	}
-}
-
-// strToInt converts a string to an integer. If the string is not a number, it returns null.
-function strToInt(num)
-{
-	if(getType(num) == "number")
-	{
-		return num;
 	}
 
-	let total_value = 0;
-
-	if(num) {
-		for(let char_index = 0; char_index < num.length; char_index++) {
-			let digit_value = 0;
-			let current_letter = num.charAt(char_index);
-
-			if(current_letter === "1") {
-				digit_value = 1;
-			}
-			else if (current_letter === "2") {
-				digit_value = 2;
-			}
-			else if (current_letter === "3") {
-				digit_value = 3;
-			}
-			else if (current_letter === "4") {
-				digit_value = 4;
-			}
-			else if (current_letter === "5") {
-				digit_value = 5;
-			}
-			else if (current_letter === "6") {
-				digit_value = 6;
-			}
-			else if (current_letter === "7") {
-				digit_value = 7;
-			}
-			else if (current_letter === "8") {
-				digit_value = 8;
-			}
-			else if (current_letter === "9") {
-				digit_value = 9;
-			}
-			else if (current_letter !== "0") {
-				return null;
-			}
-
-			total_value += digit_value * Math.pow(10, num.length - char_index - 1);
+	// strToInt converts a string to an integer. If the string is not a number, it returns null.
+	function strToInt(num) {
+		if (getType(num) == "number") {
+			return num;
 		}
-	} else {
-		return null;
+
+		let total_value = 0;
+
+		if (num) {
+			for (let char_index = 0; char_index < num.length; char_index++) {
+				let digit_value = 0;
+				let current_letter = num.charAt(char_index);
+
+				if (current_letter === "1") {
+					digit_value = 1;
+				} else if (current_letter === "2") {
+					digit_value = 2;
+				} else if (current_letter === "3") {
+					digit_value = 3;
+				} else if (current_letter === "4") {
+					digit_value = 4;
+				} else if (current_letter === "5") {
+					digit_value = 5;
+				} else if (current_letter === "6") {
+					digit_value = 6;
+				} else if (current_letter === "7") {
+					digit_value = 7;
+				} else if (current_letter === "8") {
+					digit_value = 8;
+				} else if (current_letter === "9") {
+					digit_value = 9;
+				} else if (current_letter !== "0") {
+					return null;
+				}
+
+				total_value += digit_value * Math.pow(10, num.length - char_index - 1);
+			}
+		} else {
+			return null;
+		}
+
+		return total_value;
 	}
 
-	return total_value;
-}
+	// parseTestsVariations parses a string of tests variations into an array of objects.
+	// [123:v1,456:v2,789:v3,345:u,678:n] => [{id: 123, variation: variation}, {id: 456, variation: variation2}, {id: 789, variation: variation3}, {id: 345, variation: unset}, {id: 678, variation: none}]
+	function parseTestsVariations(testsVariations) {
+		if (!testsVariations) {
+			return [];
+		}
 
-// parseTestsVariations parses a string of tests variations into an array of objects.
-// [123:v1,456:v2,789:v3,345:u,678:n] => [{id: 123, variation: variation}, {id: 456, variation: variation2}, {id: 789, variation: variation3}, {id: 345, variation: unset}, {id: 678, variation: none}]
-function parseTestsVariations(testsVariations) {
+		// Split the string into an array of key-value pairs.
+		const pairs = testsVariations.slice(1, -1).split(",");
 
-	if ( ! testsVariations ) {
-		return [];
-	}
+		const results = [];
 
-	// Split the string into an array of key-value pairs.
-	const pairs = testsVariations.slice(1, -1).split(',');
+		const firstChar = testsVariations.slice(0, 1);
+		const lastChar = testsVariations.slice(-1);
 
-	const results = [];
+		if (firstChar !== "[" || lastChar !== "]") {
+			return results;
+		}
 
-	const firstChar = testsVariations.slice(0, 1);
-	const lastChar = testsVariations.slice(-1);
+		for (const pair of pairs) {
+			const keyValue = pair.split(":");
 
-	if (firstChar !== "[" || lastChar !== "]") {
+			const key = strToInt(keyValue[0]);
+			const value = longName(keyValue[1]);
+
+			if (key > 0) {
+				const result = {
+					id: key,
+					variation: value,
+				};
+				results.push(result);
+			}
+		}
+
 		return results;
 	}
 
-	for (const pair of pairs) {
-		const keyValue = pair.split(':');
+	// serializeTestsVariations serializes an array of tests variations into a string.
+	// [{id: 123, variation: variation}, {id: 456, variation: variation2}, {id: 789, variation: variation3}, {id: 345, variation: unset}, {id: 678, variation: none}] => [123:v1,456:v2,789:v3,345:u,678:n]
+	function serializeTestsVariations(testsVariations) {
+		const pairs = [];
 
-		const key = strToInt(keyValue[0]);
-		const value = longName(keyValue[1]);
-
-		if (key > 0) {
-			const result = {
-				id: key,
-				variation: value
-			};
-			results.push(result);
-		}
-	}
-
-	return results;
-}
-
-// serializeTestsVariations serializes an array of tests variations into a string.
-// [{id: 123, variation: variation}, {id: 456, variation: variation2}, {id: 789, variation: variation3}, {id: 345, variation: unset}, {id: 678, variation: none}] => [123:v1,456:v2,789:v3,345:u,678:n]
-function serializeTestsVariations(testsVariations) {
-	const pairs = [];
-
-	for (const testVariation of testsVariations) {
-		const pair = testVariation.id + ":" + shortName(testVariation.variation);
-		pairs.push(pair);
-	}
-
-	return "[" + pairs.join(',') + "]";
-}
-
-function setTestVariation(testsVariations, testId, variation) {
-	const testVariation = {
-		id: testId,
-		variation: variation
-	};
-
-	const newTestsVariations = [];
-
-	let found = false;
-
-	for (const currentTestVariation of testsVariations) {
-		if (currentTestVariation.id == testId) {
-			newTestsVariations.push(testVariation);
-			found = true;
-		} else {
-			newTestsVariations.push(currentTestVariation);
-		}
-	}
-
-	if ( ! found ) {
-		newTestsVariations.push(testVariation);
-	}
-
-	return newTestsVariations;
-}
-
-// check if the user is in Nantu off mode
-// Nantu off mode is set using a cookie or the query parameter nantu_mode=off
-function isNantuOff() {
-	if (queryPermission('get_url', 'query')) {
-		const nantuModeQuery = getUrl('query');
-
-		if (nantuModeQuery.indexOf(nantuModeQueryVariableName + "=off") !== -1) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
-function getGACookieTimestamp() {
-
-	const GACookieName = "_ga";
-
-	if (queryPermission('get_cookies', GACookieName)) {
-		const gaCookieValue = getCookieValues(GACookieName).join('');
-
-		const cookieParts = gaCookieValue.split(".");
-
-		const gaTimestamp = strToInt(cookieParts[cookieParts.length - 1]);
-
-		if(gaTimestamp > 0)
-		{
-			return gaTimestamp;
+		for (const testVariation of testsVariations) {
+			const pair = testVariation.id + ":" + shortName(testVariation.variation);
+			pairs.push(pair);
 		}
 
-	} else {
-		return 0;
-	}
-	
-	return Math.floor(getTimestampMillis()/1000);
-}
-
-//Check if the user is in QA mode
-//QA Mode is set using a cookie or the query parameter nantu_mode=qa
-function isInQAMode() {
-	if (queryPermission('get_cookies', nantuModeCookieName)) {
-		const nantuModeCookie = getCookieValues(nantuModeCookieName).join('');
-
-		if (nantuModeCookie === "qa" || hasQAQuery()) {
-			return true;
-		}
+		return "[" + pairs.join(",") + "]";
 	}
 
-	return false;
-}
+	function setTestVariation(testsVariations, testId, variation) {
+		const testVariation = {
+			id: testId,
+			variation: variation,
+		};
 
-function hasQAQuery() {
-	if (queryPermission('get_url', 'query')) {
-		const nantuModeQuery = getUrl('query');
+		const newTestsVariations = [];
 
-		if (nantuModeQuery.indexOf(nantuModeQueryVariableName + "=qa") !== -1) {
-			return true;
-		}
-	}
+		let found = false;
 
-	return false;
-}
-
-//set the QA mode cookie
-function setQAModeCookie() {
-	// Set Cookie Permissions
-	const options = {
-		'domain': 'auto',
-		'path': '/',
-		'max-age': 60*60,
-		'secure': true
-	};
-
-	if (queryPermission('set_cookies', nantuModeCookieName, options)) {
-		setCookie(nantuModeCookieName, 'qa', options);
-	}
-}
-
-// display log messages in the console if nantu is in QA mode, also include the test index
-function testLog(message1, message2) {
-	if (isInQAMode()) {
-		log("Nantu Test " + data.testIndex + ": " + message1, message2);
-	}
-}
-
-function getNumberAfterString(text, string) {
-	const index = text.indexOf(string);
-
-	if (index !== -1) {
-		let startOfNumberIndex = index + string.length;
-		let endOfNumberIndex = startOfNumberIndex;
-		while (endOfNumberIndex < text.length) {
-			if (strToInt(text[endOfNumberIndex]) !== null) {
-				endOfNumberIndex++;
+		for (const currentTestVariation of testsVariations) {
+			if (currentTestVariation.id == testId) {
+				newTestsVariations.push(testVariation);
+				found = true;
 			} else {
+				newTestsVariations.push(currentTestVariation);
+			}
+		}
+
+		if (!found) {
+			newTestsVariations.push(testVariation);
+		}
+
+		return newTestsVariations;
+	}
+
+	// check if the user is in Nantu off mode
+	// Nantu off mode is set using a cookie or the query parameter nantu_mode=off
+	function isNantuOff() {
+		if (queryPermission("get_url", "query")) {
+			const nantuModeQuery = getUrl("query");
+
+			if (nantuModeQuery.indexOf(nantuModeQueryVariableName + "=off") !== -1) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	function getGACookieTimestamp() {
+		const GACookieName = "_ga";
+
+		if (queryPermission("get_cookies", GACookieName)) {
+			const gaCookieValue = getCookieValues(GACookieName).join("");
+
+			const cookieParts = gaCookieValue.split(".");
+
+			const gaTimestamp = strToInt(cookieParts[cookieParts.length - 1]);
+
+			if (gaTimestamp > 0) {
+				return gaTimestamp;
+			}
+		} else {
+			return 0;
+		}
+
+		return Math.floor(getTimestampMillis() / 1000);
+	}
+
+	//Check if the user is in QA mode
+	//QA Mode is set using a cookie or the query parameter nantu_mode=qa
+	function isInQAMode() {
+		if (queryPermission("get_cookies", nantuModeCookieName)) {
+			const nantuModeCookie = getCookieValues(nantuModeCookieName).join("");
+
+			if (nantuModeCookie === "qa" || hasQAQuery()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	function hasQAQuery() {
+		if (queryPermission("get_url", "query")) {
+			const nantuModeQuery = getUrl("query");
+
+			if (nantuModeQuery.indexOf(nantuModeQueryVariableName + "=qa") !== -1) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	//set the QA mode cookie
+	function setQAModeCookie() {
+		// Set Cookie Permissions
+		const options = {
+			"domain": "auto",
+			"path": "/",
+			"max-age": 60 * 60,
+			"secure": true,
+		};
+
+		if (queryPermission("set_cookies", nantuModeCookieName, options)) {
+			setCookie(nantuModeCookieName, "qa", options);
+		}
+	}
+
+	// display log messages in the console if nantu is in QA mode, also include the test index
+	function testLog(message1, message2) {
+		if (isInQAMode()) {
+			log("Nantu Test " + data.testIndex + ": " + message1, message2);
+		}
+	}
+
+	function getNumberAfterString(text, string) {
+		const index = text.indexOf(string);
+
+		if (index !== -1) {
+			let startOfNumberIndex = index + string.length;
+			let endOfNumberIndex = startOfNumberIndex;
+			while (endOfNumberIndex < text.length) {
+				if (strToInt(text[endOfNumberIndex]) !== null) {
+					endOfNumberIndex++;
+				} else {
+					break;
+				}
+			}
+
+			const number = text.slice(startOfNumberIndex, endOfNumberIndex);
+
+			return strToInt(number);
+		}
+
+		return null;
+	}
+
+	function isAllowedDomain(domain, testData) {
+		if (testData.allowedDomain === domain) {
+			return true;
+		}
+
+		return false;
+	}
+
+	function getSelectedVariation(savedVariations, testData) {
+		for (const savedVariation of savedVariations) {
+			if (savedVariation.id === strToInt(testData.testIndex)) {
+				return savedVariation.variation;
+			}
+		}
+
+		return "unset";
+	}
+
+	function getVariationName(variation, testData) {
+		for (const variationData of testData.variations) {
+			if (variationData.id === variation) {
+				return variationData.name;
+			}
+		}
+
+		return "unknown";
+	}
+
+	function selectRandomVariation(testData) {
+		const variations = testData.variations;
+
+		let maxWeight = 0;
+
+		for (const variation of variations) {
+			maxWeight += strToInt(variation.weight);
+		}
+
+		const randomWeight = generateRandom(0, maxWeight - 1);
+
+		let currentWeight = 0;
+
+		for (const variation of variations) {
+			currentWeight += strToInt(variation.weight);
+			if (randomWeight < currentWeight) {
+				return variation.id;
+			}
+		}
+
+		return "unset";
+	}
+
+	function getDaysFrom1970(dateString) {
+		const dateParts = dateString.split("/");
+
+		if (dateParts.length !== 3) {
+			return 0;
+		}
+
+		const month = strToInt(dateParts[0]);
+		const day = strToInt(dateParts[1]);
+		const year = strToInt(dateParts[2]);
+
+		// Days per month (assuming non-leap year for February)
+		const daysPerMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+		// Calculate the total number of days from the Unix Epoch to the given date
+		let totalDays = 0;
+
+		for (let y = 1970; y < year; y++) {
+			totalDays += isLeapYear(y) ? 366 : 365;
+		}
+
+		for (let m = 1; m < month; m++) {
+			totalDays += daysPerMonth[m];
+
+			if (m === 2 && isLeapYear(year)) {
+				totalDays += 1; // February has 29 days in a leap year
+			}
+		}
+		totalDays += day - 1; // Subtract 1 as the Unix Epoch starts from January 1, 1970
+
+		return totalDays;
+	}
+
+	function isLeapYear(year) {
+		return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+	}
+
+	/*--includeend--*/
+	/*--include:../tags/environment-variables/detectors.js:--*/
+	// Description: Device detection for A/B testing framework.
+	// Author: Juan Castro
+	// Last modified: 2023-07-25
+	// License: Apache 2.0
+	// Version: 1.0.0
+
+	function nantuDetectBrowser(userAgent) {
+		var safariData = nantuIsSafariBrowser(userAgent);
+
+		if (safariData) {
+			return safariData;
+		}
+
+		var desktopBrowserData = nantuGetBrowser(userAgent);
+
+		if (desktopBrowserData) {
+			return desktopBrowserData;
+		}
+
+		return {
+			device: "unknown",
+			browser: "unknown",
+			browserType: "unknown",
+			version: 0,
+		};
+	}
+
+	function nantuIsSafariBrowser(userAgent) {
+		var isSafari = false;
+
+		var isDesktop = false;
+		var isMobile = false;
+		var isTabvar = false;
+
+		var supportedApplePlatforms = ["Macintosh", "iPhone", "iPad"];
+
+		var platformIndex = -1;
+
+		for (var i = 0; i < supportedApplePlatforms.length; i++) {
+			var platform = supportedApplePlatforms[i];
+
+			if (userAgent.indexOf(platform) > -1) {
+				if (platform === "iPad") {
+					isTabvar = true;
+				}
+				if (platform === "Macintosh") {
+					isDesktop = true;
+				}
+				if (platform === "iPhone") {
+					isMobile = true;
+				}
+
+				platformIndex = userAgent.indexOf(platform);
 				break;
 			}
 		}
 
-		const number = text.slice(startOfNumberIndex, endOfNumberIndex);
+		var safariVersionRegex = /Version\/[0-9]+/;
 
-		return strToInt(number);
-	}
+		if (platformIndex > -1) {
+			if (safariVersionRegex.test(userAgent.slice(platformIndex))) {
+				var safariVersion = parseInt(
+					userAgent.slice(platformIndex).match(safariVersionRegex)[0].split(
+						"/",
+					)[1],
+				);
 
-	return null;
-}
-
-function isAllowedDomain(domain, testData) {
-	if (testData.allowedDomain === domain) {
-		return true;
-	}
-
-	return false;
-}
-
-function getSelectedVariation(savedVariations, testData) {
-	for (const savedVariation of savedVariations) {
-		if (savedVariation.id === strToInt(testData.testIndex)) {
-			return savedVariation.variation;
-		}
-	}
-
-	return "unset";
-}
-
-function getVariationName(variation, testData) {
-	for (const variationData of testData.variations) {
-		if (variationData.id === variation) {
-			return variationData.name;
-		}
-	}
-
-	return "unknown";
-}
-
-
-function selectRandomVariation(testData) {
-	const variations = testData.variations;
-
-	let maxWeight = 0;
-
-	for (const variation of variations) {
-		maxWeight += strToInt(variation.weight);
-	}
-
-	const randomWeight = generateRandom(0, maxWeight - 1);
-
-	let currentWeight = 0;
-
-	for (const variation of variations) {
-		currentWeight += strToInt(variation.weight);
-		if (randomWeight < currentWeight) {
-			return variation.id;
-		}
-	}
-
-	return "unset";
-}
-
-function getDaysFrom1970(dateString) {
-	const dateParts = dateString.split('/');
-
-	if (dateParts.length !== 3) {
-		return 0;
-	}
-
-	const month = strToInt(dateParts[0]);
-	const day = strToInt(dateParts[1]);
-	const year = strToInt(dateParts[2]);
-
-	// Days per month (assuming non-leap year for February)
-	const daysPerMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-	// Calculate the total number of days from the Unix Epoch to the given date
-	let totalDays = 0;
-
-	for (let y = 1970; y < year; y++) {
-		totalDays += isLeapYear(y) ? 366 : 365;
-	}
-
-	for (let m = 1; m < month; m++) {
-
-		totalDays += daysPerMonth[m];
-
-
-		if (m === 2 && isLeapYear(year)) {
-			totalDays += 1; // February has 29 days in a leap year
-		}
-
-	}
-	totalDays += day - 1; // Subtract 1 as the Unix Epoch starts from January 1, 1970
-
-	return totalDays;
-}
-
-function isLeapYear(year) {
-	return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-}
-
-/*--includeend--*/
-	/*--include:../tags/environment-variables/detectors.js:--*/
-// Description: Device detection for A/B testing framework.
-// Author: Juan Castro
-// Last modified: 2023-07-25
-// License: Apache 2.0
-// Version: 1.0.0
-
-function nantuDetectBrowser(userAgent) {
-	var safariData = nantuIsSafariBrowser(userAgent);
-
-	if (safariData) {
-		return safariData;
-	}
-
-	var desktopBrowserData = nantuGetBrowser(userAgent);
-
-	if (desktopBrowserData) {
-		return desktopBrowserData;
-	}
-
-	return {device: "unknown", browser: "unknown", browserType: "unknown", version: 0};
-}
-
-function nantuIsSafariBrowser(userAgent) {
-	var isSafari = false;
-
-	var isDesktop = false;
-	var isMobile = false;
-	var isTabvar = false;
-
-	var supportedApplePlatforms = ['Macintosh', 'iPhone', 'iPad'];
-
-	var platformIndex = -1;
-
-	for (var i = 0; i < supportedApplePlatforms.length; i++) {
-		var platform = supportedApplePlatforms[i];
-
-		if (userAgent.indexOf(platform) > -1) {
-			if (platform === 'iPad') {
-				isTabvar = true;
-			}
-			if (platform === 'Macintosh') {
-				isDesktop = true;
-			}
-			if (platform === 'iPhone') {
-				isMobile = true;
-			}
-
-			platformIndex = userAgent.indexOf(platform);
-			break;
-		}
-	}
-
-	var safariVersionRegex = /Version\/[0-9]+/;
-
-	if (platformIndex > -1) {
-		if (safariVersionRegex.test(userAgent.slice(platformIndex))) {
-			var safariVersion = parseInt(userAgent.slice(platformIndex).match(safariVersionRegex)[0].split('/')[1]);
-
-			if (safariVersion > 0) {
-				return {device: isDesktop ? 'desktop' : isMobile ? 'mobile' : isTabvar ? 'tablet' : null, browserType: 'safari', browser: 'safari', version: safariVersion};
-			}
-		}
-	}
-
-	var chromeIosVersionRegex = /CriOS\/[0-9]+/;
-
-	if (chromeIosVersionRegex.test(userAgent)) {
-		var chromeIosVersion = parseInt(userAgent.match(chromeIosVersionRegex)[0].split('/')[1]);
-
-		if (chromeIosVersion > 0) {
-			return {device: isDesktop ? 'desktop' : isMobile ? 'mobile' : isTabvar ? 'tablet' : null, browserType: 'safari', browser: 'chrome', version: chromeIosVersion};
-		}
-	}
-
-	return null;
-}
-
-function nantuGetBrowser(userAgent) {
-	var supportedPlatforms = ['Linux x86_64', 'Mac OS', 'Windows NT', 'CrOS', 'Android'];
-	var supportedBrowsers = [
-		{
-			name: 'Chrome',
-			versionRegex: 'OPR/'
-		},
-		{
-			name: 'Firefox',
-			versionRegex: 'Firefox/'
-		},
-		{
-			name: 'Chrome',
-			versionRegex: 'Chrome/'
-		},
-	];
-
-	var platformIndex = -1;
-
-	var deviceType = "desktop";
-
-	for (var i = 0; i < supportedPlatforms.length; i++) {
-		var platform = supportedPlatforms[i];
-
-		if (userAgent.indexOf(platform) > -1) {
-			if (platform === 'Android') { 
-				if (userAgent.indexOf('Mobile') > -1) {
-					deviceType = "mobile";
-				} else {
-					deviceType = "tablet";
+				if (safariVersion > 0) {
+					return {
+						device: isDesktop
+							? "desktop"
+							: isMobile
+							? "mobile"
+							: isTabvar
+							? "tablet"
+							: null,
+						browserType: "safari",
+						browser: "safari",
+						version: safariVersion,
+					};
 				}
 			}
+		}
 
-			for (var j = 0; j < supportedBrowsers.length; j++) {
-				var browser = supportedBrowsers[j];
+		var chromeIosVersionRegex = /CriOS\/[0-9]+/;
 
-				if (userAgent.indexOf(browser.name) > -1) {
+		if (chromeIosVersionRegex.test(userAgent)) {
+			var chromeIosVersion = parseInt(
+				userAgent.match(chromeIosVersionRegex)[0].split("/")[1],
+			);
 
-					var versionRegex = new RegExp(browser.versionRegex.replace('/', '\\/') + '[0-9]+');
+			if (chromeIosVersion > 0) {
+				return {
+					device: isDesktop
+						? "desktop"
+						: isMobile
+						? "mobile"
+						: isTabvar
+						? "tablet"
+						: null,
+					browserType: "safari",
+					browser: "chrome",
+					version: chromeIosVersion,
+				};
+			}
+		}
 
-					if (versionRegex.test(userAgent)) {
-						var browserVersion = parseInt(userAgent.slice(userAgent.indexOf(browser.name)).match(versionRegex)[0].split('/')[1]);
+		return null;
+	}
 
-						if (browserVersion > 0) {
-							var browserType = browser.name.toLowerCase();
+	function nantuGetBrowser(userAgent) {
+		var supportedPlatforms = [
+			"Linux x86_64",
+			"Mac OS",
+			"Windows NT",
+			"CrOS",
+			"Android",
+		];
+		var supportedBrowsers = [
+			{
+				name: "Chrome",
+				versionRegex: "OPR/",
+			},
+			{
+				name: "Firefox",
+				versionRegex: "Firefox/",
+			},
+			{
+				name: "Chrome",
+				versionRegex: "Chrome/",
+			},
+		];
 
-							var browserName = browserType;
+		var platformIndex = -1;
 
-							if (userAgent.indexOf('Edg/') > -1) {
-								browserName = 'edge';
+		var deviceType = "desktop";
+
+		for (var i = 0; i < supportedPlatforms.length; i++) {
+			var platform = supportedPlatforms[i];
+
+			if (userAgent.indexOf(platform) > -1) {
+				if (platform === "Android") {
+					if (userAgent.indexOf("Mobile") > -1) {
+						deviceType = "mobile";
+					} else {
+						deviceType = "tablet";
+					}
+				}
+
+				for (var j = 0; j < supportedBrowsers.length; j++) {
+					var browser = supportedBrowsers[j];
+
+					if (userAgent.indexOf(browser.name) > -1) {
+						var versionRegex = new RegExp(
+							browser.versionRegex.replace("/", "\\/") + "[0-9]+",
+						);
+
+						if (versionRegex.test(userAgent)) {
+							var browserVersion = parseInt(
+								userAgent.slice(userAgent.indexOf(browser.name)).match(
+									versionRegex,
+								)[0].split("/")[1],
+							);
+
+							if (browserVersion > 0) {
+								var browserType = browser.name.toLowerCase();
+
+								var browserName = browserType;
+
+								if (userAgent.indexOf("Edg/") > -1) {
+									browserName = "edge";
+								}
+
+								if (userAgent.indexOf("OPR/") > -1) {
+									browserName = "opera";
+								}
+
+								return {
+									device: deviceType,
+									browserType: browserType,
+									browser: browserName,
+									version: browserVersion,
+								};
 							}
-
-							if (userAgent.indexOf('OPR/') > -1) {
-								browserName = 'opera';
-							}
-
-							return {device: deviceType, browserType: browserType, browser: browserName, version: browserVersion};
 						}
 					}
 				}
 			}
 		}
+
+		return null;
 	}
 
-	return null;
-}
-
-/*--includeend--*/
+	/*--includeend--*/
 })(window, document, navigator);
-
 
 // log message in the browser log
 function nantu_x_log(nantu_x_message) {
@@ -1080,6 +1146,12 @@ function nantu_x_log(nantu_x_message) {
 }
 // Send data to data layer
 function nantu_x_push_to_data_layer() {
+	const trackingSetup = {
+		useDataLayer: true,
+		useGA4Account: null, // if has a value will send event to GA4 using gtag
+	};
+
+
 	nantu_x_qa_show_test(
 		nantu_x_test_id,
 		nantu_x_selected_variation,
@@ -1124,7 +1196,18 @@ function nantu_x_push_to_data_layer() {
 				window.dataLayer = window.dataLayer || [];
 			}
 
-			window.dataLayer.push(nantu_ga4_data);
+			if (trackingSetup.useDataLayer) {
+				window.dataLayer.push(nantu_ga4_data);
+			}
+
+			if (typeof trackingSetup.useGA4Account === "string" && window.gtag) {
+				window.gtag("event", "nantu_ga4_dimension", {
+					"send_to": trackingSetup.useGA4Account,
+					"user_properties": {
+						[`nantu_ab_test${nantu_ga4_data.nantu_ab_test_index}`]: `${nantu_ga4_data.nantu_ab_test_experiment_name}-${nantu_ga4_data.nantu_ab_test_variation}`,
+					},
+				});
+			}
 		}
 	}
 }
@@ -1156,7 +1239,13 @@ function nantu_x_setup_trigger() {
 	}
 }
 
-function nantu_x_qa_show_test(nantu_x_test_id, nantu_x_selected_variation, nantu_x_test_version, nantu_x_variations, nantu_x_set_dimension) {
+function nantu_x_qa_show_test(
+	nantu_x_test_id,
+	nantu_x_selected_variation,
+	nantu_x_test_version,
+	nantu_x_variations,
+	nantu_x_set_dimension,
+) {
 	if (typeof nantu_qa_show_test == "function") {
 		nantu_qa_show_test(
 			nantu_x_test_id,
@@ -1207,21 +1296,31 @@ function nantu_x_execute_test() {
 		// End of A/B test variations code
 		window.dataLayer = window.dataLayer || [];
 
-		window.dataLayer.push({'event': 'nantu_' + nantu_x_test_id + '_execute_' + nantu_x_selected_variation, 'nantu_test_id' : nantu_x_test_id, 'nantu_variation' : nantu_x_selected_variation, 'nantu_experiment' : nantu_x_experiment, 'nantu_variation_name' : nantu_x_variation_name, 'nantu_test_variations' : nantu_x_variations});
+		window.dataLayer.push({
+			"event": "nantu_" + nantu_x_test_id + "_execute_" +
+				nantu_x_selected_variation,
+			"nantu_test_id": nantu_x_test_id,
+			"nantu_variation": nantu_x_selected_variation,
+			"nantu_experiment": nantu_x_experiment,
+			"nantu_variation_name": nantu_x_variation_name,
+			"nantu_test_variations": nantu_x_variations,
+		});
 	}
 }
-
+/*--include:parts/test_code.js:--*/
 function nantu_x_change_page() {
 	//The code to change the page goes here
 }
-
+/*--includeend--*/
 function nantu_x_add_css_code(nantu_x_selected_variation) {
 	document.body.classList.add(
 		"nantu_x_" + nantu_x_selected_variation,
 	);
 
 	const css_code = `
+	/*--include:parts/test_code.css:--*/
 	/* Add your CSS code here */
+	/*--includeend--*/
 	`;
 	const style = document.createElement("style");
 	style.innerHTML = css_code;
