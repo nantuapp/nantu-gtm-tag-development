@@ -1,12 +1,12 @@
 // Description: QA Tab for Nantu AB Testing.
 // Author: Juan Castro
-// Last modified: 2024-09-30
+// Last modified: 2026-08-03
 // URL: https://github.com/nantuapp/nantu-gtm-tag-development/blob/main/src/tags/qa/tag.html
 // License: Apache 2.0
-// Version: 1.0.7
+// Version: 1.0.9
 
 // What's new:
-// Fix force variation button not working after CSP changes.
+// Reject test ids that are not integers to prevent HTML injection
 
 
 const nantuQAModeString = "nantu_mode=qa";
@@ -103,6 +103,16 @@ function nantuObjectToJSONLikeString(obj)
 function nantu_qa_show_test(test_id, variation, version, variations, dimension) {
 	var nantu_qa_abbrev_regex = /(ontrol|ariation)/;
 
+	// test_id is interpolated into element ids and CSS selectors below, so it
+	// must be a plain integer to prevent HTML and selector injection
+	test_id = String(test_id);
+
+	if(/^[0-9]{1,12}$/.test(test_id) === false) {
+		console.error("Nantu QA: ignoring test, id is not an integer");
+
+		return;
+	}
+
 	if(document.querySelectorAll("#nantu_qa_tab").length == 0) {
 		document.body.insertAdjacentHTML("beforeEnd", nantu_qa_tab_html);
 	}
@@ -130,8 +140,31 @@ function nantu_qa_show_test(test_id, variation, version, variations, dimension) 
 
 	qa_tab_first_child.appendChild(edit_button);
 
-	if(document.querySelectorAll("#nantu_" + test_id + "_tab_line").length == 0) {
-		document.getElementById("nantu_qa_tab").insertAdjacentHTML("beforeEnd", '<span style="display: flex;font-size:11px;column-gap: 2px; align-items: center;" id="nantu_' + test_id + '_tab_line"><span class="nantu_qa_id" style="font-weight:bold;"></span><span class="nantu_qa_variation"></span><span class="nantu_qa_dimension"></span><span class="nantu_qa_dimension_links" style="display:none; column-gap: 3px;"></span></span>');
+	if(document.getElementById("nantu_" + test_id + "_tab_line") === null) {
+		var nantu_qa_create_span = function(class_name, style) {
+			var span = document.createElement("span");
+
+			if(class_name) {
+				span.className = class_name;
+			}
+
+			if(style) {
+				span.setAttribute("style", style);
+			}
+
+			return span;
+		};
+
+		var tab_line = nantu_qa_create_span("", "display: flex;font-size:11px;column-gap: 2px; align-items: center;");
+
+		tab_line.id = "nantu_" + test_id + "_tab_line";
+
+		tab_line.appendChild(nantu_qa_create_span("nantu_qa_id", "font-weight:bold;"));
+		tab_line.appendChild(nantu_qa_create_span("nantu_qa_variation", ""));
+		tab_line.appendChild(nantu_qa_create_span("nantu_qa_dimension", ""));
+		tab_line.appendChild(nantu_qa_create_span("nantu_qa_dimension_links", "display:none; column-gap: 3px;"));
+
+		document.getElementById("nantu_qa_tab").appendChild(tab_line);
 	}
 
 	var nantu_qa_button_style = 'display: flex; text-decoration: none; min-width: 40px;height: 30px;justify-content: center;align-items: center;font-size: 20px;background: #666;color: white;border-radius: 3px; padding: 0 4px;'; 
