@@ -5,7 +5,7 @@
 	if (params.get("nantu_environment") === "qa") {
 		var expires = new Date(Date.now() + 60 * 60 * 1000).toUTCString();
 		document.cookie = "nantu_environment=qa; expires=" + expires +
-			"; path=/; domain=" + nantu_env_domain;
+			"; path=/; domain=" + nantu_env_domain + "; SameSite=Strict; Secure";
 	}
 
 	var hasCookie = document.cookie.split("; ").some(function (row) {

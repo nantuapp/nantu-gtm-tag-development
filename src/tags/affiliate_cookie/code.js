@@ -18,13 +18,19 @@ if (getCampaignQuery() != '') {
 
 data.gtmOnSuccess();
 
+function sanitizeQueryValue(value) {
+	// Reject non-strings, null, or the literal string 'undefined'
+	if (!value || value === 'undefined') return '';
+
+	// Whitelist: allow only alphanumeric, hyphens, and underscores; max 100 chars
+	const safePattern = '^[a-zA-Z0-9_\\-]{1,100}$';
+	return value.match(safePattern) ? value : '';
+}
+
 function getAffiliateQuery() {
 	if (queryPermission('get_url', 'query')) {
 		const affiliateQuery = getQueryParameters(data.query_var);
-
-		if (affiliateQuery != 'undefined') {
-			return affiliateQuery;
-		}
+		return sanitizeQueryValue(affiliateQuery);
 	}
 
 	return '';
@@ -33,10 +39,7 @@ function getAffiliateQuery() {
 function getCampaignQuery() {
 	if (queryPermission('get_url', 'query')) {
 		const campaignQuery = getQueryParameters(data.campaign_query_var);
-
-		if (campaignQuery != 'undefined') {
-			return campaignQuery;
-		}
+		return sanitizeQueryValue(campaignQuery);
 	}
 
 	return '';
