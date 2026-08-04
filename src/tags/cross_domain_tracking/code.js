@@ -1,11 +1,11 @@
 // Description: Nantu Cross Domain Tracking
 // Author: Juan Castro
-// Last modified: 2026-01-29
+// Last modified: 2026-08-04
 // License: Apache 2.0
-// Version: 1.0.0
+// Version: 1.0.1
 //
 // What's new?
-// - Initial release
+// - v1.0.1: Input validation on all fields before dataLayer push
 
 const log = require('logToConsole');
 const queryPermission = require('queryPermission');
@@ -35,6 +35,12 @@ if (!decoded) {
 
 const tests = JSON.parse(decoded);
 
+if (!tests || getType(tests) !== 'array') {
+	log('Nantu CDT: decoded payload is not a valid JSON array. Aborting.');
+	data.gtmOnFailure();
+	return;
+}
+
 for (let i = 0; i < tests.length; i++) {
 	const t = tests[i];
 
@@ -47,9 +53,26 @@ for (let i = 0; i < tests.length; i++) {
 	const selectedVariation = asString(t.nantu_ab_test_variation_id);
 	const variationName = asString(t.nantu_ab_test_variation);
 
-	if (!testId || !experimentName || !selectedVariation || !variationName) {
+	if (!testId) {
+		log('Nantu CDT: invalid nantu_ab_test_index - must be a positive integer. Got: ' + t.nantu_ab_test_index);
 		continue;
 	}
+
+	if (!isAlphaNumeric(experimentName, 30)) {
+		log('Nantu CDT: invalid nantu_ab_test_experiment_name - must be alphanumeric, max 30 chars. Got: ' + experimentName);
+		continue;
+	}
+
+	if (!isValidVariationId(selectedVariation)) {
+		log('Nantu CDT: invalid nantu_ab_test_variation_id - must be "control" or "variation1"-"variation9". Got: ' + selectedVariation);
+		continue;
+	}
+
+	if (!isAlphaNumeric(variationName, 30)) {
+		log('Nantu CDT: invalid nantu_ab_test_variation - must be alphanumeric, max 30 chars. Got: ' + variationName);
+		continue;
+	}
+
 
 	dataLayerPush({
 		'event': 'nantu_ab_test' + testId,
@@ -93,4 +116,24 @@ function makePositiveInt(v) {
 		return 0;
 	}
 	return n;
+}
+
+// Returns true only for non-empty alphanumeric strings within maxLen characters.
+function isAlphaNumeric(v, maxLen) {
+	if (!v || getType(v) !== 'string') return false;
+	if (v.length === 0 || v.length > maxLen) return false;
+	const allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ';
+	for (let i = 0; i < v.length; i++) {
+		if (allowed.indexOf(v[i]) === -1) return false;
+	}
+	return true;
+}
+
+// Returns true only for "control" or "variation1" through "variation9".
+function isValidVariationId(v) {
+	if (!v || getType(v) !== 'string') return false;
+	if (v === 'control') return true;
+	if (v.length !== 10) return false;                        // "variation" (9) + one digit = 10
+	if (v.indexOf('variation') !== 0) return false;
+	return '123456789'.indexOf(v[9]) !== -1;
 }
