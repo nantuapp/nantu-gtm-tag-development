@@ -23,6 +23,7 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 		testWindowEnd: "12/31/2029",
 		testWindowStart: "07/26/2024",
 		allowedDomain: "localhost",
+		/*--include:parts/variations.js:--*/
 		variations: [
 			{
 				id: "control",
@@ -35,6 +36,7 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 				weight: 50,
 			},
 		],
+		/*--includeend--*/
 		qaOnly: true,
 		desktop: true,
 		tablet: true,
@@ -1151,7 +1153,6 @@ function nantu_x_push_to_data_layer() {
 		useGA4Account: null, // if has a value will send event to GA4 using gtag
 	};
 
-
 	nantu_x_qa_show_test(
 		nantu_x_test_id,
 		nantu_x_selected_variation,
@@ -1204,7 +1205,8 @@ function nantu_x_push_to_data_layer() {
 				window.gtag("event", "nantu_ga4_dimension", {
 					"send_to": trackingSetup.useGA4Account,
 					"user_properties": {
-						[`nantu_ab_test${nantu_ga4_data.nantu_ab_test_index}`]: `${nantu_ga4_data.nantu_ab_test_experiment_name}-${nantu_ga4_data.nantu_ab_test_variation}`,
+						[`nantu_ab_test${nantu_ga4_data.nantu_ab_test_index}`]:
+							`${nantu_ga4_data.nantu_ab_test_experiment_name}-${nantu_ga4_data.nantu_ab_test_variation}`,
 					},
 				});
 			}
