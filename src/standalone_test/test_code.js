@@ -23,8 +23,8 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 		testWindowEnd: "12/31/2029",
 		testWindowStart: "07/26/2024",
 		allowedDomain: "localhost",
-		/*--include:parts/variations.js:--*/
 		variations: [
+		/*--include:parts/variations.js:--*/
 			{
 				id: "control",
 				name: "Control",
@@ -35,8 +35,8 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 				name: "Variation 1",
 				weight: 50,
 			},
-		],
 		/*--includeend--*/
+		],
 		qaOnly: true,
 		desktop: true,
 		tablet: true,
