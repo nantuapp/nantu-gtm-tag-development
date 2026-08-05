@@ -1,114 +1,160 @@
 <script id="nantu_x_test_script" type="text/gtmscript">
-// Description: GTM A/B test Variations code template
-// Author: Juan Castro
-// Last modified: 2024-09-30
-// URL: https://github.com/nantuapp/nantu-gtm-tag-development/blob/main/src/test_template/test.html
-// License: Apache 2.0
-// Version: 1.0.1
+	// Description: GTM A/B test Variations code template
+	// Author: Juan Castro
+	// Last modified: 2026-08-05
+	// URL: https://github.com/nantuapp/nantu-gtm-tag-development/blob/main/src/test_template/test.html
+	// License: Apache 2.0
+	// Version: 1.0.2
 
-// What's new:
-// Replace usage of GTM variables with JS variables to have more predictable hashes for CSP
+	// What's new:
+	// Add include tags to include external files for the sections that will be modified by the assistant
 
-//Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches the clickup card ID for every test to avoid name collisions
+	//Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches the clickup card ID for every test to avoid name collisions
 
-var nantu_x_test_version = 1; //Increase this number every time the test is being changed after receiving feedback from QA
-var nantu_x_debug = false; // Set to false to turn off debug log messages
+	var nantu_x_test_version = 1; //Increase this number every time the test is being changed after receiving feedback from QA
+	var nantu_x_debug = false; // Set to false to turn off debug log messages
 
-var nantu_x_gtmid = "{{Container ID}}";
+	var nantu_x_gtmid = "{{Container ID}}";
 
-var nantu_x_gtm = google_tag_manager[nantu_x_gtmid];
+	var nantu_x_gtm = google_tag_manager[nantu_x_gtmid];
 
-var nantu_x_selected_variation = nantu_x_gtm.dataLayer.get("nantu_variation");
-var nantu_x_variation_name = nantu_x_gtm.dataLayer.get("nantu_variation_name");
-var nantu_x_test_id = nantu_x_gtm.dataLayer.get("nantu_test_id");
-var nantu_x_experiment = nantu_x_gtm.dataLayer.get("nantu_experiment");
-var nantu_x_variations = nantu_x_gtm.dataLayer.get("nantu_test_variations")
-var nantu_x_trigger_event = nantu_x_gtm.dataLayer.get("event");
+	var nantu_x_selected_variation = nantu_x_gtm.dataLayer.get(
+		"nantu_variation",
+	);
+	var nantu_x_variation_name = nantu_x_gtm.dataLayer.get(
+		"nantu_variation_name",
+	);
+	var nantu_x_test_id = nantu_x_gtm.dataLayer.get("nantu_test_id");
+	var nantu_x_experiment = nantu_x_gtm.dataLayer.get("nantu_experiment");
+	var nantu_x_variations = nantu_x_gtm.dataLayer.get(
+		"nantu_test_variations",
+	);
+	var nantu_x_trigger_event = nantu_x_gtm.dataLayer.get("event");
 
-if("qa" === nantu_x_gtm.dataLayer.get("nantu_mode_cookie") || "qa" === nantu_x_gtm.dataLayer.get("nantu_mode_query_var") || localStorage.getItem("nantu_log_enable") == "yes") {
-	nantu_x_debug = true;
-}
-
-// log message in the browser log
-function nantu_x_log(nantu_x_message) {
-	if (nantu_x_debug || localStorage.nantu_x_debug == "yes") {
-		console.log("nantu_x:" + nantu_x_message);
+	if (
+		"qa" === nantu_x_gtm.dataLayer.get("nantu_mode_cookie") ||
+		"qa" === nantu_x_gtm.dataLayer.get("nantu_mode_query_var") ||
+		localStorage.getItem("nantu_log_enable") == "yes"
+	) {
+		nantu_x_debug = true;
 	}
-}
 
-function nantu_x_qa_show_test(nantu_x_test_id, nantu_x_selected_variation, nantu_x_test_version, nantu_x_variations, nantu_x_set_dimension) {
-	if (typeof nantu_qa_show_test == "function") {
-		nantu_qa_show_test(nantu_x_test_id, nantu_x_selected_variation, nantu_x_test_version, nantu_x_variations, nantu_x_set_dimension);
-	} else {
-		window.nantu_qa_tests_list = window.nantu_qa_tests_list || {};
-
-		window.nantu_qa_tests_list[nantu_x_test_id] = {
-			id: nantu_x_test_id,
-			selected_variation: nantu_x_selected_variation,
-			version: nantu_x_test_version,
-			variations: nantu_x_variations,
-			set_dimension: nantu_x_set_dimension
-		};
-	}
-}
-
-// Send data to data layer
-function nantu_x_push_to_data_layer() {
-	nantu_x_qa_show_test(nantu_x_test_id, nantu_x_selected_variation, nantu_x_test_version, nantu_x_variations, true);
-
-	var nantu_ga4_data = {
-		"nantu_version" : "1.0",
-		"nantu_ab_test_experiment_name" : nantu_x_experiment,
-		"nantu_ab_test_variation_id" : nantu_x_selected_variation,
-		"nantu_ab_test_variation" : nantu_x_variation_name,
-		"nantu_ab_test_index" : nantu_x_test_id
-	};
-
-	nantu_x_log("setting GA4 user property: nantu_ab_test" + nantu_x_test_id + " to " + nantu_x_variation_name);
-
-	var nantu_ga4_data_string = JSON.stringify(nantu_ga4_data);
-
-	if (nantu_ga4_data_string != window.nantu_ga4_data_sent) {
-		//only push data if it is the first time or data has been changed
-		window.nantu_ga4_data_sent = nantu_ga4_data_string;
-
-		nantu_ga4_event_id = "nantu_ab_test" + nantu_x_test_id;
-
-		if(localStorage.getItem(nantu_ga4_event_id) != nantu_x_variation_name) {
-			nantu_ga4_data["event"] = "nantu_ab_test" + nantu_x_test_id;
-
-			nantu_ga4_data["eventTimeout"] = 2000;
-
-			nantu_ga4_data["eventCallback"] = function() {
-        			localStorage.setItem(nantu_ga4_event_id, nantu_x_variation_name);
-      			}
-
-			dataLayer.push(nantu_ga4_data);
+	// log message in the browser log
+	function nantu_x_log(nantu_x_message) {
+		if (nantu_x_debug || localStorage.nantu_x_debug == "yes") {
+			console.log("nantu_x:" + nantu_x_message);
 		}
 	}
-}
 
-if(nantu_x_trigger_event.indexOf("nantu_x_execute") > -1) {
-	nantu_x_qa_show_test(nantu_x_test_id, nantu_x_selected_variation, nantu_x_test_version, nantu_x_variations, false);
+	function nantu_x_qa_show_test(
+		nantu_x_test_id,
+		nantu_x_selected_variation,
+		nantu_x_test_version,
+		nantu_x_variations,
+		nantu_x_set_dimension,
+	) {
+		if (typeof nantu_qa_show_test == "function") {
+			nantu_qa_show_test(
+				nantu_x_test_id,
+				nantu_x_selected_variation,
+				nantu_x_test_version,
+				nantu_x_variations,
+				nantu_x_set_dimension,
+			);
+		} else {
+			window.nantu_qa_tests_list = window.nantu_qa_tests_list || {};
 
-	// don't run if test is off
-	if (/^(unknown|none)$/.test(nantu_x_selected_variation) === false) {
-
-		//The code of the A/B test variations goes here
-
-		// Revealing the page if anti-flicker is enabled
-		window.nantu_unhide = true;
-		document.body.classList.remove("nantu_antiflicker");
-
-		// Push data to data layer to track the test results
-		nantu_x_push_to_data_layer();
-
-
-		// End of A/B test variations code
+			window.nantu_qa_tests_list[nantu_x_test_id] = {
+				id: nantu_x_test_id,
+				selected_variation: nantu_x_selected_variation,
+				version: nantu_x_test_version,
+				variations: nantu_x_variations,
+				set_dimension: nantu_x_set_dimension,
+			};
+		}
 	}
-} else {
-	nantu_x_log("setup error, this tag should be triggered by an event that starts with nantu_x_execute");
-}
+
+	// Send data to data layer
+	function nantu_x_push_to_data_layer() {
+		nantu_x_qa_show_test(
+			nantu_x_test_id,
+			nantu_x_selected_variation,
+			nantu_x_test_version,
+			nantu_x_variations,
+			true,
+		);
+
+		var nantu_ga4_data = {
+			"nantu_version": "1.0",
+			"nantu_ab_test_experiment_name": nantu_x_experiment,
+			"nantu_ab_test_variation_id": nantu_x_selected_variation,
+			"nantu_ab_test_variation": nantu_x_variation_name,
+			"nantu_ab_test_index": nantu_x_test_id,
+		};
+
+		nantu_x_log(
+			"setting GA4 user property: nantu_ab_test" + nantu_x_test_id +
+				" to " + nantu_x_variation_name,
+		);
+
+		var nantu_ga4_data_string = JSON.stringify(nantu_ga4_data);
+
+		if (nantu_ga4_data_string != window.nantu_ga4_data_sent) {
+			//only push data if it is the first time or data has been changed
+			window.nantu_ga4_data_sent = nantu_ga4_data_string;
+
+			nantu_ga4_event_id = "nantu_ab_test" + nantu_x_test_id;
+
+			if (
+				localStorage.getItem(nantu_ga4_event_id) != nantu_x_variation_name
+			) {
+				nantu_ga4_data["event"] = "nantu_ab_test" + nantu_x_test_id;
+
+				nantu_ga4_data["eventTimeout"] = 2000;
+
+				nantu_ga4_data["eventCallback"] = function () {
+					localStorage.setItem(nantu_ga4_event_id, nantu_x_variation_name);
+				};
+
+				dataLayer.push(nantu_ga4_data);
+			}
+		}
+	}
+
+	if (nantu_x_trigger_event.indexOf("nantu_x_execute") > -1) {
+		nantu_x_qa_show_test(
+			nantu_x_test_id,
+			nantu_x_selected_variation,
+			nantu_x_test_version,
+			nantu_x_variations,
+			false,
+		);
+
+		// don't run if test is off
+		if (/^(unknown|none)$/.test(nantu_x_selected_variation) === false) {
+			//The code of the A/B test variations goes here
+
+			// Revealing the page if anti-flicker is enabled
+			window.nantu_unhide = true;
+			document.body.classList.remove("nantu_antiflicker");
+
+			// Push data to data layer to track the test results
+			nantu_x_push_to_data_layer();
+
+			/*--include:parts/call_change_page.js:--*/
+			/*--includeend--*/
+
+			// End of A/B test variations code
+		}
+	} else {
+		nantu_x_log(
+			"setup error, this tag should be triggered by an event that starts with nantu_x_execute",
+		);
+	}
+	/*--include:parts/test_code.js:--*/
+	/*--includeend--*/
 </script>
 <style>
+	/*--include:parts/test_code.css:--*/
+	/*--includeend--*/
 </style>
