@@ -122,7 +122,7 @@ function makePositiveInt(v) {
 function isAlphaNumeric(v, maxLen) {
 	if (!v || getType(v) !== 'string') return false;
 	if (v.length === 0 || v.length > maxLen) return false;
-	const allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ';
+	const allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 -';
 	for (let i = 0; i < v.length; i++) {
 		if (allowed.indexOf(v[i]) === -1) return false;
 	}
