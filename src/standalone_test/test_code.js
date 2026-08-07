@@ -24,7 +24,7 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 		testWindowStart: "07/26/2024",
 		allowedDomain: "localhost",
 		variations: [
-		/*--include:parts/variations.js:--*/
+			/*--include:parts/variations.js:--*/
 			{
 				id: "control",
 				name: "Control",
@@ -35,7 +35,7 @@ var nantu_x_debug = false; // Set to false to turn off debug log messages
 				name: "Variation 1",
 				weight: 50,
 			},
-		/*--includeend--*/
+			/*--includeend--*/
 		],
 		qaOnly: true,
 		desktop: true,
@@ -1290,10 +1290,8 @@ function nantu_x_execute_test() {
 		// Push data to data layer to track the test results
 		nantu_x_push_to_data_layer();
 
-		if (nantu_x_selected_variation !== "control") {
-			// nantu_x_add_css_code(nantu_x_selected_variation); // Adds the CSS code
-			nantu_x_change_page();
-		}
+		/*--include:parts/call_change_page.js:--*/
+		/*--includeend--*/
 
 		// End of A/B test variations code
 		window.dataLayer = window.dataLayer || [];
