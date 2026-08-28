@@ -15,6 +15,11 @@
 			return;
 		}
 
+		if (location.search.indexOf("nantu_environment=dev") > -1) {
+			console.log('Nantu test script for test ID ' + test_id + ' is not intended to run on Dev environment.');
+			return;
+		}
+
 		if (document.getElementById('nantu_install_script_' + test_id)) {
 			console.log('Nantu test script for test ID ' + test_id + ' is already installed.');
 			return;
