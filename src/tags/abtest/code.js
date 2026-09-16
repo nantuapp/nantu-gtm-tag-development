@@ -1,12 +1,11 @@
 // Description: Nantu A/B Testing Template
 // Author: Juan Castro
-// Last modified: 2025-01-24
+// Last modified: 2026-09-16
 // License: Apache 2.0
-// Version: 1.0.2
+// Version: 1.0.3
 
 // What's new:
-// Select which variation to run when the weight of a variation is 0.
-// Exclude visitors from running the test if the variation they are assigned to has been removed.
+// Added the ability to set a custom user property name
 
 // API imports
 const Math = require('Math');
@@ -123,10 +122,18 @@ for (let variationIndex = 0; variationIndex < data.variations.length; variationI
 	testVariations.push(variation.id);
 }
 
+var userPropertyName = "nantu_ab_test" + data.testIndex;
+
+if (data.useCustomUserProperty === true && isValidUserPropertyName(data.customUserPropertyName)) {
+	userPropertyName = data.customUserPropertyName;
+} else if (data.useCustomUserProperty === true) {
+	testLog("Nantu: customUserPropertyName is invalid, using default user property name: " + userPropertyName);
+}
+
 const dataLayerPush = createQueue('dataLayer');
 
 if (data.qaOnly === false || data.qaOnly === true && isInQAMode()) {
-	dataLayerPush({'event': 'nantu_' + data.testIndex + '_execute_' + selectedVariation, 'nantu_test_id' : data.testIndex, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experimentName, 'nantu_variation_name' : getVariationName(selectedVariation, data), 'nantu_test_variations' : testVariations.join(",")});
+	dataLayerPush({'event': 'nantu_' + data.testIndex + '_execute_' + selectedVariation, 'nantu_test_id' : data.testIndex, 'nantu_variation' : selectedVariation, 'nantu_experiment' : data.experimentName, 'nantu_variation_name' : getVariationName(selectedVariation, data), 'nantu_test_variations' : testVariations.join(","), 'nantu_user_property_name' : userPropertyName, 'nantu_version' : '1.0.3'});
 }
 
 function getVariationFromURL() {
@@ -467,6 +474,29 @@ function isAllowedDomain(domain, testData) {
 	}
 
 	return false;
+}
+
+// isValidUserPropertyName validates a custom user property name.
+// Sandboxed JavaScript doesn't support RegExp, so this checks the
+// equivalent of ^[A-Za-z0-9_-][A-Za-z0-9_-]{4,24}$ (5-25 chars, letters, digits, underscore or hyphen) manually.
+function isValidUserPropertyName(name) {
+	if (getType(name) !== "string") {
+		return false;
+	}
+
+	if (name.length < 5 || name.length > 25) {
+		return false;
+	}
+
+	const allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
+
+	for (let charIndex = 0; charIndex < name.length; charIndex++) {
+		if (allowedChars.indexOf(name.charAt(charIndex)) === -1) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 function getSelectedVariation(savedVariations, testData) {

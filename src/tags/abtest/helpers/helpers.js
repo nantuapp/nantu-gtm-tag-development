@@ -297,14 +297,53 @@ function isAllowedDomain(domain, testData) {
 	return false;
 }
 
+// isValidUserPropertyName validates a custom user property name.
+// Sandboxed JavaScript doesn't support RegExp, so this checks the
+// equivalent of ^[A-Za-z0-9_-][A-Za-z0-9_-]{4,24}$ (5-25 chars, letters, digits, underscore or hyphen) manually.
+function isValidUserPropertyName(name) {
+	if (getType(name) !== "string") {
+		return false;
+	}
+
+	if (name.length < 5 || name.length > 25) {
+		return false;
+	}
+
+	const allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
+
+	for (let charIndex = 0; charIndex < name.length; charIndex++) {
+		if (allowedChars.indexOf(name.charAt(charIndex)) === -1) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 function getSelectedVariation(savedVariations, testData) {
 	for (const savedVariation of savedVariations) {
 		if (savedVariation.id === strToInt(testData.testIndex)) {
-			return savedVariation.variation;
+			return getVariationToDisplay(savedVariation.variation, testData);
 		}
 	}
 
 	return "unset";
+}
+
+function getVariationToDisplay(variation, testData) {
+	for (const variationData of testData.variations) {
+		if (variationData.id === variation) {
+			if (variationData.weight === "0") {
+				return variationData.variation_when_disabled;
+			} else {
+				return variation;
+			}
+		}
+	}
+
+	testLog("Selected variation does not exist", variation);
+
+	return "removed";
 }
 
 function getVariationName(variation, testData) {

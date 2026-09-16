@@ -1,7 +1,7 @@
 // Unit Tests for Helpers
 
 // Import the necessary dependencies for testing (e.g., assert library)
-const assert = require('assert');
+import assert from "node:assert";
 
 
 // Define the test cases
@@ -262,6 +262,114 @@ if(variationResults.variation1 < 450 || variationResults.variation1 > 550) {
 console.log('All selectRandomVariation tests passed successfully!');
 
 
+const variationToDisplayTestCases = [
+	{
+		name: "Variation is active",
+		variation: "variation1",
+		variations: [
+			{ id: "control", weight: "50", variation_when_disabled: "control" },
+			{ id: "variation1", weight: "50", variation_when_disabled: "control" }
+		],
+		expected: "variation1"
+	},
+	{
+		name: "Variation weight is 0, falls back to variation_when_disabled",
+		variation: "variation1",
+		variations: [
+			{ id: "control", weight: "100", variation_when_disabled: "control" },
+			{ id: "variation1", weight: "0", variation_when_disabled: "control" }
+		],
+		expected: "control"
+	},
+	{
+		name: "Control weight is 0, falls back to its own variation_when_disabled",
+		variation: "control",
+		variations: [
+			{ id: "control", weight: "0", variation_when_disabled: "variation1" },
+			{ id: "variation1", weight: "100", variation_when_disabled: "control" }
+		],
+		expected: "variation1"
+	},
+	{
+		name: "Variation no longer exists",
+		variation: "variation2",
+		variations: [
+			{ id: "control", weight: "50", variation_when_disabled: "control" },
+			{ id: "variation1", weight: "50", variation_when_disabled: "control" }
+		],
+		expected: "removed"
+	}
+];
+
+for (const testCase of variationToDisplayTestCases) {
+	const { name, variation, variations, expected } = testCase;
+	const result = getVariationToDisplay(variation, {variations: variations});
+	assert.strictEqual(result, expected, `Test Case: ${name}, Expected: ${expected}, Result: ${result}`);
+}
+
+console.log('All getVariationToDisplay tests passed successfully!');
+
+
+const selectedVariationTestCases = [
+	{
+		name: "Saved variation is active",
+		savedVariations: [{ id: 123, variation: "variation1" }],
+		testData: {
+			testIndex: "123",
+			variations: [
+				{ id: "control", weight: "50", variation_when_disabled: "control" },
+				{ id: "variation1", weight: "50", variation_when_disabled: "control" }
+			]
+		},
+		expected: "variation1"
+	},
+	{
+		name: "Saved variation weight is now 0, falls back to variation_when_disabled",
+		savedVariations: [{ id: 123, variation: "variation1" }],
+		testData: {
+			testIndex: "123",
+			variations: [
+				{ id: "control", weight: "100", variation_when_disabled: "control" },
+				{ id: "variation1", weight: "0", variation_when_disabled: "control" }
+			]
+		},
+		expected: "control"
+	},
+	{
+		name: "No saved variation for this test",
+		savedVariations: [{ id: 456, variation: "variation1" }],
+		testData: {
+			testIndex: "123",
+			variations: [
+				{ id: "control", weight: "50", variation_when_disabled: "control" },
+				{ id: "variation1", weight: "50", variation_when_disabled: "control" }
+			]
+		},
+		expected: "unset"
+	},
+	{
+		name: "Saved variation no longer exists",
+		savedVariations: [{ id: 123, variation: "variation2" }],
+		testData: {
+			testIndex: "123",
+			variations: [
+				{ id: "control", weight: "50", variation_when_disabled: "control" },
+				{ id: "variation1", weight: "50", variation_when_disabled: "control" }
+			]
+		},
+		expected: "removed"
+	}
+];
+
+for (const testCase of selectedVariationTestCases) {
+	const { name, savedVariations, testData, expected } = testCase;
+	const result = getSelectedVariation(savedVariations, testData);
+	assert.strictEqual(result, expected, `Test Case: ${name}, Expected: ${expected}, Result: ${result}`);
+}
+
+console.log('All getSelectedVariation tests passed successfully!');
+
+
 const leapYearTestCases = [
 	{ year: 2020, expected: true },
 	{ year: 2021, expected: false },
@@ -302,3 +410,30 @@ for (const testCase of timestampTestCases) {
 	const result = getDaysFrom1970(date);
 	assert.strictEqual(result, expected, `Input: ${date}, Expected: ${expected}, Result: ${result}`);
 }
+
+console.log('All getDaysFrom1970 tests passed successfully!');
+
+
+const validUserPropertyNameTestCases = [
+	{ name: 'valid', expected: true },
+	{ name: 'ab-cd_12', expected: true },
+	{ name: 'ABCDE', expected: true },
+	{ name: 'a11111111111111111111111', expected: true }, // 24 chars
+	{ name: 'a111111111111111111111111', expected: true }, // 25 chars
+	{ name: 'a1111111111111111111111111', expected: false }, // 26 chars, too long
+	{ name: 'abcd', expected: false }, // 4 chars, too short
+	{ name: 'abc$', expected: false }, // invalid char
+	{ name: 'abc de', expected: false }, // space not allowed
+	{ name: '', expected: false },
+	{ name: null, expected: false },
+	{ name: undefined, expected: false },
+	{ name: 12345, expected: false }
+];
+
+for (const testCase of validUserPropertyNameTestCases) {
+	const { name, expected } = testCase;
+	const result = isValidUserPropertyName(name);
+	assert.strictEqual(result, expected, `Input: ${name}, Expected: ${expected}, Result: ${result}`);
+}
+
+console.log('All isValidUserPropertyName tests passed successfully!');

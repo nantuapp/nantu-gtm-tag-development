@@ -20,3 +20,17 @@ function generateRandom(min, max) {
 function getType(obj) {
 	return typeof obj;
 }
+
+/**
+ * Minimal stand-ins for the GTM sandboxed JS APIs/constants that helpers.js
+ * relies on (e.g. via testLog -> isInQAMode -> queryPermission) so helper
+ * functions can be exercised in isolation without pulling in code.js.
+ */
+function log() {}
+
+function queryPermission() {
+	return false;
+}
+
+const nantuModeCookieName = 'nantu_mode';
+const nantuModeQueryVariableName = 'nantu_mode';
