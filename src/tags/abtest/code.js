@@ -6,6 +6,7 @@
 
 // What's new:
 // Added the ability to set a custom user property name
+// Fixed testLog logging "undefined" when called without a second message argument
 
 // API imports
 const Math = require('Math');
@@ -442,7 +443,11 @@ function setQAModeCookie() {
 // display log messages in the console if nantu is in QA mode, also include the test index
 function testLog(message1, message2) {
 	if (isInQAMode()) {
-		log("Nantu Test " + data.testIndex + ": " + message1, message2);
+		if (message2 === undefined) {
+			log("Nantu Test " + data.testIndex + ": " + message1);
+		} else {
+			log("Nantu Test " + data.testIndex + ": " + message1, message2);
+		}
 	}
 }
 
