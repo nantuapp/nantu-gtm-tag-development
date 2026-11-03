@@ -2,12 +2,12 @@
 --Nantu A/B Test Standalone template--
 
 // Author: Juan Castro
-// Last modified: 2026-07-03
+// Last modified: 2026-11-03
 // License: Apache 2.0
-// Version: 1.0.2
+// Version: 1.0.3
 
 // What's new:
-// Option to send data to GA4 using gtag
+// Option to setup custom tracking for specific clients
 
 Developers Note: replace all "nantu_x" ocurrences. Use a unique id that matches the clickup card ID for every test to avoid name collisions
 */
@@ -1288,7 +1288,9 @@ function nantu_x_execute_test() {
 		document.body.classList.remove("nantu_antiflicker");
 
 		// Push data to data layer to track the test results
+		/*--include:parts/client_custom_tracking.js:--*/
 		nantu_x_push_to_data_layer();
+		/*--includeend--*/
 
 		/*--include:parts/call_change_page.js:--*/
 		if (nantu_x_selected_variation !== "control") {
