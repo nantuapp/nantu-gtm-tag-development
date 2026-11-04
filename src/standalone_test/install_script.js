@@ -1,5 +1,3 @@
-<script>
-
 /* Nantu Standalone Test Install Script */
 
 /* Test Name: Test Name */
@@ -36,5 +34,3 @@
 		console.log('Nantu test script of test ID ' + test_id + ' is not intended to run on this page.');
 	}
 })(document, location);
-
-</script>
